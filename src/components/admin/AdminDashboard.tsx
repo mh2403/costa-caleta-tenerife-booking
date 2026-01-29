@@ -1,22 +1,32 @@
 import { useLanguage } from '@/i18n';
-import { Calendar, DollarSign, Users, TrendingUp } from 'lucide-react';
-
-// Mock data
-const stats = {
-  totalBookings: 24,
-  pendingBookings: 3,
-  revenue: 12450,
-  occupancyRate: 72,
-};
-
-const recentBookings = [
-  { id: 1, guest: 'Sophie van den Berg', dates: 'Feb 15 - Feb 22', status: 'confirmed', amount: 840 },
-  { id: 2, guest: 'James Wilson', dates: 'Feb 28 - Mar 5', status: 'pending', amount: 700 },
-  { id: 3, guest: 'Marie Dupont', dates: 'Mar 10 - Mar 15', status: 'pending', amount: 600 },
-];
+import { Calendar, DollarSign, Users, TrendingUp, Loader2 } from 'lucide-react';
+import { useBookings } from '@/hooks/useBookings';
+import { format } from 'date-fns';
 
 export function AdminDashboard() {
   const { t } = useLanguage();
+  const { data: bookings = [], isLoading } = useBookings();
+
+  // Calculate stats from real data
+  const stats = {
+    totalBookings: bookings.length,
+    pendingBookings: bookings.filter(b => b.status === 'pending').length,
+    revenue: bookings
+      .filter(b => b.status === 'confirmed')
+      .reduce((sum, b) => sum + Number(b.total_price), 0),
+    confirmedBookings: bookings.filter(b => b.status === 'confirmed').length,
+  };
+
+  // Get recent bookings (last 5)
+  const recentBookings = bookings.slice(0, 5);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -65,8 +75,8 @@ export function AdminDashboard() {
               <TrendingUp className="h-5 w-5 text-primary" />
             </div>
           </div>
-          <p className="text-2xl font-bold text-foreground">{stats.occupancyRate}%</p>
-          <p className="text-sm text-muted-foreground">Occupancy</p>
+          <p className="text-2xl font-bold text-foreground">{stats.confirmedBookings}</p>
+          <p className="text-sm text-muted-foreground">Confirmed</p>
         </div>
       </div>
 
@@ -75,28 +85,40 @@ export function AdminDashboard() {
         <div className="p-6 border-b border-border">
           <h2 className="font-heading text-lg font-semibold">Recent Bookings</h2>
         </div>
-        <div className="divide-y divide-border">
-          {recentBookings.map((booking) => (
-            <div key={booking.id} className="p-4 flex items-center justify-between">
-              <div>
-                <p className="font-medium text-foreground">{booking.guest}</p>
-                <p className="text-sm text-muted-foreground">{booking.dates}</p>
+        {recentBookings.length === 0 ? (
+          <div className="p-6 text-center text-muted-foreground">
+            No bookings yet
+          </div>
+        ) : (
+          <div className="divide-y divide-border">
+            {recentBookings.map((booking) => (
+              <div key={booking.id} className="p-4 flex items-center justify-between">
+                <div>
+                  <p className="font-medium text-foreground">{booking.guest_name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {format(new Date(booking.check_in), 'MMM d')} - {format(new Date(booking.check_out), 'MMM d, yyyy')}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <span
+                    className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
+                      booking.status === 'confirmed'
+                        ? 'bg-primary/10 text-primary'
+                        : booking.status === 'pending'
+                        ? 'bg-accent/20 text-accent-foreground'
+                        : booking.status === 'declined'
+                        ? 'bg-destructive/10 text-destructive'
+                        : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
+                    {t.admin[booking.status as keyof typeof t.admin] || booking.status}
+                  </span>
+                  <p className="text-sm font-semibold text-foreground mt-1">€{Number(booking.total_price).toLocaleString()}</p>
+                </div>
               </div>
-              <div className="text-right">
-                <span
-                  className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${
-                    booking.status === 'confirmed'
-                      ? 'bg-primary/10 text-primary'
-                      : 'bg-accent/20 text-accent-foreground'
-                  }`}
-                >
-                  {booking.status === 'confirmed' ? t.admin.confirmed : t.admin.pending}
-                </span>
-                <p className="text-sm font-semibold text-foreground mt-1">€{booking.amount}</p>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

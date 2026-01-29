@@ -15,85 +15,62 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Check, X, Eye, Mail, Phone, User, MessageCircle } from 'lucide-react';
+import { Check, X, Eye, Loader2, Mail, Phone, User, MessageCircle } from 'lucide-react';
+import { useBookings, useUpdateBooking, Booking, BookingStatus } from '@/hooks/useBookings';
 import { format } from 'date-fns';
-
-// Mock bookings data
-const initialBookings = [
-  {
-    id: 1,
-    guestName: 'Sophie van den Berg',
-    email: 'sophie@example.com',
-    phone: '+31 6 12345678',
-    checkIn: new Date(2026, 1, 15),
-    checkOut: new Date(2026, 1, 22),
-    guests: 2,
-    totalPrice: 840,
-    status: 'pending',
-    message: 'Looking forward to our honeymoon!',
-    language: 'nl',
-  },
-  {
-    id: 2,
-    guestName: 'James Wilson',
-    email: 'james@example.com',
-    phone: '+44 7911 123456',
-    checkIn: new Date(2026, 1, 28),
-    checkOut: new Date(2026, 2, 5),
-    guests: 4,
-    totalPrice: 700,
-    status: 'confirmed',
-    message: 'Family trip with kids',
-    language: 'en',
-  },
-  {
-    id: 3,
-    guestName: 'Marie Dupont',
-    email: 'marie@example.com',
-    phone: '+33 6 12345678',
-    checkIn: new Date(2026, 2, 10),
-    checkOut: new Date(2026, 2, 15),
-    guests: 2,
-    totalPrice: 600,
-    status: 'pending',
-    message: '',
-    language: 'fr',
-  },
-];
-
-type BookingStatus = 'pending' | 'confirmed' | 'declined' | 'cancelled';
+import { useToast } from '@/hooks/use-toast';
 
 export function AdminBookings() {
   const { t } = useLanguage();
-  const [bookings, setBookings] = useState(initialBookings);
-  const [selectedBooking, setSelectedBooking] = useState<typeof initialBookings[0] | null>(null);
+  const { toast } = useToast();
+  const { data: bookings = [], isLoading } = useBookings();
+  const updateBooking = useUpdateBooking();
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [filter, setFilter] = useState<BookingStatus | 'all'>('all');
 
-  const updateStatus = (id: number, status: BookingStatus) => {
-    setBookings(bookings.map(b =>
-      b.id === id ? { ...b, status } : b
-    ));
-    // In production, this would also send an email notification
+  const filteredBookings = filter === 'all'
+    ? bookings
+    : bookings.filter(b => b.status === filter);
+
+  const handleStatusChange = async (id: string, status: BookingStatus) => {
+    try {
+      await updateBooking.mutateAsync({ id, status });
+      toast({
+        title: t.common.success,
+        description: `Booking ${status}`,
+      });
+      setSelectedBooking(null);
+    } catch (error) {
+      toast({
+        title: t.common.error,
+        description: 'Failed to update booking',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const getStatusBadge = (status: string) => {
-    const styles: Record<string, string> = {
-      pending: 'bg-accent/20 text-accent-foreground',
-      confirmed: 'bg-primary/10 text-primary',
-      declined: 'bg-destructive/10 text-destructive',
-      cancelled: 'bg-muted text-muted-foreground',
-    };
-    const labels: Record<string, string> = {
-      pending: t.admin.pending,
-      confirmed: t.admin.confirmed,
-      declined: t.admin.declined,
-      cancelled: t.admin.cancelled,
-    };
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return 'bg-primary/10 text-primary';
+      case 'pending':
+        return 'bg-accent/20 text-accent-foreground';
+      case 'declined':
+        return 'bg-destructive/10 text-destructive';
+      case 'cancelled':
+        return 'bg-muted text-muted-foreground';
+      default:
+        return 'bg-muted text-muted-foreground';
+    }
+  };
+
+  if (isLoading) {
     return (
-      <span className={`px-3 py-1 rounded-full text-xs font-medium ${styles[status]}`}>
-        {labels[status]}
-      </span>
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
     );
-  };
+  }
 
   return (
     <div className="space-y-6">
@@ -104,87 +81,102 @@ export function AdminBookings() {
         <p className="text-muted-foreground mt-1">Manage all booking requests</p>
       </div>
 
-      {/* Status Filters */}
+      {/* Filter Tabs */}
       <div className="flex flex-wrap gap-2">
-        {['all', 'pending', 'confirmed', 'declined'].map((filter) => (
+        {(['all', 'pending', 'confirmed', 'declined', 'cancelled'] as const).map((status) => (
           <Button
-            key={filter}
-            variant="outline"
+            key={status}
+            variant={filter === status ? 'default' : 'outline'}
             size="sm"
-            className="capitalize"
+            onClick={() => setFilter(status)}
           >
-            {filter === 'all' ? 'All Bookings' : filter}
+            {status === 'all' ? 'All' : t.admin[status]}
+            {status !== 'all' && (
+              <span className="ml-2 px-2 py-0.5 rounded-full bg-background/20 text-xs">
+                {bookings.filter(b => b.status === status).length}
+              </span>
+            )}
           </Button>
         ))}
       </div>
 
       {/* Bookings Table */}
       <div className="bg-card rounded-xl shadow-soft overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Guest</TableHead>
-              <TableHead>Dates</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {bookings.map((booking) => (
-              <TableRow key={booking.id}>
-                <TableCell>
-                  <div>
-                    <p className="font-medium">{booking.guestName}</p>
-                    <p className="text-sm text-muted-foreground">{booking.guests} guests</p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    <p>{format(booking.checkIn, 'MMM d')} - {format(booking.checkOut, 'MMM d, yyyy')}</p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="font-semibold">€{booking.totalPrice}</span>
-                </TableCell>
-                <TableCell>
-                  {getStatusBadge(booking.status)}
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setSelectedBooking(booking)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    {booking.status === 'pending' && (
-                      <>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-primary hover:text-primary"
-                          onClick={() => updateStatus(booking.id, 'confirmed')}
-                        >
-                          <Check className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="text-destructive hover:text-destructive"
-                          onClick={() => updateStatus(booking.id, 'declined')}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </>
-                    )}
-                  </div>
-                </TableCell>
+        {filteredBookings.length === 0 ? (
+          <div className="p-8 text-center text-muted-foreground">
+            {t.common.noResults}
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Guest</TableHead>
+                <TableHead>Dates</TableHead>
+                <TableHead>Guests</TableHead>
+                <TableHead>Total</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {filteredBookings.map((booking) => (
+                <TableRow key={booking.id}>
+                  <TableCell>
+                    <div>
+                      <p className="font-medium">{booking.guest_name}</p>
+                      <p className="text-sm text-muted-foreground">{booking.guest_email}</p>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <p className="text-sm">
+                      {format(new Date(booking.check_in), 'MMM d')} - {format(new Date(booking.check_out), 'MMM d, yyyy')}
+                    </p>
+                  </TableCell>
+                  <TableCell>{booking.num_guests}</TableCell>
+                  <TableCell className="font-semibold">€{Number(booking.total_price).toLocaleString()}</TableCell>
+                  <TableCell>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
+                      {t.admin[booking.status as keyof typeof t.admin] || booking.status}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedBooking(booking)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      {booking.status === 'pending' && (
+                        <>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-primary hover:text-primary"
+                            onClick={() => handleStatusChange(booking.id, 'confirmed')}
+                            disabled={updateBooking.isPending}
+                          >
+                            <Check className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => handleStatusChange(booking.id, 'declined')}
+                            disabled={updateBooking.isPending}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </div>
 
       {/* Booking Details Dialog */}
@@ -195,56 +187,49 @@ export function AdminBookings() {
           </DialogHeader>
           {selectedBooking && (
             <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <User className="h-6 w-6 text-primary" />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-muted rounded-lg p-3">
+                  <p className="text-sm text-muted-foreground">Check-in</p>
+                  <p className="font-semibold">{format(new Date(selectedBooking.check_in), 'PPP')}</p>
                 </div>
-                <div>
-                  <p className="font-semibold">{selectedBooking.guestName}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedBooking.guests} guests
-                  </p>
+                <div className="bg-muted rounded-lg p-3">
+                  <p className="text-sm text-muted-foreground">Check-out</p>
+                  <p className="font-semibold">{format(new Date(selectedBooking.check_out), 'PPP')}</p>
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <a
-                  href={`mailto:${selectedBooking.email}`}
-                  className="flex items-center gap-2 text-sm hover:text-primary"
-                >
-                  <Mail className="h-4 w-4" />
-                  {selectedBooking.email}
-                </a>
-                <a
-                  href={`tel:${selectedBooking.phone}`}
-                  className="flex items-center gap-2 text-sm hover:text-primary"
-                >
-                  <Phone className="h-4 w-4" />
-                  {selectedBooking.phone}
-                </a>
-              </div>
-
-              <div className="bg-muted rounded-lg p-4 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Check-in</span>
-                  <span className="font-medium">{format(selectedBooking.checkIn, 'PPP')}</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span>{selectedBooking.guest_name}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Check-out</span>
-                  <span className="font-medium">{format(selectedBooking.checkOut, 'PPP')}</span>
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <a href={`mailto:${selectedBooking.guest_email}`} className="text-primary hover:underline">
+                    {selectedBooking.guest_email}
+                  </a>
                 </div>
-                <div className="flex justify-between text-sm pt-2 border-t">
-                  <span className="text-muted-foreground">Total</span>
-                  <span className="font-bold text-primary">€{selectedBooking.totalPrice}</span>
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <a href={`tel:${selectedBooking.guest_phone}`} className="text-primary hover:underline">
+                    {selectedBooking.guest_phone}
+                  </a>
                 </div>
               </div>
 
               {selectedBooking.message && (
-                <div className="bg-muted rounded-lg p-4">
+                <div className="bg-muted rounded-lg p-3">
                   <p className="text-sm text-muted-foreground mb-1">Message</p>
-                  <p className="text-sm">{selectedBooking.message}</p>
+                  <p>{selectedBooking.message}</p>
                 </div>
               )}
+
+              <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+                <div className="flex justify-between items-center">
+                  <span>Total</span>
+                  <span className="text-xl font-bold text-primary">€{Number(selectedBooking.total_price).toLocaleString()}</span>
+                </div>
+              </div>
 
               <div className="flex gap-2">
                 <Button
@@ -253,7 +238,7 @@ export function AdminBookings() {
                   asChild
                 >
                   <a
-                    href={`https://wa.me/${selectedBooking.phone.replace(/\D/g, '')}`}
+                    href={`https://wa.me/${selectedBooking.guest_phone.replace(/[^0-9]/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -264,14 +249,20 @@ export function AdminBookings() {
                 {selectedBooking.status === 'pending' && (
                   <>
                     <Button
-                      variant="hero"
-                      onClick={() => {
-                        updateStatus(selectedBooking.id, 'confirmed');
-                        setSelectedBooking(null);
-                      }}
+                      variant="default"
+                      onClick={() => handleStatusChange(selectedBooking.id, 'confirmed')}
+                      disabled={updateBooking.isPending}
                     >
                       <Check className="h-4 w-4 mr-2" />
                       Confirm
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleStatusChange(selectedBooking.id, 'declined')}
+                      disabled={updateBooking.isPending}
+                    >
+                      <X className="h-4 w-4 mr-2" />
+                      Decline
                     </Button>
                   </>
                 )}

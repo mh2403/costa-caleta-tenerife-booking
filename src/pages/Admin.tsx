@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,42 +9,49 @@ import {
   Calendar,
   DollarSign,
   CalendarX,
-  FileText,
-  Settings,
   LogOut,
   Menu,
   X,
+  Loader2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AdminBookings } from '@/components/admin/AdminBookings';
 import { AdminPricing } from '@/components/admin/AdminPricing';
 import { AdminAvailability } from '@/components/admin/AdminAvailability';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
-
-// Simple auth state - in production, use proper authentication
-const ADMIN_PASSWORD = 'admin123'; // Change this!
+import { useAuth } from '@/hooks/useAuth';
 
 const Admin = () => {
   const { t } = useLanguage();
   const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+  const { user, isAdmin, loading, signIn, signOut } = useAuth();
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setError('');
-    } else {
+    setError('');
+    setIsLoggingIn(true);
+
+    try {
+      const { error: signInError } = await signIn(email, password);
+      if (signInError) {
+        setError(signInError.message || t.admin.invalidCredentials);
+      }
+    } catch (err) {
       setError(t.admin.invalidCredentials);
+    } finally {
+      setIsLoggingIn(false);
     }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setPassword('');
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/admin');
   };
 
   const navItems = [
@@ -59,7 +66,17 @@ const Admin = () => {
     return location.pathname.startsWith(path);
   };
 
-  if (!isAuthenticated) {
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // Show login form if not authenticated or not admin
+  if (!user || !isAdmin) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <div className="w-full max-w-md">
@@ -71,26 +88,56 @@ const Admin = () => {
               <h1 className="font-heading text-2xl font-bold text-foreground">
                 {t.admin.login}
               </h1>
+              {user && !isAdmin && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  You don't have admin access. Please contact the owner.
+                </p>
+              )}
             </div>
 
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Label htmlFor="password">{t.admin.password}</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="mt-1"
-                />
-              </div>
-              {error && (
-                <p className="text-sm text-destructive">{error}</p>
-              )}
-              <Button variant="hero" className="w-full">
-                {t.admin.login}
+            {!user ? (
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div>
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="password">{t.admin.password}</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="mt-1"
+                    required
+                  />
+                </div>
+                {error && (
+                  <p className="text-sm text-destructive">{error}</p>
+                )}
+                <Button variant="hero" className="w-full" disabled={isLoggingIn}>
+                  {isLoggingIn ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      {t.common.loading}
+                    </>
+                  ) : (
+                    t.admin.login
+                  )}
+                </Button>
+              </form>
+            ) : (
+              <Button variant="outline" className="w-full" onClick={handleLogout}>
+                {t.admin.logout}
               </Button>
-            </form>
+            )}
 
             <div className="mt-6 text-center">
               <Link to="/" className="text-sm text-muted-foreground hover:text-primary">
@@ -149,8 +196,11 @@ const Admin = () => {
             ))}
           </nav>
 
-          {/* Logout */}
+          {/* User Info & Logout */}
           <div className="p-4 border-t border-border">
+            <p className="text-xs text-muted-foreground mb-2 truncate">
+              {user.email}
+            </p>
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground w-full transition-colors"
