@@ -2,34 +2,33 @@ import { useState } from 'react';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
-import { addDays, isSameDay, isWithinInterval } from 'date-fns';
-import { CalendarX, CalendarCheck } from 'lucide-react';
-
-// Mock data
-const initialBlockedDates = [
-  { start: addDays(new Date(), 30), end: addDays(new Date(), 35) },
-  { start: addDays(new Date(), 50), end: addDays(new Date(), 52) },
-];
-
-const bookedDates = [
-  { start: addDays(new Date(), 5), end: addDays(new Date(), 10) },
-  { start: addDays(new Date(), 20), end: addDays(new Date(), 25) },
-];
+import { isSameDay, isWithinInterval, addDays } from 'date-fns';
+import { CalendarX, CalendarCheck, Loader2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { useToast } from '@/hooks/use-toast';
+import { useBlockedDates, useCreateBlockedDate, useDeleteBlockedDate } from '@/hooks/useBlockedDates';
+import { useBookedDates } from '@/hooks/useBookings';
 
 export function AdminAvailability() {
   const { t } = useLanguage();
-  const [blockedDates, setBlockedDates] = useState(initialBlockedDates);
+  const { toast } = useToast();
+  const { data: blockedDatesData = [], isLoading: loadingBlocked } = useBlockedDates();
+  const { data: bookedDates = [], isLoading: loadingBooked } = useBookedDates();
+  const createBlockedDate = useCreateBlockedDate();
+  const deleteBlockedDate = useDeleteBlockedDate();
+
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
-  const [mode, setMode] = useState<'block' | 'unblock'>('block');
+
+  const isLoading = loadingBlocked || loadingBooked;
 
   const isDateBooked = (date: Date) => {
     return bookedDates.some(booking =>
-      isWithinInterval(date, { start: booking.start, end: booking.end })
+      isWithinInterval(date, { start: booking.start, end: addDays(booking.end, -1) })
     );
   };
 
   const isDateBlocked = (date: Date) => {
-    return blockedDates.some(blocked =>
+    return blockedDatesData.some(blocked =>
       isWithinInterval(date, { start: blocked.start, end: blocked.end })
     );
   };
@@ -37,7 +36,15 @@ export function AdminAvailability() {
   const handleDateSelect = (date: Date | undefined) => {
     if (!date) return;
 
-    if (isDateBooked(date)) return; // Can't modify booked dates
+    // Can't modify booked dates
+    if (isDateBooked(date)) {
+      toast({
+        title: 'This date is already booked',
+        description: 'You cannot block a date that has a confirmed booking.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     const isSelected = selectedDates.some(d => isSameDay(d, date));
     if (isSelected) {
@@ -47,41 +54,59 @@ export function AdminAvailability() {
     }
   };
 
-  const handleBlockDates = () => {
+  const handleBlockDates = async () => {
     if (selectedDates.length === 0) return;
 
     const sortedDates = [...selectedDates].sort((a, b) => a.getTime() - b.getTime());
-    const newBlocked = {
-      start: sortedDates[0],
-      end: sortedDates[sortedDates.length - 1],
-    };
-
-    setBlockedDates([...blockedDates, newBlocked]);
-    setSelectedDates([]);
+    
+    try {
+      await createBlockedDate.mutateAsync({
+        start_date: format(sortedDates[0], 'yyyy-MM-dd'),
+        end_date: format(sortedDates[sortedDates.length - 1], 'yyyy-MM-dd'),
+        reason: 'Blocked by owner',
+      });
+      toast({ title: t.common.success, description: 'Dates blocked successfully' });
+      setSelectedDates([]);
+    } catch (error) {
+      toast({ title: t.common.error, variant: 'destructive' });
+    }
   };
 
-  const handleUnblockDates = () => {
-    const newBlocked = blockedDates.filter(blocked => {
-      return !selectedDates.some(date =>
+  const handleUnblockDates = async () => {
+    // Find which blocked date ranges contain any of the selected dates
+    const blockedToRemove = blockedDatesData.filter(blocked =>
+      selectedDates.some(date =>
         isWithinInterval(date, { start: blocked.start, end: blocked.end })
-      );
-    });
-    setBlockedDates(newBlocked);
-    setSelectedDates([]);
+      )
+    );
+
+    try {
+      for (const blocked of blockedToRemove) {
+        await deleteBlockedDate.mutateAsync(blocked.id);
+      }
+      toast({ title: t.common.success, description: 'Dates unblocked successfully' });
+      setSelectedDates([]);
+    } catch (error) {
+      toast({ title: t.common.error, variant: 'destructive' });
+    }
   };
 
-  const getDayClassName = (date: Date) => {
-    if (isDateBooked(date)) {
-      return 'bg-primary/20 text-primary';
+  const handleRemoveBlocked = async (id: string) => {
+    try {
+      await deleteBlockedDate.mutateAsync(id);
+      toast({ title: t.common.success });
+    } catch (error) {
+      toast({ title: t.common.error, variant: 'destructive' });
     }
-    if (isDateBlocked(date)) {
-      return 'bg-destructive/20 text-destructive';
-    }
-    if (selectedDates.some(d => isSameDay(d, date))) {
-      return 'bg-secondary text-secondary-foreground';
-    }
-    return '';
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -143,19 +168,27 @@ export function AdminAvailability() {
               <Button
                 variant="destructive"
                 className="w-full flex items-center gap-2"
-                disabled={selectedDates.length === 0}
+                disabled={selectedDates.length === 0 || createBlockedDate.isPending}
                 onClick={handleBlockDates}
               >
-                <CalendarX className="h-4 w-4" />
+                {createBlockedDate.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <CalendarX className="h-4 w-4" />
+                )}
                 {t.admin.blockDates}
               </Button>
               <Button
                 variant="outline"
                 className="w-full flex items-center gap-2"
-                disabled={selectedDates.length === 0}
+                disabled={selectedDates.length === 0 || deleteBlockedDate.isPending}
                 onClick={handleUnblockDates}
               >
-                <CalendarCheck className="h-4 w-4" />
+                {deleteBlockedDate.isPending ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <CalendarCheck className="h-4 w-4" />
+                )}
                 {t.admin.unblockDates}
               </Button>
             </div>
@@ -164,25 +197,24 @@ export function AdminAvailability() {
           {/* Blocked Periods List */}
           <div className="bg-card rounded-xl p-6 shadow-soft">
             <h3 className="font-heading text-lg font-semibold mb-4">Blocked Periods</h3>
-            {blockedDates.length === 0 ? (
+            {blockedDatesData.length === 0 ? (
               <p className="text-sm text-muted-foreground">No blocked dates</p>
             ) : (
               <div className="space-y-2">
-                {blockedDates.map((blocked, index) => (
+                {blockedDatesData.map((blocked) => (
                   <div
-                    key={index}
+                    key={blocked.id}
                     className="flex items-center justify-between p-3 bg-muted rounded-lg text-sm"
                   >
                     <span>
-                      {blocked.start.toLocaleDateString()} - {blocked.end.toLocaleDateString()}
+                      {format(blocked.start, 'MMM d, yyyy')} - {format(blocked.end, 'MMM d, yyyy')}
                     </span>
                     <Button
                       variant="ghost"
                       size="sm"
                       className="text-destructive hover:text-destructive"
-                      onClick={() => {
-                        setBlockedDates(blockedDates.filter((_, i) => i !== index));
-                      }}
+                      onClick={() => handleRemoveBlocked(blocked.id)}
+                      disabled={deleteBlockedDate.isPending}
                     >
                       Remove
                     </Button>

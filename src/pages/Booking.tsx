@@ -8,26 +8,16 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { useLanguage } from '@/i18n';
-import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone } from 'lucide-react';
+import { useLanguage, Language } from '@/i18n';
+import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-
-// Mock data for booked dates and pricing
-const bookedDates = [
-  { start: addDays(new Date(), 5), end: addDays(new Date(), 10) },
-  { start: addDays(new Date(), 20), end: addDays(new Date(), 25) },
-];
-
-const seasonalPricing = [
-  { name: 'High Season', start: new Date(2026, 11, 1), end: new Date(2027, 2, 31), price: 120 },
-  { name: 'Low Season', start: new Date(2026, 3, 1), end: new Date(2026, 10, 30), price: 80 },
-];
-
-const basePrice = 90;
-const cleaningFee = 50;
+import { useCreateBooking, useBookedDates } from '@/hooks/useBookings';
+import { usePricingRules } from '@/hooks/usePricing';
+import { useSettings } from '@/hooks/useSettings';
+import { useBlockedDates } from '@/hooks/useBlockedDates';
 
 const Booking = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [checkIn, setCheckIn] = useState<Date>();
@@ -41,22 +31,46 @@ const Booking = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
+  // Fetch data from database
+  const { data: bookedDates = [], isLoading: loadingBookings } = useBookedDates();
+  const { data: pricingRules = [], isLoading: loadingPricing } = usePricingRules();
+  const { data: blockedDates = [], isLoading: loadingBlocked } = useBlockedDates();
+  const { data: settings, isLoading: loadingSettings } = useSettings();
+  const createBooking = useCreateBooking();
+
+  const basePrice = settings?.base_price?.amount ?? 85;
+  const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
+  const maxGuests = settings?.max_guests?.count ?? 6;
+  const whatsappNumber = settings?.whatsapp_number?.number ?? '+34600123456';
+
+  const isLoading = loadingBookings || loadingPricing || loadingBlocked || loadingSettings;
+
   const isDateBooked = (date: Date) => {
     return bookedDates.some(booking =>
-      isWithinInterval(date, { start: booking.start, end: booking.end })
+      isWithinInterval(date, { start: booking.start, end: addDays(booking.end, -1) })
+    );
+  };
+
+  const isDateBlocked = (date: Date) => {
+    return blockedDates.some(blocked =>
+      isWithinInterval(date, { start: blocked.start, end: blocked.end })
     );
   };
 
   const isDateDisabled = (date: Date) => {
     const today = startOfDay(new Date());
-    return isBefore(date, today) || isDateBooked(date);
+    return isBefore(date, today) || isDateBooked(date) || isDateBlocked(date);
   };
 
   const getPriceForDate = (date: Date) => {
-    const season = seasonalPricing.find(s =>
-      isWithinInterval(date, { start: s.start, end: s.end })
+    // Check seasonal pricing rules
+    const rule = pricingRules.find(r =>
+      isWithinInterval(date, {
+        start: new Date(r.start_date),
+        end: new Date(r.end_date),
+      })
     );
-    return season ? season.price : basePrice;
+    return rule ? Number(rule.price_per_night) : basePrice;
   };
 
   const { nights, totalNightsCost, totalPrice } = useMemo(() => {
@@ -74,12 +88,19 @@ const Booking = () => {
       totalNightsCost: nightsCost,
       totalPrice: nightsCost + cleaningFee,
     };
-  }, [checkIn, checkOut]);
+  }, [checkIn, checkOut, pricingRules, basePrice, cleaningFee]);
 
   const handleNext = () => {
     if (step === 1 && (!checkIn || !checkOut)) {
       toast({
         title: t.booking.selectDates,
+        variant: 'destructive',
+      });
+      return;
+    }
+    if (step === 1 && nights < 1) {
+      toast({
+        title: 'Please select at least one night',
         variant: 'destructive',
       });
       return;
@@ -91,7 +112,7 @@ const Booking = () => {
     setStep(step - 1);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Validate form
     if (!formData.fullName || !formData.email || !formData.phone) {
       toast({
@@ -101,16 +122,32 @@ const Booking = () => {
       return;
     }
 
-    // In production, this would send an email to both guest and owner
-    console.log('Booking submitted:', {
-      checkIn,
-      checkOut,
-      guests,
-      ...formData,
-      totalPrice,
-    });
+    if (!checkIn || !checkOut) return;
 
-    setSubmitted(true);
+    try {
+      await createBooking.mutateAsync({
+        guest_name: formData.fullName,
+        guest_email: formData.email,
+        guest_phone: formData.phone,
+        check_in: format(checkIn, 'yyyy-MM-dd'),
+        check_out: format(checkOut, 'yyyy-MM-dd'),
+        num_guests: parseInt(guests),
+        message: formData.message || null,
+        language: language as 'en' | 'nl' | 'es' | 'fr',
+        total_price: totalPrice,
+        cleaning_fee: cleaningFee,
+        status: 'pending',
+      });
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Booking error:', error);
+      toast({
+        title: t.common.error,
+        description: 'Failed to submit booking. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   if (submitted) {
@@ -154,7 +191,7 @@ const Booking = () => {
               </p>
               <Button variant="whatsapp" size="lg" asChild>
                 <a
-                  href="https://wa.me/34600123456"
+                  href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2"
@@ -165,6 +202,18 @@ const Booking = () => {
               </Button>
             </div>
           </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 pt-20 md:pt-24 flex items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </main>
         <Footer />
       </div>
@@ -240,7 +289,7 @@ const Booking = () => {
                       mode="single"
                       selected={checkOut}
                       onSelect={setCheckOut}
-                      disabled={(date) => isDateDisabled(date) || (checkIn ? isBefore(date, checkIn) : false)}
+                      disabled={(date) => isDateDisabled(date) || (checkIn ? isBefore(date, addDays(checkIn, 1)) : false)}
                       className="rounded-md border pointer-events-auto"
                     />
                   </div>
@@ -252,7 +301,7 @@ const Booking = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-popover z-50">
-                        {[1, 2, 3, 4, 5, 6].map((n) => (
+                        {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
                           <SelectItem key={n} value={n.toString()}>
                             {n} {t.booking.guestsCount}
                           </SelectItem>
@@ -412,8 +461,20 @@ const Booking = () => {
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               ) : (
-                <Button variant="hero" onClick={handleSubmit} size="lg">
-                  {t.booking.submit}
+                <Button
+                  variant="hero"
+                  onClick={handleSubmit}
+                  size="lg"
+                  disabled={createBooking.isPending}
+                >
+                  {createBooking.isPending ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      {t.common.loading}
+                    </>
+                  ) : (
+                    t.booking.submit
+                  )}
                 </Button>
               )}
             </div>
