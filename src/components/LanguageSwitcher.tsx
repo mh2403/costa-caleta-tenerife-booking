@@ -18,7 +18,7 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
 
-  const languages: Language[] = ['en', 'nl', 'es', 'fr'];
+  const languages: Language[] = ['en', 'nl', 'es'];
 
   if (variant === 'minimal') {
     return (

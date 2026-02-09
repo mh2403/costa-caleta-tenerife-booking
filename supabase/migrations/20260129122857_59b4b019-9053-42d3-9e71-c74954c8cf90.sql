@@ -227,7 +227,7 @@ INSERT INTO public.settings (key, value) VALUES
     ('base_price', '{"amount": 85}'),
     ('cleaning_fee', '{"amount": 50}'),
     ('check_in_time', '{"time": "15:00"}'),
-    ('check_out_time', '{"time": "10:00"}'),
+    ('check_out_time', '{"time": "12:00"}'),
     ('max_guests', '{"count": 4}'),
     ('owner_email', '{"email": "owner@example.com"}'),
     ('owner_phone', '{"phone": "+34 XXX XXX XXX"}'),

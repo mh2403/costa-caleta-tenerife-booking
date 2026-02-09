@@ -8,9 +8,9 @@ export function Footer() {
 
   // Placeholder contact info - admin can customize
   const contactInfo = {
-    phone: '+34 600 123 456',
-    email: 'hello@casatenerife.com',
-    whatsapp: '34600123456',
+    phone: '+32 475 96 51 41',
+    email: 'martine.govaert@gmail.com',
+    whatsapp: '32475965141',
   };
 
   return (
@@ -71,7 +71,7 @@ export function Footer() {
                 className="flex items-center gap-2 text-background/70 hover:text-background transition-colors text-sm"
               >
                 <MessageCircle className="h-4 w-4" />
-                {t.contact.whatsapp}
+                WhatsApp: {contactInfo.phone}
               </a>
             </div>
           </div>

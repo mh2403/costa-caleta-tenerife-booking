@@ -1,4 +1,4 @@
-export type Language = 'en' | 'nl' | 'es' | 'fr';
+export type Language = 'en' | 'nl' | 'es';
 
 export interface Translations {
   // Navigation
@@ -16,6 +16,11 @@ export interface Translations {
     bookNow: string;
     fromPrice: string;
     perNight: string;
+  };
+  // CTA section
+  cta: {
+    title: string;
+    subtitle: string;
   };
   // Facilities
   facilities: {
@@ -36,7 +41,9 @@ export interface Translations {
   location: {
     title: string;
     subtitle: string;
+    region: string;
     description: string;
+    highlights: { label: string; desc: string }[];
   };
   // Testimonials
   testimonials: {
@@ -168,24 +175,52 @@ export const translations: Record<Language, Translations> = {
       fromPrice: 'From',
       perNight: '/ night',
     },
+    cta: {
+      title: 'Ready for Your Tenerife Escape?',
+      subtitle: 'Book directly with us for the best rates. No hidden fees, no middlemen — just your perfect vacation home.',
+    },
     facilities: {
       title: 'Amenities & Facilities',
       subtitle: 'Everything you need for a comfortable stay',
-      wifi: 'High-Speed WiFi',
-      kitchen: 'Fully Equipped Kitchen',
-      aircon: 'Air Conditioning',
-      washing: 'Washing Machine',
-      tv: 'Smart TV',
-      balcony: 'Private Balcony',
-      parking: 'Free Parking',
-      pool: 'Swimming Pool',
-      beach: 'Beach Access',
-      towels: 'Fresh Towels',
+      wifi: 'Wi-Fi',
+      kitchen: 'Fully equipped kitchen',
+      aircon: 'Nespresso, kettle, toaster & juicer',
+      washing: 'Washing machine + drying rack',
+      tv: 'TV',
+      balcony: 'Sunny terrace with sea & mountain views',
+      parking: 'Street parking / plaza (50 m)',
+      pool: 'Shared pool + sun loungers',
+      beach: 'La Caleta bay',
+      towels: 'Linens & towels included',
     },
     location: {
-      title: 'Perfect Location',
-      subtitle: 'Discover the beauty of Tenerife',
-      description: 'Nestled in a peaceful area with stunning ocean views, our apartment offers the perfect base for exploring Tenerife. Just minutes from beautiful beaches, local restaurants, and hiking trails.',
+      title: 'Prime Location in La Caleta',
+      subtitle: 'In the bay of La Caleta, Adeje',
+      region: 'La Caleta • Adeje',
+      description: `Located in the Costa Caleta residence in La Caleta (Adeje), on the 4th floor. There are 2 lifts and a shared pool with sun loungers. Beautifully renovated 1-bedroom apartment with a sunny terrace, sea views and mountain views.
+Very well located, close to supermarket, restaurants, bars, shops, nature and Adeje Golf. From the apartment you can take the promenade to Los Cristianos, or through nature towards El Puertito or Playa Paraiso.
+
+Apartment includes:
+- Living room with sunny terrace and sea view, TV and Wi-Fi.
+- Kitchen with fridge, freezer, induction hob, microwave, oven and dishwasher.
+- Nespresso machine, kettle, toaster, juicer.
+- Iron, ironing board and vacuum cleaner.
+- Bathroom with walk-in shower, toilet, hairdryer, styler and window.
+- Bedroom with king bed (1.80 x 2m), built-in wardrobe and terrace.
+- Terrace with drying rack and washing machine.
+
+Practical:
+- Bed linen and towels included.
+- Utilities (electricity and internet) included.
+- Meet & greet, key handover on site.
+- Check-in after 15:00, check-out before 12:00.
+- Parking on the street or a square 50 m away.`,
+      highlights: [
+        { label: 'Nearby', desc: 'Supermarket & shops' },
+        { label: 'Nearby', desc: 'Restaurants & bars' },
+        { label: 'Promenade', desc: 'Los Cristianos' },
+        { label: 'Nature', desc: 'El Puertito / Playa Paraiso' },
+      ],
     },
     testimonials: {
       title: 'Guest Experiences',
@@ -218,7 +253,7 @@ export const translations: Record<Language, Translations> = {
       available: 'Available',
       confirmationTitle: 'Booking Request Sent!',
       confirmationMessage: 'Thank you for your booking request. We will confirm your reservation shortly.',
-      disclaimer: 'This is a booking request. Availability will be confirmed within 24 hours.',
+      disclaimer: 'This is a booking request. Availability will be confirmed within 24 hours. Meet & greet on arrival; keys handed over on site. Check-in after 15:00, check-out before 12:00.',
       whatsappNote: 'Need to modify your booking? Contact us via WhatsApp.',
       minStayNote: 'Minimum stay: {n} night(s)',
       minStayError: 'Minimum stay is {n} night(s) for the selected dates.',
@@ -309,24 +344,52 @@ export const translations: Record<Language, Translations> = {
       fromPrice: 'Vanaf',
       perNight: '/ nacht',
     },
+    cta: {
+      title: 'Klaar voor uw Tenerife-escape?',
+      subtitle: 'Boek direct bij ons voor de beste tarieven. Geen verborgen kosten, geen tussenpersonen — gewoon uw perfecte vakantieverblijf.',
+    },
     facilities: {
       title: 'Voorzieningen & Faciliteiten',
       subtitle: 'Alles wat u nodig heeft voor een comfortabel verblijf',
-      wifi: 'Snelle WiFi',
-      kitchen: 'Volledig Uitgeruste Keuken',
-      aircon: 'Airconditioning',
-      washing: 'Wasmachine',
-      tv: 'Smart TV',
-      balcony: 'Privé Balkon',
-      parking: 'Gratis Parkeren',
-      pool: 'Zwembad',
-      beach: 'Strand Toegang',
-      towels: 'Verse Handdoeken',
+      wifi: 'WiFi',
+      kitchen: 'Volledig uitgeruste keuken',
+      aircon: 'Nespresso, waterkoker, broodrooster & fruitpers',
+      washing: 'Wasmachine + droogrek',
+      tv: 'TV',
+      balcony: 'Zonnig terras met zee- en bergzicht',
+      parking: 'Parkeren op straat/plein (50 m)',
+      pool: 'Gemeenschappelijk zwembad + ligstoelen',
+      beach: 'In de baai van La Caleta',
+      towels: 'Linnen & handdoeken inbegrepen',
     },
     location: {
-      title: 'Perfecte Locatie',
-      subtitle: 'Ontdek de schoonheid van Tenerife',
-      description: 'Gelegen in een rustige omgeving met prachtig uitzicht op zee, biedt ons appartement de perfecte uitvalsbasis om Tenerife te verkennen. Op slechts enkele minuten van prachtige stranden, lokale restaurants en wandelpaden.',
+      title: 'Toplocatie in La Caleta',
+      subtitle: 'In de baai van La Caleta, Adeje',
+      region: 'La Caleta • Adeje',
+      description: `Gelegen in residentie Costa Caleta in La Caleta (Adeje), op de 4de verdieping. Er zijn 2 liften en een gemeenschappelijk zwembad met ligstoelen. Prachtig nieuw gerenoveerd 1 slaapkamer appartement met zonnig terras, zeezicht en zicht op de bergen.
+Zeer goed gelegen, dichtbij supermarkt, restaurants, bars, winkels, de natuur en Adeje Golf. Vanaf het appartement kan u de promenade nemen tot aan Los Cristianos, of door de natuur richting El Puertito of Playa Paraiso.
+
+Appartement bevat:
+- Woonkamer met zonnig terras en zeezicht, tv en wifi.
+- Keuken met frigo, vriezer, inductie kookplaat, microgolf, oven en afwasmachine.
+- Nespresso machine, waterkoker, broodrooster, fruitpers.
+- Strijkijzer, strijkplank en stofzuiger.
+- Badkamer met inloopdouche, wc, haardroger, styletang en raam.
+- Slaapkamer met groot bed (1.80 x 2m), ingemaakte kast en terras.
+- Terras met droogrek en wasmachine.
+
+Praktisch:
+- Lakens en badhanddoeken inbegrepen.
+- Nutsvoorzieningen (elektriciteit en internet) inbegrepen.
+- Meet & greet, sleuteloverhandiging ter plaatse.
+- Aankomst na 15u, vertrek voor 12u.
+- Parkeren op straat of op een plein op 50m afstand.`,
+      highlights: [
+        { label: 'Dichtbij', desc: 'Supermarkt & winkels' },
+        { label: 'Dichtbij', desc: 'Restaurants & bars' },
+        { label: 'Promenade', desc: 'Los Cristianos' },
+        { label: 'Natuur', desc: 'El Puertito / Playa Paraiso' },
+      ],
     },
     testimonials: {
       title: 'Gastervaringen',
@@ -359,7 +422,7 @@ export const translations: Record<Language, Translations> = {
       available: 'Beschikbaar',
       confirmationTitle: 'Boekingsverzoek Verzonden!',
       confirmationMessage: 'Bedankt voor uw boekingsverzoek. Wij bevestigen uw reservering zo spoedig mogelijk.',
-      disclaimer: 'Dit is een boekingsverzoek. Beschikbaarheid wordt binnen 24 uur bevestigd.',
+      disclaimer: 'Dit is een boekingsverzoek. Beschikbaarheid wordt binnen 24 uur bevestigd. Meet & greet ter plaatse; sleuteloverhandiging bij aankomst. Aankomst na 15u, vertrek voor 12u.',
       whatsappNote: 'Wilt u uw boeking wijzigen? Neem contact op via WhatsApp.',
       minStayNote: 'Minimum verblijf: {n} nacht(en)',
       minStayError: 'Minimum verblijf is {n} nacht(en) voor de geselecteerde data.',
@@ -450,24 +513,52 @@ export const translations: Record<Language, Translations> = {
       fromPrice: 'Desde',
       perNight: '/ noche',
     },
+    cta: {
+      title: '¿Listo para tu escapada en Tenerife?',
+      subtitle: 'Reserva directamente con nosotros para las mejores tarifas. Sin cargos ocultos, sin intermediarios — solo tu hogar vacacional perfecto.',
+    },
     facilities: {
       title: 'Servicios e Instalaciones',
       subtitle: 'Todo lo que necesitas para una estancia cómoda',
-      wifi: 'WiFi de Alta Velocidad',
-      kitchen: 'Cocina Totalmente Equipada',
-      aircon: 'Aire Acondicionado',
-      washing: 'Lavadora',
-      tv: 'Smart TV',
-      balcony: 'Balcón Privado',
-      parking: 'Aparcamiento Gratuito',
-      pool: 'Piscina',
-      beach: 'Acceso a la Playa',
-      towels: 'Toallas Limpias',
+      wifi: 'Wi-Fi',
+      kitchen: 'Cocina totalmente equipada',
+      aircon: 'Nespresso, hervidor, tostadora y exprimidor',
+      washing: 'Lavadora + tendedero',
+      tv: 'TV',
+      balcony: 'Terraza soleada con vistas al mar y a la montaña',
+      parking: 'Aparcamiento en la calle / plaza (50 m)',
+      pool: 'Piscina comunitaria + tumbonas',
+      beach: 'Bahía de La Caleta',
+      towels: 'Sábanas y toallas incluidas',
     },
     location: {
-      title: 'Ubicación Perfecta',
-      subtitle: 'Descubre la belleza de Tenerife',
-      description: 'Situado en una zona tranquila con impresionantes vistas al mar, nuestro apartamento ofrece la base perfecta para explorar Tenerife. A pocos minutos de hermosas playas, restaurantes locales y rutas de senderismo.',
+      title: 'Ubicación ideal en La Caleta',
+      subtitle: 'En la bahía de La Caleta, Adeje',
+      region: 'La Caleta • Adeje',
+      description: `Ubicado en la residencia Costa Caleta en La Caleta (Adeje), en la 4a planta. Hay 2 ascensores y una piscina comunitaria con tumbonas. Apartamento de 1 dormitorio, recientemente renovado, con terraza soleada, vistas al mar y a la montaña.
+Muy bien situado, cerca de supermercado, restaurantes, bares, tiendas, naturaleza y Adeje Golf. Desde el apartamento puede tomar el paseo hasta Los Cristianos, o por la naturaleza hacia El Puertito o Playa Paraiso.
+
+El apartamento incluye:
+- Sala de estar con terraza soleada y vistas al mar, TV y Wi-Fi.
+- Cocina con nevera, congelador, placa de inducción, microondas, horno y lavavajillas.
+- Cafetera Nespresso, hervidor, tostadora, exprimidor.
+- Plancha, tabla de planchar y aspiradora.
+- Baño con ducha a ras de suelo, WC, secador, plancha de pelo y ventana.
+- Dormitorio con cama grande (1.80 x 2m), armario empotrado y terraza.
+- Terraza con tendedero y lavadora.
+
+Práctico:
+- Ropa de cama y toallas incluidas.
+- Servicios (electricidad e internet) incluidos.
+- Meet & greet, entrega de llaves en el lugar.
+- Llegada después de las 15:00, salida antes de las 12:00.
+- Aparcamiento en la calle o en una plaza a 50 m.`,
+      highlights: [
+        { label: 'Cerca', desc: 'Supermercado y tiendas' },
+        { label: 'Cerca', desc: 'Restaurantes y bares' },
+        { label: 'Paseo', desc: 'Los Cristianos' },
+        { label: 'Naturaleza', desc: 'El Puertito / Playa Paraiso' },
+      ],
     },
     testimonials: {
       title: 'Experiencias de Huéspedes',
@@ -500,7 +591,7 @@ export const translations: Record<Language, Translations> = {
       available: 'Disponible',
       confirmationTitle: '¡Solicitud de Reserva Enviada!',
       confirmationMessage: 'Gracias por tu solicitud de reserva. Confirmaremos tu reserva en breve.',
-      disclaimer: 'Esta es una solicitud de reserva. La disponibilidad se confirmará en 24 horas.',
+      disclaimer: 'Esta es una solicitud de reserva. La disponibilidad se confirmará en 24 horas. Meet & greet a la llegada; entrega de llaves en el lugar. Llegada después de las 15:00, salida antes de las 12:00.',
       whatsappNote: '¿Necesitas modificar tu reserva? Contáctanos por WhatsApp.',
       minStayNote: 'Estancia mínima: {n} noche(s)',
       minStayError: 'La estancia mínima es de {n} noche(s) para las fechas seleccionadas.',
@@ -574,147 +665,6 @@ export const translations: Record<Language, Translations> = {
       close: 'Cerrar',
       viewDetails: 'Ver Detalles',
       noResults: 'No se encontraron resultados',
-    },
-  },
-  fr: {
-    nav: {
-      home: 'Accueil',
-      booking: 'Réserver',
-      contact: 'Contact',
-      admin: 'Admin',
-    },
-    hero: {
-      title: 'Votre Séjour Privé à Tenerife',
-      subtitle: 'Réservez directement — sans plateformes, sans frais supplémentaires. Vivez la chaleur des îles Canaries.',
-      checkAvailability: 'Voir Photos',
-      bookNow: 'Réserver Maintenant',
-      fromPrice: 'À partir de',
-      perNight: '/ nuit',
-    },
-    facilities: {
-      title: 'Équipements & Installations',
-      subtitle: 'Tout ce dont vous avez besoin pour un séjour confortable',
-      wifi: 'WiFi Haut Débit',
-      kitchen: 'Cuisine Entièrement Équipée',
-      aircon: 'Climatisation',
-      washing: 'Machine à Laver',
-      tv: 'Smart TV',
-      balcony: 'Balcon Privé',
-      parking: 'Parking Gratuit',
-      pool: 'Piscine',
-      beach: 'Accès Plage',
-      towels: 'Serviettes Fraîches',
-    },
-    location: {
-      title: 'Emplacement Parfait',
-      subtitle: 'Découvrez la beauté de Tenerife',
-      description: 'Niché dans un quartier paisible avec une vue imprenable sur l\'océan, notre appartement offre la base idéale pour explorer Tenerife. À quelques minutes de belles plages, restaurants locaux et sentiers de randonnée.',
-    },
-    testimonials: {
-      title: 'Expériences des Clients',
-      subtitle: 'Ce que nos clients disent de leur séjour',
-    },
-    booking: {
-      title: 'Réservez Votre Séjour',
-      subtitle: 'Réservation simple, pas de compte requis',
-      step1: 'Sélectionner les Dates',
-      step2: 'Vos Coordonnées',
-      step3: 'Confirmer',
-      checkIn: 'Arrivée',
-      checkOut: 'Départ',
-      guests: 'Voyageurs',
-      guestsCount: 'voyageur(s)',
-      fullName: 'Nom Complet',
-      email: 'Adresse Email',
-      phone: 'Numéro de Téléphone',
-      message: 'Message (optionnel)',
-      messagePlaceholder: 'Des demandes spéciales ou questions?',
-      next: 'Suivant',
-      back: 'Retour',
-      submit: 'Envoyer la Demande de Réservation',
-      priceBreakdown: 'Détail des Prix',
-      nights: 'nuits',
-      cleaningFee: 'Frais de Ménage',
-      total: 'Total',
-      selectDates: 'Veuillez sélectionner vos dates',
-      unavailable: 'Indisponible',
-      available: 'Disponible',
-      confirmationTitle: 'Demande de Réservation Envoyée!',
-      confirmationMessage: 'Merci pour votre demande de réservation. Nous confirmerons votre réservation sous peu.',
-      disclaimer: 'Ceci est une demande de réservation. La disponibilité sera confirmée sous 24 heures.',
-      whatsappNote: 'Besoin de modifier votre réservation? Contactez-nous via WhatsApp.',
-      minStayNote: 'Séjour minimum : {n} nuit(s)',
-      minStayError: 'Le séjour minimum est de {n} nuit(s) pour les dates sélectionnées.',
-      invalidDates: 'Veuillez sélectionner au moins une nuit.',
-      unavailableRange: 'Les dates sélectionnées incluent des jours indisponibles. Choisissez une autre période.',
-      requiredFields: 'Veuillez remplir tous les champs obligatoires.',
-      submitError: 'Échec de l’envoi de la réservation. Veuillez réessayer.',
-      paymentTitle: 'Paiement par virement bancaire',
-      paymentIntro: 'Nous acceptons uniquement le virement bancaire. Vous recevrez les détails de paiement après confirmation de la disponibilité.',
-      paymentDetailAccount: 'Titulaire du compte : [à ajouter]',
-      paymentDetailIban: 'IBAN : [à ajouter]',
-      paymentDetailBic: 'BIC/SWIFT : [à ajouter]',
-      paymentDetailReference: 'Référence : votre nom + dates',
-      paymentNote: 'La réservation est confirmée dès réception du paiement.',
-      checkInTime: 'Heure d’arrivée',
-      checkOutTime: 'Heure de départ',
-    },
-    contact: {
-      title: 'Contactez-Nous',
-      subtitle: 'Nous sommes là pour répondre à vos questions',
-      phone: 'Téléphone',
-      email: 'Email',
-      responseTime: 'Nous répondons sous 24 heures',
-      sendMessage: 'Envoyez-nous un message',
-      yourName: 'Votre Nom',
-      yourEmail: 'Votre Email',
-      yourMessage: 'Votre Message',
-      send: 'Envoyer le Message',
-      whatsapp: 'Discuter sur WhatsApp',
-    },
-    footer: {
-      rights: 'Tous droits réservés',
-      privacy: 'Politique de Confidentialité',
-      terms: 'Conditions d\'Utilisation',
-    },
-    admin: {
-      dashboard: 'Tableau de Bord',
-      bookings: 'Réservations',
-      pricing: 'Tarifs',
-      availability: 'Disponibilité',
-      content: 'Contenu',
-      settings: 'Paramètres',
-      logout: 'Déconnexion',
-      pending: 'En Attente',
-      confirmed: 'Confirmé',
-      declined: 'Refusé',
-      cancelled: 'Annulé',
-      confirmBooking: 'Confirmer Réservation',
-      declineBooking: 'Refuser Réservation',
-      guestDetails: 'Détails du Client',
-      seasonalPricing: 'Tarification Saisonnière',
-      addSeason: 'Ajouter une Saison',
-      basePriceLabel: 'Prix de Base (par nuit)',
-      seasonName: 'Nom de la Saison',
-      startDate: 'Date de Début',
-      endDate: 'Date de Fin',
-      pricePerNight: 'Prix par Nuit',
-      save: 'Enregistrer',
-      cancel: 'Annuler',
-      deleteConfirm: 'Êtes-vous sûr de vouloir supprimer ceci?',
-      blockDates: 'Bloquer les Dates',
-      unblockDates: 'Débloquer les Dates',
-      login: 'Connexion Admin',
-      password: 'Mot de Passe',
-      invalidCredentials: 'Identifiants invalides',
-    },
-    common: {
-      loading: 'Chargement...',
-      error: 'Une erreur est survenue',
-      success: 'Succès!',
-      close: 'Fermer',
-      viewDetails: 'Voir les Détails',
-      noResults: 'Aucun résultat trouvé',
     },
   },
 };

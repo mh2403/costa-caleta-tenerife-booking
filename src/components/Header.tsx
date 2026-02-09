@@ -41,7 +41,11 @@ export function Header() {
         <nav className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-2xl">🌴</span>
+            <img
+              src="/favicon.svg"
+              alt="Costa Caleta"
+              className="h-7 w-7 rounded-full shadow-soft"
+            />
             <span className={cn(
               'font-heading text-xl font-semibold transition-colors',
               isScrolled ? 'text-foreground' : 'text-foreground'

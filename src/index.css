@@ -211,6 +211,10 @@
     animation: slideInRight 0.5s ease-out forwards;
   }
 
+  .text-shadow-hero {
+    text-shadow: 0 6px 22px hsl(220 20% 10% / 0.55);
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;

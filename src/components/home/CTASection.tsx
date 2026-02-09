@@ -10,10 +10,10 @@ export function CTASection() {
     <section className="py-16 md:py-24 bg-gradient-sunset text-primary-foreground">
       <div className="container mx-auto px-4 text-center">
         <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-          Ready for Your Tenerife Escape?
+          {t.cta.title}
         </h2>
         <p className="text-primary-foreground/90 text-lg max-w-2xl mx-auto mb-8">
-          Book directly with us for the best rates. No hidden fees, no middlemen — just your perfect vacation home.
+          {t.cta.subtitle}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

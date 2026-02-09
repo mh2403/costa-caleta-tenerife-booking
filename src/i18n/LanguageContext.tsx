@@ -62,12 +62,10 @@ export const languageNames: Record<Language, string> = {
   en: 'English',
   nl: 'Nederlands',
   es: 'Español',
-  fr: 'Français',
 };
 
 export const languageFlags: Record<Language, string> = {
   en: '🇬🇧',
   nl: '🇳🇱',
   es: '🇪🇸',
-  fr: '🇫🇷',
 };

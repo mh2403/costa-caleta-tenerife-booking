@@ -41,9 +41,9 @@ const Booking = () => {
   const basePrice = settings?.base_price?.amount ?? 85;
   const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
   const maxGuests = settings?.max_guests?.count ?? 6;
-  const whatsappNumber = settings?.whatsapp_number?.number ?? '+34600123456';
+  const whatsappNumber = settings?.whatsapp_number?.number ?? '+32 475 96 51 41';
   const checkInTime = settings?.check_in_time?.time ?? '15:00';
-  const checkOutTime = settings?.check_out_time?.time ?? '10:00';
+  const checkOutTime = settings?.check_out_time?.time ?? '12:00';
   const currencySymbol = settings?.currency?.symbol ?? '€';
 
   const isLoading = loadingBookings || loadingPricing || loadingBlocked || loadingSettings;
@@ -230,7 +230,7 @@ const Booking = () => {
         check_out: format(checkOut, 'yyyy-MM-dd'),
         num_guests: parseInt(guests),
         message: formData.message || null,
-        language: language as 'en' | 'nl' | 'es' | 'fr',
+        language: language as 'en' | 'nl' | 'es',
         total_price: totalPrice,
         cleaning_fee: cleaningFee,
         status: 'pending',

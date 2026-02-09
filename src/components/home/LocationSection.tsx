@@ -13,7 +13,7 @@ export function LocationSection() {
             <div className="flex items-center gap-2 text-primary mb-4">
               <MapPin className="h-5 w-5" />
               <span className="text-sm font-semibold uppercase tracking-wider">
-                Tenerife, Canary Islands
+                {t.location.region}
               </span>
             </div>
             <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -22,18 +22,13 @@ export function LocationSection() {
             <p className="text-muted-foreground text-lg mb-6">
               {t.location.subtitle}
             </p>
-            <p className="text-foreground leading-relaxed">
+            <p className="text-foreground leading-relaxed whitespace-pre-line">
               {t.location.description}
             </p>
 
             {/* Highlights */}
             <div className="mt-8 grid grid-cols-2 gap-4">
-              {[
-                { label: '5 min', desc: 'Beach' },
-                { label: '10 min', desc: 'Restaurants' },
-                { label: '15 min', desc: 'Airport' },
-                { label: '30 min', desc: 'Mount Teide' },
-              ].map((item, index) => (
+              {t.location.highlights.map((item, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
                     <span className="text-sm font-bold text-secondary">{item.label}</span>
@@ -46,18 +41,13 @@ export function LocationSection() {
 
           {/* Map Placeholder */}
           <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-medium">
-            <div className="absolute inset-0 bg-muted flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="h-12 w-12 text-primary mx-auto mb-4" />
-                <p className="text-muted-foreground">
-                  Interactive map coming soon
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Costa Adeje, Tenerife
-                </p>
-              </div>
-            </div>
-            {/* When you have a Google Maps API key, replace with actual map */}
+            <iframe
+              title="Costa Caleta map"
+              src="https://www.google.com/maps?q=C.%20las%20Artes%2C%2024%2C%2038679%20La%20Caleta%2C%20Santa%20Cruz%20de%20Tenerife%2C%20Spanje&z=18&output=embed"
+              className="w-full h-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </div>

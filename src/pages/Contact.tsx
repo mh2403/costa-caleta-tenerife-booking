@@ -20,9 +20,9 @@ const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const contactInfo = {
-    phone: '+34 600 123 456',
-    email: 'hello@casatenerife.com',
-    whatsapp: '34600123456',
+    phone: '+32 475 96 51 41',
+    email: 'martine.govaert@gmail.com',
+    whatsapp: '32475965141',
     address: 'Costa Adeje, Tenerife, Canary Islands',
   };
 
@@ -109,7 +109,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">{t.contact.whatsapp}</p>
-                      <p className="text-[#25D366] text-lg">Chat Now</p>
+                      <p className="text-[#25D366] text-lg">{contactInfo.phone}</p>
                     </div>
                   </a>
 
