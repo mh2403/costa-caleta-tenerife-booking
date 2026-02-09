@@ -1,16 +1,42 @@
 import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import heroImage from '@/assets/hero-tenerife.jpg';
-import livingImage from '@/assets/apartment-living.jpg';
-import bedroomImage from '@/assets/apartment-bedroom.jpg';
-import kitchenImage from '@/assets/apartment-kitchen.jpg';
+import balconyMorningImage from '@/assets/CostaCaleta/BalconyView-Pic1.jpg';
+import balconyBreakfastImage from '@/assets/CostaCaleta/BalconyView-pic4.jpg';
+import balconyMountainBreakfastImage from '@/assets/CostaCaleta/BalconyView-pic5.jpg';
+import bedroomImage from '@/assets/CostaCaleta/Bedroom-pic1.jpg';
+import livingroomImage from '@/assets/CostaCaleta/Livingroom-pic1.jpg';
+import livingroomAltImage from '@/assets/CostaCaleta/Livingroom-pic2.jpg';
+import bathroomImage from '@/assets/CostaCaleta/Bathroom-pic1.jpg';
+import bathroomAltImage from '@/assets/CostaCaleta/Bathroom-pic2.jpg';
+import diningImage from '@/assets/CostaCaleta/DinnerTable-pic1.jpg';
+import poolImage from '@/assets/CostaCaleta/Pool-pic3.jpg';
+import poolAltImage from '@/assets/CostaCaleta/Pool-pic1.jpg';
+import poolsideImage from '@/assets/CostaCaleta/Poolside-pic2-crop.jpg';
+import poolsideSunsetImage from '@/assets/CostaCaleta/Poolside-pic3.jpg';
+import sunsetBeachImage from '@/assets/CostaCaleta/Nature-pic13.jpg';
+import coastalViewImage from '@/assets/CostaCaleta/Nature-pic3.jpg';
+import roadImage from '@/assets/CostaCaleta/TenerifeRoad-pic1.jpg';
 
 const images = [
-  { src: heroImage, alt: 'Balcony with ocean view' },
-  { src: livingImage, alt: 'Living room' },
+  // Apartment photos
+  { src: balconyMorningImage, alt: 'Balcony breakfast setup' },
+  { src: balconyBreakfastImage, alt: 'Breakfast table on the terrace' },
+  { src: balconyMountainBreakfastImage, alt: 'Breakfast with mountain view' },
   { src: bedroomImage, alt: 'Bedroom' },
-  { src: kitchenImage, alt: 'Kitchen' },
+  { src: livingroomImage, alt: 'Living room and kitchen' },
+  { src: livingroomAltImage, alt: 'Living room view from the terrace' },
+  { src: bathroomImage, alt: 'Bathroom with vanity' },
+  { src: bathroomAltImage, alt: 'Bathroom with shower' },
+  { src: diningImage, alt: 'Dining area' },
+  { src: poolImage, alt: 'Pool' },
+  { src: poolAltImage, alt: 'Pool view' },
+  { src: poolsideImage, alt: 'Poolside at the residence' },
+  { src: poolsideSunsetImage, alt: 'Pool terrace at sunset' },
+  // Tenerife atmosphere photos
+  { src: sunsetBeachImage, alt: 'Sunset at the beach' },
+  { src: coastalViewImage, alt: 'Coastline view of Tenerife' },
+  { src: roadImage, alt: 'Scenic road in Tenerife' },
 ];
 
 export function GallerySection() {

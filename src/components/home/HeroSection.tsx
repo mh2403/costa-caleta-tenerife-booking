@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
-import heroImage from '@/assets/hero-tenerife.jpg';
+import heroImage from '@/assets/CostaCaleta/BreakfastView-Pic2-hero.jpeg';
 
 export function HeroSection() {
   const { t } = useLanguage();
@@ -12,10 +12,10 @@ export function HeroSection() {
       <div className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Luxury apartment terrace with ocean view in Tenerife"
-          className="w-full h-full object-cover"
+          alt="Breakfast table with ocean view in La Caleta"
+          className="w-full h-full object-cover object-[center_60%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-foreground/40 via-foreground/20 to-foreground/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-foreground/45 via-foreground/20 to-foreground/65" />
       </div>
 
       {/* Content */}

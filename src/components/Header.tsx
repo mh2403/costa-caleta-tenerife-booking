@@ -46,7 +46,7 @@ export function Header() {
               'font-heading text-xl font-semibold transition-colors',
               isScrolled ? 'text-foreground' : 'text-foreground'
             )}>
-              Casa Tenerife
+              Costa Caleta
             </span>
           </Link>
 
@@ -68,7 +68,14 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <LanguageSwitcher />
+            <LanguageSwitcher
+              className={cn(
+                'transition-colors',
+                isScrolled
+                  ? 'bg-background/90 border-border text-foreground hover:bg-muted'
+                  : 'bg-primary-foreground/10 border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/20'
+              )}
+            />
             <Button asChild variant="hero" size="sm">
               <Link to="/booking">{t.hero.bookNow}</Link>
             </Button>
@@ -76,7 +83,15 @@ export function Header() {
 
           {/* Mobile Menu Button */}
           <div className="flex md:hidden items-center gap-2">
-            <LanguageSwitcher variant="minimal" />
+            <LanguageSwitcher
+              variant="minimal"
+              className={cn(
+                'transition-colors',
+                isScrolled
+                  ? 'bg-background/90 text-foreground hover:bg-muted'
+                  : 'bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20'
+              )}
+            />
             <Button
               variant="ghost"
               size="icon"

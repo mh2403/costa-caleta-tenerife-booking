@@ -172,7 +172,7 @@ const Admin = () => {
           <div className="p-6 border-b border-border">
             <Link to="/" className="flex items-center gap-2">
               <span className="text-2xl">🌴</span>
-              <span className="font-heading text-xl font-semibold">Casa Tenerife</span>
+              <span className="font-heading text-xl font-semibold">Costa Caleta</span>
             </Link>
           </div>
 
