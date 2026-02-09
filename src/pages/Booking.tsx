@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { format, addDays, differenceInDays, isWithinInterval, isBefore, startOfDay } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
@@ -42,6 +42,9 @@ const Booking = () => {
   const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
   const maxGuests = settings?.max_guests?.count ?? 6;
   const whatsappNumber = settings?.whatsapp_number?.number ?? '+34600123456';
+  const checkInTime = settings?.check_in_time?.time ?? '15:00';
+  const checkOutTime = settings?.check_out_time?.time ?? '10:00';
+  const currencySymbol = settings?.currency?.symbol ?? '€';
 
   const isLoading = loadingBookings || loadingPricing || loadingBlocked || loadingSettings;
 
@@ -62,6 +65,43 @@ const Booking = () => {
     return isBefore(date, today) || isDateBooked(date) || isDateBlocked(date);
   };
 
+  const isCheckOutDisabled = (date: Date) => {
+    if (!checkIn) return isDateDisabled(date);
+    if (isDateDisabled(date)) return true;
+    if (isBefore(date, addDays(checkIn, 1))) return true;
+    if (differenceInDays(date, checkIn) < minStayForCheckIn) return true;
+    return !isRangeAvailable(checkIn, date);
+  };
+
+  const rangesOverlap = (startA: Date, endA: Date, startB: Date, endB: Date) => {
+    return startA <= endB && startB <= endA;
+  };
+
+  const hasUnavailableInRange = (start: Date, end: Date) => {
+    const rangeStart = startOfDay(start);
+    const rangeEnd = startOfDay(addDays(end, -1));
+
+    if (isBefore(rangeEnd, rangeStart)) {
+      return true;
+    }
+
+    const overlapsBooking = bookedDates.some(booking => {
+      const bookingStart = startOfDay(booking.start);
+      const bookingEnd = startOfDay(addDays(booking.end, -1));
+      return rangesOverlap(rangeStart, rangeEnd, bookingStart, bookingEnd);
+    });
+
+    if (overlapsBooking) return true;
+
+    return blockedDates.some(blocked => {
+      const blockedStart = startOfDay(blocked.start);
+      const blockedEnd = startOfDay(blocked.end);
+      return rangesOverlap(rangeStart, rangeEnd, blockedStart, blockedEnd);
+    });
+  };
+
+  const isRangeAvailable = (start: Date, end: Date) => !hasUnavailableInRange(start, end);
+
   const getPriceForDate = (date: Date) => {
     // Check seasonal pricing rules
     const rule = pricingRules.find(r =>
@@ -73,11 +113,52 @@ const Booking = () => {
     return rule ? Number(rule.price_per_night) : basePrice;
   };
 
+  const getMinStayForDate = (date: Date) => {
+    const rule = pricingRules.find(r =>
+      isWithinInterval(date, {
+        start: new Date(r.start_date),
+        end: new Date(r.end_date),
+      })
+    );
+    return rule?.min_stay ? Number(rule.min_stay) : 1;
+  };
+
+  const getMinStayForRange = (start: Date, end: Date) => {
+    const nightsCount = differenceInDays(end, start);
+    const nightsToCheck = nightsCount > 0 ? nightsCount : 1;
+    let minStay = 1;
+
+    for (let i = 0; i < nightsToCheck; i++) {
+      const currentDate = addDays(start, i);
+      minStay = Math.max(minStay, getMinStayForDate(currentDate));
+    }
+
+    return minStay;
+  };
+
+  const minStayForCheckIn = useMemo(() => {
+    if (!checkIn) return 1;
+    return getMinStayForDate(checkIn);
+  }, [checkIn, pricingRules]);
+
+  const minStayForSelection = useMemo(() => {
+    if (!checkIn || !checkOut) return minStayForCheckIn;
+    return getMinStayForRange(checkIn, checkOut);
+  }, [checkIn, checkOut, minStayForCheckIn, pricingRules]);
+
+  useEffect(() => {
+    if (!checkIn || !checkOut) return;
+    const nightsCount = differenceInDays(checkOut, checkIn);
+    if (nightsCount < 1 || !isRangeAvailable(checkIn, checkOut)) {
+      setCheckOut(undefined);
+    }
+  }, [checkIn, checkOut, bookedDates, blockedDates, isRangeAvailable]);
+
   const { nights, totalNightsCost, totalPrice } = useMemo(() => {
     if (!checkIn || !checkOut) {
       return { nights: 0, totalNightsCost: 0, totalPrice: 0 };
     }
-    const nightCount = differenceInDays(checkOut, checkIn);
+    const nightCount = Math.max(differenceInDays(checkOut, checkIn), 0);
     let nightsCost = 0;
     for (let i = 0; i < nightCount; i++) {
       const currentDate = addDays(checkIn, i);
@@ -91,19 +172,35 @@ const Booking = () => {
   }, [checkIn, checkOut, pricingRules, basePrice, cleaningFee]);
 
   const handleNext = () => {
-    if (step === 1 && (!checkIn || !checkOut)) {
-      toast({
-        title: t.booking.selectDates,
-        variant: 'destructive',
-      });
-      return;
-    }
-    if (step === 1 && nights < 1) {
-      toast({
-        title: 'Please select at least one night',
-        variant: 'destructive',
-      });
-      return;
+    if (step === 1) {
+      if (!checkIn || !checkOut) {
+        toast({
+          title: t.booking.selectDates,
+          variant: 'destructive',
+        });
+        return;
+      }
+      if (nights < 1) {
+        toast({
+          title: t.booking.invalidDates,
+          variant: 'destructive',
+        });
+        return;
+      }
+      if (!isRangeAvailable(checkIn, checkOut)) {
+        toast({
+          title: t.booking.unavailableRange,
+          variant: 'destructive',
+        });
+        return;
+      }
+      if (nights < minStayForSelection) {
+        toast({
+          title: t.booking.minStayError.replace('{n}', String(minStayForSelection)),
+          variant: 'destructive',
+        });
+        return;
+      }
     }
     setStep(step + 1);
   };
@@ -116,7 +213,7 @@ const Booking = () => {
     // Validate form
     if (!formData.fullName || !formData.email || !formData.phone) {
       toast({
-        title: 'Please fill in all required fields',
+        title: t.booking.requiredFields,
         variant: 'destructive',
       });
       return;
@@ -144,11 +241,31 @@ const Booking = () => {
       console.error('Booking error:', error);
       toast({
         title: t.common.error,
-        description: 'Failed to submit booking. Please try again.',
+        description: t.booking.submitError,
         variant: 'destructive',
       });
     }
   };
+
+  const paymentDetails = (
+    <div className="bg-card rounded-xl p-6 shadow-soft">
+      <h3 className="font-heading text-lg font-semibold mb-2">
+        {t.booking.paymentTitle}
+      </h3>
+      <p className="text-sm text-muted-foreground mb-4">
+        {t.booking.paymentIntro}
+      </p>
+      <ul className="space-y-1 text-sm">
+        <li>{t.booking.paymentDetailAccount}</li>
+        <li>{t.booking.paymentDetailIban}</li>
+        <li>{t.booking.paymentDetailBic}</li>
+        <li>{t.booking.paymentDetailReference}</li>
+      </ul>
+      <p className="text-xs text-muted-foreground mt-3">
+        {t.booking.paymentNote}
+      </p>
+    </div>
+  );
 
   if (submitted) {
     return (
@@ -177,18 +294,29 @@ const Booking = () => {
                     <p className="font-semibold">{checkOut && format(checkOut, 'PPP')}</p>
                   </div>
                   <div>
+                    <span className="text-muted-foreground">{t.booking.checkInTime}</span>
+                    <p className="font-semibold">{checkInTime}</p>
+                  </div>
+                  <div>
+                    <span className="text-muted-foreground">{t.booking.checkOutTime}</span>
+                    <p className="font-semibold">{checkOutTime}</p>
+                  </div>
+                  <div>
                     <span className="text-muted-foreground">{t.booking.guests}</span>
                     <p className="font-semibold">{guests} {t.booking.guestsCount}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">{t.booking.total}</span>
-                    <p className="font-semibold text-primary">€{totalPrice}</p>
+                    <p className="font-semibold text-primary">{currencySymbol}{totalPrice}</p>
                   </div>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground mb-6">
                 {t.booking.disclaimer}
               </p>
+              <div className="mb-6">
+                {paymentDetails}
+              </div>
               <Button variant="whatsapp" size="lg" asChild>
                 <a
                   href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}`}
@@ -289,7 +417,7 @@ const Booking = () => {
                       mode="single"
                       selected={checkOut}
                       onSelect={setCheckOut}
-                      disabled={(date) => isDateDisabled(date) || (checkIn ? isBefore(date, addDays(checkIn, 1)) : false)}
+                      disabled={isCheckOutDisabled}
                       className="rounded-md border pointer-events-auto"
                     />
                   </div>
@@ -308,6 +436,11 @@ const Booking = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                    {checkIn && (
+                      <p className="text-sm text-muted-foreground mt-3">
+                        {t.booking.minStayNote.replace('{n}', String(checkOut ? minStayForSelection : minStayForCheckIn))}
+                      </p>
+                    )}
                   </div>
 
                   {checkIn && checkOut && nights > 0 && (
@@ -316,15 +449,15 @@ const Booking = () => {
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span>{nights} {t.booking.nights}</span>
-                          <span>€{totalNightsCost}</span>
+                          <span>{currencySymbol}{totalNightsCost}</span>
                         </div>
                         <div className="flex justify-between">
                           <span>{t.booking.cleaningFee}</span>
-                          <span>€{cleaningFee}</span>
+                          <span>{currencySymbol}{cleaningFee}</span>
                         </div>
                         <div className="border-t border-primary/20 pt-2 mt-2 flex justify-between font-bold text-lg">
                           <span>{t.booking.total}</span>
-                          <span className="text-primary">€{totalPrice}</span>
+                          <span className="text-primary">{currencySymbol}{totalPrice}</span>
                         </div>
                       </div>
                     </div>
@@ -407,6 +540,14 @@ const Booking = () => {
                         <p className="text-sm text-muted-foreground">{t.booking.checkOut}</p>
                         <p className="font-semibold">{checkOut && format(checkOut, 'PPP')}</p>
                       </div>
+                      <div className="bg-muted rounded-lg p-4">
+                        <p className="text-sm text-muted-foreground">{t.booking.checkInTime}</p>
+                        <p className="font-semibold">{checkInTime}</p>
+                      </div>
+                      <div className="bg-muted rounded-lg p-4">
+                        <p className="text-sm text-muted-foreground">{t.booking.checkOutTime}</p>
+                        <p className="font-semibold">{checkOutTime}</p>
+                      </div>
                     </div>
 
                     {/* Guest Info */}
@@ -429,12 +570,14 @@ const Booking = () => {
                     <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
                       <div className="flex justify-between items-center">
                         <span className="font-semibold">{t.booking.total}</span>
-                        <span className="text-2xl font-bold text-primary">€{totalPrice}</span>
+                        <span className="text-2xl font-bold text-primary">{currencySymbol}{totalPrice}</span>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
                         {nights} {t.booking.nights} + {t.booking.cleaningFee}
                       </p>
                     </div>
+
+                    {paymentDetails}
 
                     <p className="text-sm text-muted-foreground text-center">
                       {t.booking.disclaimer}

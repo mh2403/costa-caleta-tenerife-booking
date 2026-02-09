@@ -73,6 +73,21 @@ export interface Translations {
     confirmationMessage: string;
     disclaimer: string;
     whatsappNote: string;
+    minStayNote: string;
+    minStayError: string;
+    invalidDates: string;
+    unavailableRange: string;
+    requiredFields: string;
+    submitError: string;
+    paymentTitle: string;
+    paymentIntro: string;
+    paymentDetailAccount: string;
+    paymentDetailIban: string;
+    paymentDetailBic: string;
+    paymentDetailReference: string;
+    paymentNote: string;
+    checkInTime: string;
+    checkOutTime: string;
   };
   // Contact
   contact: {
@@ -148,7 +163,7 @@ export const translations: Record<Language, Translations> = {
     hero: {
       title: 'Your Private Holiday Stay in Tenerife',
       subtitle: 'Book directly — no platforms, no extra fees. Experience the warmth of the Canary Islands.',
-      checkAvailability: 'Check Availability',
+      checkAvailability: 'View Gallery',
       bookNow: 'Book Now',
       fromPrice: 'From',
       perNight: '/ night',
@@ -205,6 +220,21 @@ export const translations: Record<Language, Translations> = {
       confirmationMessage: 'Thank you for your booking request. We will confirm your reservation shortly.',
       disclaimer: 'This is a booking request. Availability will be confirmed within 24 hours.',
       whatsappNote: 'Need to modify your booking? Contact us via WhatsApp.',
+      minStayNote: 'Minimum stay: {n} night(s)',
+      minStayError: 'Minimum stay is {n} night(s) for the selected dates.',
+      invalidDates: 'Please select at least one night.',
+      unavailableRange: 'Selected dates include unavailable days. Please choose another range.',
+      requiredFields: 'Please fill in all required fields.',
+      submitError: 'Failed to submit booking. Please try again.',
+      paymentTitle: 'Payment by bank transfer',
+      paymentIntro: 'We only accept bank transfer. You will receive the payment details after we confirm availability.',
+      paymentDetailAccount: 'Account name: [add later]',
+      paymentDetailIban: 'IBAN: [add later]',
+      paymentDetailBic: 'BIC/SWIFT: [add later]',
+      paymentDetailReference: 'Reference: Your name + dates',
+      paymentNote: 'Your reservation is secured once payment is received.',
+      checkInTime: 'Check-in time',
+      checkOutTime: 'Check-out time',
     },
     contact: {
       title: 'Get in Touch',
@@ -274,7 +304,7 @@ export const translations: Record<Language, Translations> = {
     hero: {
       title: 'Uw Privé Vakantieverblijf op Tenerife',
       subtitle: 'Boek direct — geen platforms, geen extra kosten. Ervaar de warmte van de Canarische Eilanden.',
-      checkAvailability: 'Beschikbaarheid Controleren',
+      checkAvailability: "Bekijk foto's",
       bookNow: 'Nu Boeken',
       fromPrice: 'Vanaf',
       perNight: '/ nacht',
@@ -331,6 +361,21 @@ export const translations: Record<Language, Translations> = {
       confirmationMessage: 'Bedankt voor uw boekingsverzoek. Wij bevestigen uw reservering zo spoedig mogelijk.',
       disclaimer: 'Dit is een boekingsverzoek. Beschikbaarheid wordt binnen 24 uur bevestigd.',
       whatsappNote: 'Wilt u uw boeking wijzigen? Neem contact op via WhatsApp.',
+      minStayNote: 'Minimum verblijf: {n} nacht(en)',
+      minStayError: 'Minimum verblijf is {n} nacht(en) voor de geselecteerde data.',
+      invalidDates: 'Selecteer minstens één nacht.',
+      unavailableRange: 'De geselecteerde data bevatten niet-beschikbare dagen. Kies een andere periode.',
+      requiredFields: 'Vul alle verplichte velden in.',
+      submitError: 'Boeking versturen mislukt. Probeer het opnieuw.',
+      paymentTitle: 'Betaling via bankoverschrijving',
+      paymentIntro: 'We accepteren alleen bankoverschrijving. Na bevestiging sturen we de betaalgegevens.',
+      paymentDetailAccount: 'Rekeninghouder: [later invullen]',
+      paymentDetailIban: 'IBAN: [later invullen]',
+      paymentDetailBic: 'BIC/SWIFT: [later invullen]',
+      paymentDetailReference: 'Referentie: uw naam + data',
+      paymentNote: 'Uw reservering is definitief zodra de betaling is ontvangen.',
+      checkInTime: 'Inchecktijd',
+      checkOutTime: 'Uitchecktijd',
     },
     contact: {
       title: 'Neem Contact Op',
@@ -400,7 +445,7 @@ export const translations: Record<Language, Translations> = {
     hero: {
       title: 'Tu Estancia Privada en Tenerife',
       subtitle: 'Reserva directamente — sin plataformas, sin costes adicionales. Experimenta el calor de las Islas Canarias.',
-      checkAvailability: 'Ver Disponibilidad',
+      checkAvailability: 'Ver Fotos',
       bookNow: 'Reservar Ahora',
       fromPrice: 'Desde',
       perNight: '/ noche',
@@ -457,6 +502,21 @@ export const translations: Record<Language, Translations> = {
       confirmationMessage: 'Gracias por tu solicitud de reserva. Confirmaremos tu reserva en breve.',
       disclaimer: 'Esta es una solicitud de reserva. La disponibilidad se confirmará en 24 horas.',
       whatsappNote: '¿Necesitas modificar tu reserva? Contáctanos por WhatsApp.',
+      minStayNote: 'Estancia mínima: {n} noche(s)',
+      minStayError: 'La estancia mínima es de {n} noche(s) para las fechas seleccionadas.',
+      invalidDates: 'Selecciona al menos una noche.',
+      unavailableRange: 'Las fechas seleccionadas incluyen días no disponibles. Elige otro rango.',
+      requiredFields: 'Completa todos los campos obligatorios.',
+      submitError: 'No se pudo enviar la reserva. Inténtalo de nuevo.',
+      paymentTitle: 'Pago por transferencia bancaria',
+      paymentIntro: 'Solo aceptamos transferencia bancaria. Recibirás los datos de pago después de confirmar la disponibilidad.',
+      paymentDetailAccount: 'Titular de la cuenta: [añadir después]',
+      paymentDetailIban: 'IBAN: [añadir después]',
+      paymentDetailBic: 'BIC/SWIFT: [añadir después]',
+      paymentDetailReference: 'Referencia: tu nombre + fechas',
+      paymentNote: 'La reserva queda confirmada una vez recibido el pago.',
+      checkInTime: 'Hora de entrada',
+      checkOutTime: 'Hora de salida',
     },
     contact: {
       title: 'Ponte en Contacto',
@@ -526,7 +586,7 @@ export const translations: Record<Language, Translations> = {
     hero: {
       title: 'Votre Séjour Privé à Tenerife',
       subtitle: 'Réservez directement — sans plateformes, sans frais supplémentaires. Vivez la chaleur des îles Canaries.',
-      checkAvailability: 'Voir Disponibilité',
+      checkAvailability: 'Voir Photos',
       bookNow: 'Réserver Maintenant',
       fromPrice: 'À partir de',
       perNight: '/ nuit',
@@ -583,6 +643,21 @@ export const translations: Record<Language, Translations> = {
       confirmationMessage: 'Merci pour votre demande de réservation. Nous confirmerons votre réservation sous peu.',
       disclaimer: 'Ceci est une demande de réservation. La disponibilité sera confirmée sous 24 heures.',
       whatsappNote: 'Besoin de modifier votre réservation? Contactez-nous via WhatsApp.',
+      minStayNote: 'Séjour minimum : {n} nuit(s)',
+      minStayError: 'Le séjour minimum est de {n} nuit(s) pour les dates sélectionnées.',
+      invalidDates: 'Veuillez sélectionner au moins une nuit.',
+      unavailableRange: 'Les dates sélectionnées incluent des jours indisponibles. Choisissez une autre période.',
+      requiredFields: 'Veuillez remplir tous les champs obligatoires.',
+      submitError: 'Échec de l’envoi de la réservation. Veuillez réessayer.',
+      paymentTitle: 'Paiement par virement bancaire',
+      paymentIntro: 'Nous acceptons uniquement le virement bancaire. Vous recevrez les détails de paiement après confirmation de la disponibilité.',
+      paymentDetailAccount: 'Titulaire du compte : [à ajouter]',
+      paymentDetailIban: 'IBAN : [à ajouter]',
+      paymentDetailBic: 'BIC/SWIFT : [à ajouter]',
+      paymentDetailReference: 'Référence : votre nom + dates',
+      paymentNote: 'La réservation est confirmée dès réception du paiement.',
+      checkInTime: 'Heure d’arrivée',
+      checkOutTime: 'Heure de départ',
     },
     contact: {
       title: 'Contactez-Nous',

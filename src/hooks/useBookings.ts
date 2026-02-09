@@ -29,14 +29,12 @@ export function useCreateBooking() {
 
   return useMutation({
     mutationFn: async (booking: BookingInsert) => {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('bookings')
-        .insert(booking)
-        .select()
-        .single();
+        .insert(booking);
 
       if (error) throw error;
-      return data as Booking;
+      return null;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
