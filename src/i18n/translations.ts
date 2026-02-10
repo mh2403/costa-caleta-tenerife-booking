@@ -195,7 +195,7 @@ export const translations: Record<Language, Translations> = {
       admin: 'Admin',
     },
     hero: {
-      title: 'Your Private Holiday Stay in Tenerife',
+      title: 'Escape to the sun of Tenerife',
       subtitle: 'Book directly — no platforms, no extra fees. Experience the warmth of the Canary Islands.',
       checkAvailability: 'View Gallery',
       bookNow: 'Book Now',
@@ -481,7 +481,7 @@ Practical:
       admin: 'Beheer',
     },
     hero: {
-      title: 'Uw Privé Vakantieverblijf op Tenerife',
+      title: 'Ontsnap naar de zon van Tenerife',
       subtitle: 'Boek direct — geen platforms, geen extra kosten. Ervaar de warmte van de Canarische Eilanden.',
       checkAvailability: "Bekijk foto's",
       bookNow: 'Nu Boeken',
@@ -767,7 +767,7 @@ Praktisch:
       admin: 'Admin',
     },
     hero: {
-      title: 'Tu Estancia Privada en Tenerife',
+      title: 'Escápate al sol de Tenerife',
       subtitle: 'Reserva directamente — sin plataformas, sin costes adicionales. Experimenta el calor de las Islas Canarias.',
       checkAvailability: 'Ver Fotos',
       bookNow: 'Reservar Ahora',
