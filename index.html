@@ -11,6 +11,21 @@
     />
     <meta name="author" content="Costa Caleta" />
 
+    <!-- GitHub Pages SPA redirect fix -->
+    <script>
+      (function () {
+        const { search, pathname, hash } = window.location;
+        if (search.startsWith('?/')) {
+          const decoded = search
+            .slice(2)
+            .split('&')
+            .map((segment) => segment.replace(/~and~/g, '&'))
+            .join('?');
+          window.history.replaceState(null, '', pathname + decoded + hash);
+        }
+      })();
+    </script>
+
     <meta property="og:title" content="Costa Caleta" />
     <meta
       property="og:description"

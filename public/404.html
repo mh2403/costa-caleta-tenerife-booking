@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Costa Caleta</title>
+    <script>
+      (function () {
+        const base = '/costa-caleta-tenerife-booking';
+        const { pathname, search, hash } = window.location;
+        const path = pathname.startsWith(base) ? pathname.slice(base.length) : pathname;
+        const encoded = path.replace(/&/g, '~and~');
+        const query = search.slice(1).replace(/&/g, '~and~');
+        const redirect = `${base}/?/${encoded}${query ? `&${query}` : ''}${hash || ''}`;
+        window.location.replace(redirect);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
