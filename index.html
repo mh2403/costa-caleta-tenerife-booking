@@ -21,7 +21,9 @@
             .split('&')
             .map((segment) => segment.replace(/~and~/g, '&'))
             .join('?');
-          window.history.replaceState(null, '', pathname + decoded + hash);
+          const normalized = decoded.startsWith('/') ? decoded : `/${decoded}`;
+          const basePath = pathname.replace(/\/+$/, '');
+          window.history.replaceState(null, '', basePath + normalized + hash);
         }
       })();
     </script>
