@@ -32,15 +32,15 @@ export function FacilitiesSection() {
 
   const facilities: { key: FacilityKey; label: string }[] = [
     { key: 'wifi', label: t.facilities.wifi },
+    { key: 'tv', label: t.facilities.tv },
     { key: 'kitchen', label: t.facilities.kitchen },
     { key: 'aircon', label: t.facilities.aircon },
     { key: 'washing', label: t.facilities.washing },
-    { key: 'tv', label: t.facilities.tv },
     { key: 'balcony', label: t.facilities.balcony },
-    { key: 'parking', label: t.facilities.parking },
     { key: 'pool', label: t.facilities.pool },
-    { key: 'beach', label: t.facilities.beach },
     { key: 'towels', label: t.facilities.towels },
+    { key: 'parking', label: t.facilities.parking },
+    { key: 'beach', label: t.facilities.beach },
   ];
 
   return (

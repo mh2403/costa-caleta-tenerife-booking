@@ -27,12 +27,12 @@ export function LocationSection() {
             </p>
 
             {/* Highlights */}
-            <div className="mt-8 grid grid-cols-2 gap-4">
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
               {t.location.highlights.map((item, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center">
-                    <span className="text-sm font-bold text-secondary">{item.label}</span>
-                  </div>
+                <div key={index} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <span className="inline-flex items-center justify-center rounded-full bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary w-fit">
+                    {item.label}
+                  </span>
                   <span className="text-foreground font-medium">{item.desc}</span>
                 </div>
               ))}

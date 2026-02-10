@@ -42,9 +42,9 @@ const Booking = () => {
   const basePrice = settings?.base_price?.amount ?? 85;
   const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
   const maxGuests = settings?.max_guests?.count ?? 6;
-  const whatsappNumber = settings?.whatsapp_number?.number ?? contactInfo.phone;
+  const whatsappNumber = contactInfo.phone;
   const checkInTime = settings?.check_in_time?.time ?? '15:00';
-  const checkOutTime = settings?.check_out_time?.time ?? '12:00';
+  const checkOutTime = '12:00';
   const currencySymbol = settings?.currency?.symbol ?? '€';
 
   const isLoading = loadingBookings || loadingPricing || loadingBlocked || loadingSettings;
@@ -318,12 +318,12 @@ const Booking = () => {
               <div className="mb-6">
                 {paymentDetails}
               </div>
-              <Button variant="whatsapp" size="lg" asChild>
+              <Button variant="whatsapp" size="lg" asChild className="w-full">
                 <a
                   href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 w-full justify-center text-center px-2 whitespace-pre-line leading-tight"
                 >
                   <MessageCircle className="h-5 w-5" />
                   {t.booking.whatsappNote}
@@ -430,7 +430,7 @@ const Booking = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-popover z-50">
-                        {Array.from({ length: maxGuests }, (_, i) => i + 1).map((n) => (
+                        {[1, 2].map((n) => (
                           <SelectItem key={n} value={n.toString()}>
                             {n} {t.booking.guestsCount}
                           </SelectItem>
@@ -621,6 +621,19 @@ const Booking = () => {
                   )}
                 </Button>
               )}
+            </div>
+
+            <div className="mt-8 flex flex-col items-center gap-2 text-sm text-muted-foreground">
+              <span>{t.booking.helpWhatsapp}</span>
+              <a
+                href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-primary hover:underline"
+              >
+                <MessageCircle className="h-4 w-4" />
+                {whatsappNumber}
+              </a>
             </div>
           </div>
         </div>

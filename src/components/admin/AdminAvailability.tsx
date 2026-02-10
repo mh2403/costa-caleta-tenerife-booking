@@ -18,6 +18,7 @@ export function AdminAvailability() {
   const deleteBlockedDate = useDeleteBlockedDate();
 
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
 
   const isLoading = loadingBlocked || loadingBooked;
 
@@ -136,10 +137,21 @@ export function AdminAvailability() {
       <div className="grid md:grid-cols-2 gap-8">
         {/* Calendar */}
         <div className="bg-card rounded-xl p-6 shadow-soft">
+          <div className="flex items-center justify-end mb-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCalendarMonth(new Date())}
+            >
+              Vandaag
+            </Button>
+          </div>
           <Calendar
             mode="single"
             selected={undefined}
             onSelect={handleDateSelect}
+            month={calendarMonth}
+            onMonthChange={setCalendarMonth}
             modifiers={{
               booked: (date) => isDateBooked(date),
               blocked: (date) => isDateBlocked(date),

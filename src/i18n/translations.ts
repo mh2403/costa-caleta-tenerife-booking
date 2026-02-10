@@ -80,6 +80,7 @@ export interface Translations {
     confirmationMessage: string;
     disclaimer: string;
     whatsappNote: string;
+    helpWhatsapp: string;
     minStayNote: string;
     minStayError: string;
     invalidDates: string;
@@ -106,9 +107,13 @@ export interface Translations {
     sendMessage: string;
     yourName: string;
     yourEmail: string;
+    yourPhone: string;
     yourMessage: string;
     send: string;
     whatsapp: string;
+    successTitle: string;
+    successBody: string;
+    requiredFields: string;
   };
   // Footer
   footer: {
@@ -143,6 +148,7 @@ export interface Translations {
     bookings: string;
     pricing: string;
     availability: string;
+    messages: string;
     content: string;
     settings: string;
     logout: string;
@@ -274,8 +280,9 @@ Practical:
       available: 'Available',
       confirmationTitle: 'Booking Request Sent!',
       confirmationMessage: 'Thank you for your booking request. We will confirm your reservation shortly.',
-      disclaimer: 'This is a booking request. Availability will be confirmed within 24 hours. Meet & greet on arrival; keys handed over on site. Check-in after 15:00, check-out before 12:00.',
-      whatsappNote: 'Need to modify your booking? Contact us via WhatsApp.',
+      disclaimer: 'This is a booking request. Availability will be confirmed within 24 hours. Meet & greet on arrival; keys handed over on site. Check-in from 15:00, check-out before 12:00.',
+      whatsappNote: 'Need to modify your booking?\nContact us via WhatsApp.',
+      helpWhatsapp: 'Questions? Feel free to contact us via WhatsApp.',
       minStayNote: 'Minimum stay: {n} night(s)',
       minStayError: 'Minimum stay is {n} night(s) for the selected dates.',
       invalidDates: 'Please select at least one night.',
@@ -301,9 +308,13 @@ Practical:
       sendMessage: 'Send us a message',
       yourName: 'Your Name',
       yourEmail: 'Your Email',
+      yourPhone: 'Your Phone (optional)',
       yourMessage: 'Your Message',
       send: 'Send Message',
       whatsapp: 'Chat on WhatsApp',
+      successTitle: 'Message sent!',
+      successBody: 'We will get back to you within 24 hours.',
+      requiredFields: 'Please fill in all required fields.',
     },
     footer: {
       rights: 'All rights reserved',
@@ -426,6 +437,7 @@ Practical:
       bookings: 'Bookings',
       pricing: 'Pricing',
       availability: 'Availability',
+      messages: 'Messages',
       content: 'Content',
       settings: 'Settings',
       logout: 'Logout',
@@ -554,8 +566,9 @@ Praktisch:
       available: 'Beschikbaar',
       confirmationTitle: 'Boekingsverzoek Verzonden!',
       confirmationMessage: 'Bedankt voor uw boekingsverzoek. Wij bevestigen uw reservering zo spoedig mogelijk.',
-      disclaimer: 'Dit is een boekingsverzoek. Beschikbaarheid wordt binnen 24 uur bevestigd. Meet & greet ter plaatse; sleuteloverhandiging bij aankomst. Aankomst na 15u, vertrek voor 12u.',
-      whatsappNote: 'Wilt u uw boeking wijzigen? Neem contact op via WhatsApp.',
+      disclaimer: 'Dit is een boekingsverzoek. Beschikbaarheid wordt binnen 24 uur bevestigd. Meet & greet ter plaatse; sleuteloverhandiging bij aankomst. Aankomst vanaf 15u, vertrek voor 12u.',
+      whatsappNote: 'Wilt u uw boeking wijzigen?\nNeem contact op via WhatsApp.',
+      helpWhatsapp: 'Vragen? Aarzel niet contact op te nemen via WhatsApp.',
       minStayNote: 'Minimum verblijf: {n} nacht(en)',
       minStayError: 'Minimum verblijf is {n} nacht(en) voor de geselecteerde data.',
       invalidDates: 'Selecteer minstens één nacht.',
@@ -581,9 +594,13 @@ Praktisch:
       sendMessage: 'Stuur ons een bericht',
       yourName: 'Uw Naam',
       yourEmail: 'Uw E-mail',
+      yourPhone: 'Uw Telefoon (optioneel)',
       yourMessage: 'Uw Bericht',
       send: 'Verstuur Bericht',
       whatsapp: 'Chat via WhatsApp',
+      successTitle: 'Bericht verzonden!',
+      successBody: 'We nemen binnen 24 uur contact met u op.',
+      requiredFields: 'Vul alle verplichte velden in.',
     },
     footer: {
       rights: 'Alle rechten voorbehouden',
@@ -706,6 +723,7 @@ Praktisch:
       bookings: 'Boekingen',
       pricing: 'Prijzen',
       availability: 'Beschikbaarheid',
+      messages: 'Vragen',
       content: 'Inhoud',
       settings: 'Instellingen',
       logout: 'Uitloggen',
@@ -834,8 +852,9 @@ Práctico:
       available: 'Disponible',
       confirmationTitle: '¡Solicitud de Reserva Enviada!',
       confirmationMessage: 'Gracias por tu solicitud de reserva. Confirmaremos tu reserva en breve.',
-      disclaimer: 'Esta es una solicitud de reserva. La disponibilidad se confirmará en 24 horas. Meet & greet a la llegada; entrega de llaves en el lugar. Llegada después de las 15:00, salida antes de las 12:00.',
-      whatsappNote: '¿Necesitas modificar tu reserva? Contáctanos por WhatsApp.',
+      disclaimer: 'Esta es una solicitud de reserva. La disponibilidad se confirmará en 24 horas. Meet & greet a la llegada; entrega de llaves en el lugar. Llegada desde las 15:00, salida antes de las 12:00.',
+      whatsappNote: '¿Necesitas modificar tu reserva?\nContáctanos por WhatsApp.',
+      helpWhatsapp: '¿Preguntas? No dudes en contactarnos por WhatsApp.',
       minStayNote: 'Estancia mínima: {n} noche(s)',
       minStayError: 'La estancia mínima es de {n} noche(s) para las fechas seleccionadas.',
       invalidDates: 'Selecciona al menos una noche.',
@@ -861,9 +880,13 @@ Práctico:
       sendMessage: 'Envíanos un mensaje',
       yourName: 'Tu Nombre',
       yourEmail: 'Tu Correo',
+      yourPhone: 'Tu Teléfono (opcional)',
       yourMessage: 'Tu Mensaje',
       send: 'Enviar Mensaje',
       whatsapp: 'Chatear por WhatsApp',
+      successTitle: '¡Mensaje enviado!',
+      successBody: 'Te responderemos en un plazo de 24 horas.',
+      requiredFields: 'Completa todos los campos obligatorios.',
     },
     footer: {
       rights: 'Todos los derechos reservados',
@@ -986,6 +1009,7 @@ Práctico:
       bookings: 'Reservas',
       pricing: 'Precios',
       availability: 'Disponibilidad',
+      messages: 'Mensajes',
       content: 'Contenido',
       settings: 'Ajustes',
       logout: 'Cerrar Sesión',
