@@ -11,6 +11,7 @@ export function Header() {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg`;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +43,7 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <img
-              src="/favicon.svg"
+              src={logoUrl}
               alt="Costa Caleta"
               className="h-7 w-7 rounded-full shadow-soft"
             />

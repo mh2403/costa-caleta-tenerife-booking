@@ -311,10 +311,10 @@ export function AdminBookings() {
         <p className="text-muted-foreground mt-1">Beheer alle boekingsaanvragen</p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
         <span className="text-sm text-muted-foreground">Filter:</span>
         <Select value={yearFilter} onValueChange={setYearFilter}>
-          <SelectTrigger className="w-[160px]">
+          <SelectTrigger className="w-full sm:w-[160px]">
             <SelectValue placeholder="Alle jaren" />
           </SelectTrigger>
           <SelectContent className="bg-popover">
@@ -329,13 +329,14 @@ export function AdminBookings() {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex flex-wrap gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
         {(['all', 'pending', 'confirmed', 'declined', 'cancelled'] as const).map((status) => (
           <Button
             key={status}
             variant={filter === status ? 'default' : 'outline'}
             size="sm"
             onClick={() => setFilter(status)}
+            className="w-full sm:w-auto"
           >
             {status === 'all' ? 'Alle' : t.admin[status]}
             {status !== 'all' && (
@@ -347,8 +348,85 @@ export function AdminBookings() {
         ))}
       </div>
 
-      {/* Bookings Table */}
-      <div className="bg-card rounded-xl shadow-soft overflow-hidden">
+      {/* Mobile List */}
+      <div className="md:hidden space-y-4">
+        {filteredBookings.length === 0 ? (
+          <div className="p-6 text-center text-muted-foreground bg-card rounded-xl shadow-soft">
+            {t.common.noResults}
+          </div>
+        ) : (
+          filteredBookings.map((booking) => {
+            const isPending = booking.status === 'pending';
+            return (
+              <div key={booking.id} className="bg-card rounded-xl shadow-soft p-4 space-y-3">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="font-semibold text-foreground">{booking.guest_name}</p>
+                  <p className="text-xs text-muted-foreground">{booking.guest_email}</p>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
+                  {t.admin[booking.status as keyof typeof t.admin] || booking.status}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="col-span-2">
+                  <p className="text-muted-foreground">Data</p>
+                  <p className="font-medium">
+                    {format(new Date(booking.check_in), 'MMM d')} - {format(new Date(booking.check_out), 'MMM d, yyyy')}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Gasten</p>
+                  <p className="font-medium">{booking.num_guests}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Totaal</p>
+                  <p className="font-medium">€{Number(booking.total_price).toLocaleString()}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setSelectedBooking(booking)}
+                  className="col-span-2"
+                >
+                  <Eye className="h-4 w-4 mr-2" />
+                  Details
+                </Button>
+                {isPending && (
+                  <>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => handleStatusChange(booking.id, 'confirmed')}
+                      disabled={updateBooking.isPending}
+                    >
+                      <Check className="h-4 w-4 mr-2" />
+                      Bevestig
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleStatusChange(booking.id, 'declined')}
+                      disabled={updateBooking.isPending}
+                    >
+                      <X className="h-4 w-4 mr-2" />
+                      Afwijs
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Desktop Table */}
+      <div className="hidden md:block bg-card rounded-xl shadow-soft overflow-hidden">
         {filteredBookings.length === 0 ? (
           <div className="p-8 text-center text-muted-foreground">
             {t.common.noResults}
