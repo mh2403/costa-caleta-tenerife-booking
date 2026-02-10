@@ -506,7 +506,10 @@ export function AdminBookings() {
 
       {/* Booking Details Dialog */}
       <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent
+          className="sm:max-w-md max-h-[85vh] overflow-y-auto"
+          onOpenAutoFocus={(event) => event.preventDefault()}
+        >
           <DialogHeader>
             <DialogTitle>{t.admin.guestDetails}</DialogTitle>
           </DialogHeader>
@@ -558,7 +561,7 @@ export function AdminBookings() {
                       type="date"
                       value={editCheckIn}
                       onChange={(e) => setEditCheckIn(e.target.value)}
-                      className="mt-1"
+                      className="mt-1 text-base"
                     />
                   </div>
                   <div>
@@ -567,7 +570,7 @@ export function AdminBookings() {
                       type="date"
                       value={editCheckOut}
                       onChange={(e) => setEditCheckOut(e.target.value)}
-                      className="mt-1"
+                      className="mt-1 text-base"
                     />
                   </div>
                 </div>
