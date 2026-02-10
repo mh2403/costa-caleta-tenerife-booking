@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLanguage } from '@/i18n';
+import { translations } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { isSameDay, isWithinInterval, addDays } from 'date-fns';
@@ -10,7 +10,7 @@ import { useBlockedDates, useCreateBlockedDate, useDeleteBlockedDate } from '@/h
 import { useBookedDates } from '@/hooks/useBookings';
 
 export function AdminAvailability() {
-  const { t } = useLanguage();
+  const t = translations.nl;
   const { toast } = useToast();
   const { data: blockedDatesData = [], isLoading: loadingBlocked } = useBlockedDates();
   const { data: bookedDates = [], isLoading: loadingBooked } = useBookedDates();
@@ -39,8 +39,8 @@ export function AdminAvailability() {
     // Can't modify booked dates
     if (isDateBooked(date)) {
       toast({
-        title: 'This date is already booked',
-        description: 'You cannot block a date that has a confirmed booking.',
+        title: 'Deze datum is al geboekt',
+        description: 'U kunt geen datum blokkeren met een bevestigde boeking.',
         variant: 'destructive',
       });
       return;
@@ -63,9 +63,9 @@ export function AdminAvailability() {
       await createBlockedDate.mutateAsync({
         start_date: format(sortedDates[0], 'yyyy-MM-dd'),
         end_date: format(sortedDates[sortedDates.length - 1], 'yyyy-MM-dd'),
-        reason: 'Blocked by owner',
+        reason: 'Geblokkeerd door eigenaar',
       });
-      toast({ title: t.common.success, description: 'Dates blocked successfully' });
+      toast({ title: t.common.success, description: 'Data succesvol geblokkeerd' });
       setSelectedDates([]);
     } catch (error) {
       toast({ title: t.common.error, variant: 'destructive' });
@@ -84,7 +84,7 @@ export function AdminAvailability() {
       for (const blocked of blockedToRemove) {
         await deleteBlockedDate.mutateAsync(blocked.id);
       }
-      toast({ title: t.common.success, description: 'Dates unblocked successfully' });
+      toast({ title: t.common.success, description: 'Data succesvol gedeblokkeerd' });
       setSelectedDates([]);
     } catch (error) {
       toast({ title: t.common.error, variant: 'destructive' });
@@ -114,22 +114,22 @@ export function AdminAvailability() {
         <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
           {t.admin.availability}
         </h1>
-        <p className="text-muted-foreground mt-1">Block dates for personal use or maintenance</p>
+        <p className="text-muted-foreground mt-1">Blokkeer data voor eigen gebruik of onderhoud</p>
       </div>
 
       {/* Legend */}
       <div className="flex flex-wrap gap-4">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-primary/20" />
-          <span className="text-sm text-muted-foreground">Booked</span>
+          <span className="text-sm text-muted-foreground">Geboekt</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-destructive/20" />
-          <span className="text-sm text-muted-foreground">Blocked</span>
+          <span className="text-sm text-muted-foreground">Geblokkeerd</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded bg-secondary" />
-          <span className="text-sm text-muted-foreground">Selected</span>
+          <span className="text-sm text-muted-foreground">Geselecteerd</span>
         </div>
       </div>
 
@@ -160,8 +160,8 @@ export function AdminAvailability() {
           <div className="bg-card rounded-xl p-6 shadow-soft">
             <h3 className="font-heading text-lg font-semibold mb-4">
               {selectedDates.length > 0
-                ? `${selectedDates.length} date(s) selected`
-                : 'Select dates on the calendar'}
+                ? `${selectedDates.length} datum(s) geselecteerd`
+                : 'Selecteer data op de kalender'}
             </h3>
 
             <div className="space-y-3">
@@ -196,9 +196,9 @@ export function AdminAvailability() {
 
           {/* Blocked Periods List */}
           <div className="bg-card rounded-xl p-6 shadow-soft">
-            <h3 className="font-heading text-lg font-semibold mb-4">Blocked Periods</h3>
+            <h3 className="font-heading text-lg font-semibold mb-4">Geblokkeerde periodes</h3>
             {blockedDatesData.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No blocked dates</p>
+              <p className="text-sm text-muted-foreground">Geen geblokkeerde data</p>
             ) : (
               <div className="space-y-2">
                 {blockedDatesData.map((blocked) => (
@@ -216,7 +216,7 @@ export function AdminAvailability() {
                       onClick={() => handleRemoveBlocked(blocked.id)}
                       disabled={deleteBlockedDate.isPending}
                     >
-                      Remove
+                      Verwijderen
                     </Button>
                   </div>
                 ))}

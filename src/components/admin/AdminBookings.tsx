@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLanguage } from '@/i18n';
+import { translations } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -21,7 +21,7 @@ import { format } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 
 export function AdminBookings() {
-  const { t } = useLanguage();
+  const t = translations.nl;
   const { toast } = useToast();
   const { data: bookings = [], isLoading } = useBookings();
   const updateBooking = useUpdateBooking();
@@ -37,13 +37,13 @@ export function AdminBookings() {
       await updateBooking.mutateAsync({ id, status });
       toast({
         title: t.common.success,
-        description: `Booking ${status}`,
+        description: `Boeking ${t.admin[status] ?? status}`,
       });
       setSelectedBooking(null);
     } catch (error) {
       toast({
         title: t.common.error,
-        description: 'Failed to update booking',
+        description: 'Boeking bijwerken mislukt',
         variant: 'destructive',
       });
     }
@@ -78,7 +78,7 @@ export function AdminBookings() {
         <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
           {t.admin.bookings}
         </h1>
-        <p className="text-muted-foreground mt-1">Manage all booking requests</p>
+        <p className="text-muted-foreground mt-1">Beheer alle boekingsaanvragen</p>
       </div>
 
       {/* Filter Tabs */}
@@ -90,7 +90,7 @@ export function AdminBookings() {
             size="sm"
             onClick={() => setFilter(status)}
           >
-            {status === 'all' ? 'All' : t.admin[status]}
+            {status === 'all' ? 'Alle' : t.admin[status]}
             {status !== 'all' && (
               <span className="ml-2 px-2 py-0.5 rounded-full bg-background/20 text-xs">
                 {bookings.filter(b => b.status === status).length}
@@ -110,12 +110,12 @@ export function AdminBookings() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Guest</TableHead>
-                <TableHead>Dates</TableHead>
-                <TableHead>Guests</TableHead>
-                <TableHead>Total</TableHead>
+                <TableHead>Gast</TableHead>
+                <TableHead>Data</TableHead>
+                <TableHead>Gasten</TableHead>
+                <TableHead>Totaal</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right">Acties</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -189,11 +189,11 @@ export function AdminBookings() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-muted rounded-lg p-3">
-                  <p className="text-sm text-muted-foreground">Check-in</p>
+                  <p className="text-sm text-muted-foreground">Inchecken</p>
                   <p className="font-semibold">{format(new Date(selectedBooking.check_in), 'PPP')}</p>
                 </div>
                 <div className="bg-muted rounded-lg p-3">
-                  <p className="text-sm text-muted-foreground">Check-out</p>
+                  <p className="text-sm text-muted-foreground">Uitchecken</p>
                   <p className="font-semibold">{format(new Date(selectedBooking.check_out), 'PPP')}</p>
                 </div>
               </div>
@@ -219,14 +219,14 @@ export function AdminBookings() {
 
               {selectedBooking.message && (
                 <div className="bg-muted rounded-lg p-3">
-                  <p className="text-sm text-muted-foreground mb-1">Message</p>
+                  <p className="text-sm text-muted-foreground mb-1">Bericht</p>
                   <p>{selectedBooking.message}</p>
                 </div>
               )}
 
               <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
                 <div className="flex justify-between items-center">
-                  <span>Total</span>
+                  <span>Totaal</span>
                   <span className="text-xl font-bold text-primary">€{Number(selectedBooking.total_price).toLocaleString()}</span>
                 </div>
               </div>
@@ -254,7 +254,7 @@ export function AdminBookings() {
                       disabled={updateBooking.isPending}
                     >
                       <Check className="h-4 w-4 mr-2" />
-                      Confirm
+                      Bevestigen
                     </Button>
                     <Button
                       variant="destructive"
@@ -262,7 +262,7 @@ export function AdminBookings() {
                       disabled={updateBooking.isPending}
                     >
                       <X className="h-4 w-4 mr-2" />
-                      Decline
+                      Afwijzen
                     </Button>
                   </>
                 )}

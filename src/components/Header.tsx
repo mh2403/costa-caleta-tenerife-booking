@@ -74,10 +74,10 @@ export function Header() {
             ))}
             <LanguageSwitcher
               className={cn(
-                'transition-colors',
+                'transition-colors text-foreground',
                 isScrolled
-                  ? 'bg-background/90 border-border text-foreground hover:bg-muted'
-                  : 'bg-primary-foreground/10 border-primary-foreground/40 text-primary-foreground hover:bg-primary-foreground/20'
+                  ? 'bg-background/90 border-border hover:bg-muted'
+                  : 'bg-background/80 border-border hover:bg-background'
               )}
             />
             <Button asChild variant="hero" size="sm">
@@ -90,10 +90,10 @@ export function Header() {
             <LanguageSwitcher
               variant="minimal"
               className={cn(
-                'transition-colors',
+                'transition-colors text-foreground',
                 isScrolled
-                  ? 'bg-background/90 text-foreground hover:bg-muted'
-                  : 'bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20'
+                  ? 'bg-background/90 hover:bg-muted'
+                  : 'bg-background/80 hover:bg-background'
               )}
             />
             <Button

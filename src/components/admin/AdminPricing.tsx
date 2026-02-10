@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLanguage } from '@/i18n';
+import { translations } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,7 +23,7 @@ import {
 } from '@/hooks/usePricing';
 
 export function AdminPricing() {
-  const { t } = useLanguage();
+  const t = translations.nl;
   const { toast } = useToast();
   const { data: settings, isLoading: loadingSettings } = useSettings();
   const { data: pricingRules = [], isLoading: loadingRules } = useAllPricingRules();
@@ -80,7 +80,7 @@ export function AdminPricing() {
 
   const handleCreateRule = async () => {
     if (!newRule.name || !newRule.start_date || !newRule.end_date || !newRule.price_per_night) {
-      toast({ title: 'Please fill all fields', variant: 'destructive' });
+      toast({ title: 'Vul alle velden in', variant: 'destructive' });
       return;
     }
 
@@ -151,7 +151,7 @@ export function AdminPricing() {
         <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
           {t.admin.pricing}
         </h1>
-        <p className="text-muted-foreground mt-1">Manage base prices and seasonal rates</p>
+        <p className="text-muted-foreground mt-1">Beheer basisprijzen en seizoensprijzen</p>
       </div>
 
       {/* Base Pricing */}
@@ -180,7 +180,7 @@ export function AdminPricing() {
         </div>
 
         <div className="bg-card rounded-xl p-6 shadow-soft">
-          <h3 className="font-heading text-lg font-semibold mb-4">Cleaning Fee</h3>
+          <h3 className="font-heading text-lg font-semibold mb-4">Schoonmaakkosten</h3>
           <div className="flex gap-3">
             <div className="flex-1">
               <div className="relative">
@@ -222,7 +222,7 @@ export function AdminPricing() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>{editingRule ? 'Edit Season' : t.admin.addSeason}</DialogTitle>
+                <DialogTitle>{editingRule ? 'Seizoen bewerken' : t.admin.addSeason}</DialogTitle>
               </DialogHeader>
               <div className="space-y-4">
                 <div>
@@ -230,7 +230,7 @@ export function AdminPricing() {
                   <Input
                     value={newRule.name}
                     onChange={(e) => setNewRule({ ...newRule, name: e.target.value })}
-                    placeholder="e.g. High Season"
+                    placeholder="bv. Hoogseizoen"
                     className="mt-1"
                   />
                 </div>
@@ -268,7 +268,7 @@ export function AdminPricing() {
                     </div>
                   </div>
                   <div>
-                    <Label>Minimum Stay (nights)</Label>
+                    <Label>Minimum verblijf (nachten)</Label>
                     <Input
                       type="number"
                       value={newRule.min_stay}
@@ -299,7 +299,7 @@ export function AdminPricing() {
         </div>
 
         {pricingRules.length === 0 ? (
-          <p className="text-muted-foreground text-center py-8">No seasonal pricing rules yet</p>
+          <p className="text-muted-foreground text-center py-8">Nog geen seizoensprijzen</p>
         ) : (
           <div className="space-y-3">
             {pricingRules.map((rule) => (
@@ -314,7 +314,7 @@ export function AdminPricing() {
                   </p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="font-bold text-primary">€{Number(rule.price_per_night)}/night</span>
+                  <span className="font-bold text-primary">€{Number(rule.price_per_night)}/nacht</span>
                   <div className="flex gap-2">
                     <Button
                       variant="ghost"

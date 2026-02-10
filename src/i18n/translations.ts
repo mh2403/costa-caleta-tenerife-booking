@@ -116,6 +116,20 @@ export interface Translations {
     privacy: string;
     terms: string;
   };
+  // Privacy policy
+  privacy: {
+    title: string;
+    updated: string;
+    intro: string;
+    sections: { title: string; body?: string; list?: string[] }[];
+  };
+  // Terms
+  terms: {
+    title: string;
+    updated: string;
+    intro: string;
+    sections: { title: string; body?: string; list?: string[] }[];
+  };
   // Admin
   admin: {
     dashboard: string;
@@ -289,6 +303,111 @@ Practical:
       privacy: 'Privacy Policy',
       terms: 'Terms of Service',
     },
+    privacy: {
+      title: 'Privacy Policy',
+      updated: 'Last updated: February 10, 2026',
+      intro: 'This policy explains how we process personal data when you visit the Costa Caleta website or contact us.',
+      sections: [
+        {
+          title: 'Who we are',
+          body: 'Costa Caleta is a private holiday rental in La Caleta, Tenerife. We act as the data controller. Contact: {email}, {phone}.',
+        },
+        {
+          title: 'What data we collect',
+          list: [
+            'Identification and contact details you provide (name, email, phone).',
+            'Booking details (dates, number of guests, messages).',
+            'Communications and inquiries you send us.',
+            'Technical data needed to operate the site (IP address, browser/device, log data).',
+          ],
+        },
+        {
+          title: 'Why we use your data (legal basis)',
+          list: [
+            'To respond to inquiries and manage bookings (contract/steps prior to contract).',
+            'To send booking-related communications (contract/legitimate interest).',
+            'To comply with legal obligations (accounting, tax, security).',
+            'To protect and improve our services (legitimate interests).',
+          ],
+        },
+        {
+          title: 'Sharing',
+          body: 'We do not sell your data. We share it only with service providers that help operate the website and booking communications (hosting, email), or when required by law.',
+        },
+        {
+          title: 'Retention',
+          body: 'We keep data only as long as necessary for the purposes above. Booking records may be retained to meet legal and accounting obligations.',
+        },
+        {
+          title: 'Your rights',
+          list: [
+            'Access, rectification, erasure, restriction.',
+            'Objection and data portability.',
+            'Withdraw consent where applicable.',
+            'Lodge a complaint with your local supervisory authority.',
+          ],
+        },
+        {
+          title: 'Cookies & local storage',
+          body: 'We use essential cookies and local storage to remember your language preference and ensure the site works.',
+        },
+        {
+          title: 'International transfers',
+          body: 'If data is processed outside the EEA, we rely on appropriate safeguards such as standard contractual clauses.',
+        },
+        {
+          title: 'Security',
+          body: 'We take reasonable technical and organizational measures to protect your data, but no system is 100% secure.',
+        },
+        {
+          title: 'Contact',
+          body: 'For privacy questions or requests, contact us at {email} or {phone}.',
+        },
+      ],
+    },
+    terms: {
+      title: 'Terms & Conditions',
+      updated: 'Last updated: February 10, 2026',
+      intro: 'By using this website and submitting a booking request, you agree to these terms.',
+      sections: [
+        {
+          title: 'Booking requests & confirmation',
+          body: 'Submitting the booking form is a request. A reservation is confirmed only after we confirm availability and send a confirmation.',
+        },
+        {
+          title: 'Pricing & payment',
+          list: [
+            'Prices are shown in EUR and may include a cleaning fee as displayed.',
+            'Payment is by bank transfer.',
+            'Your reservation is confirmed once payment is received.',
+          ],
+        },
+        {
+          title: 'Check-in / check-out',
+          body: 'Check-in is after 15:00 and check-out is before 12:00, unless agreed otherwise.',
+        },
+        {
+          title: 'Use of the property',
+          body: 'Guests must use the apartment with care, respect neighbors and building rules, and follow the occupancy stated in the booking.',
+        },
+        {
+          title: 'Damages',
+          body: 'Guests are responsible for damage caused during their stay. Costs may be charged after assessment.',
+        },
+        {
+          title: 'Cancellations',
+          body: 'Cancellation terms will be communicated in your booking confirmation. If you cancel before confirmation, no charges apply.',
+        },
+        {
+          title: 'Liability',
+          body: 'We are not liable for loss of personal belongings or disruptions outside our control (e.g. utilities or force majeure), except where liability cannot be excluded by law.',
+        },
+        {
+          title: 'Contact',
+          body: 'Questions about these terms? Contact us at {email} or {phone}.',
+        },
+      ],
+    },
     admin: {
       dashboard: 'Dashboard',
       bookings: 'Bookings',
@@ -458,6 +577,111 @@ Praktisch:
       privacy: 'Privacybeleid',
       terms: 'Algemene Voorwaarden',
     },
+    privacy: {
+      title: 'Privacybeleid',
+      updated: 'Laatst bijgewerkt: 10 februari 2026',
+      intro: 'Dit beleid legt uit hoe wij persoonsgegevens verwerken wanneer u de website van Costa Caleta bezoekt of contact met ons opneemt.',
+      sections: [
+        {
+          title: 'Wie we zijn',
+          body: 'Costa Caleta is een privé vakantieverblijf in La Caleta, Tenerife. Wij zijn de verwerkingsverantwoordelijke. Contact: {email}, {phone}.',
+        },
+        {
+          title: 'Welke gegevens we verzamelen',
+          list: [
+            'Identificatie- en contactgegevens die u zelf verstrekt (naam, e-mail, telefoon).',
+            'Boekingsgegevens (data, aantal gasten, berichten).',
+            'Communicatie en vragen die u naar ons stuurt.',
+            'Technische gegevens die nodig zijn om de site te laten werken (IP-adres, browser/apparaat, loggegevens).',
+          ],
+        },
+        {
+          title: 'Waarom we uw gegevens gebruiken (rechtsgrond)',
+          list: [
+            'Om te reageren op vragen en boekingen te beheren (contract/voorafgaande stappen).',
+            'Om boekingsgerelateerde communicatie te versturen (contract/gerechtvaardigd belang).',
+            'Om te voldoen aan wettelijke verplichtingen (boekhouding, belasting, veiligheid).',
+            'Om onze diensten te beschermen en te verbeteren (gerechtvaardigd belang).',
+          ],
+        },
+        {
+          title: 'Delen van gegevens',
+          body: 'Wij verkopen uw gegevens niet. We delen ze enkel met dienstverleners die helpen bij het runnen van de website en boekingscommunicatie (hosting, e-mail), of wanneer dit wettelijk verplicht is.',
+        },
+        {
+          title: 'Bewaartermijn',
+          body: 'We bewaren gegevens enkel zolang nodig voor de bovenstaande doeleinden. Boekingsgegevens kunnen langer bewaard worden om aan wettelijke en boekhoudkundige verplichtingen te voldoen.',
+        },
+        {
+          title: 'Uw rechten',
+          list: [
+            'Inzage, correctie, verwijdering, beperking.',
+            'Bezwaar en gegevensoverdraagbaarheid.',
+            'Intrekking van toestemming waar van toepassing.',
+            'Een klacht indienen bij uw lokale toezichthoudende autoriteit.',
+          ],
+        },
+        {
+          title: 'Cookies & lokale opslag',
+          body: 'We gebruiken essentiële cookies en lokale opslag om uw taalvoorkeur te onthouden en de site goed te laten werken.',
+        },
+        {
+          title: 'Doorgifte buiten de EER',
+          body: 'Als gegevens buiten de EER worden verwerkt, gebruiken we passende waarborgen zoals standaardcontractbepalingen.',
+        },
+        {
+          title: 'Beveiliging',
+          body: 'We nemen redelijke technische en organisatorische maatregelen om uw gegevens te beschermen, maar geen enkel systeem is 100% veilig.',
+        },
+        {
+          title: 'Contact',
+          body: 'Voor privacyvragen of -verzoeken: {email} of {phone}.',
+        },
+      ],
+    },
+    terms: {
+      title: 'Algemene Voorwaarden',
+      updated: 'Laatst bijgewerkt: 10 februari 2026',
+      intro: 'Door deze website te gebruiken en een boekingsaanvraag te plaatsen, gaat u akkoord met deze voorwaarden.',
+      sections: [
+        {
+          title: 'Boekingsaanvraag & bevestiging',
+          body: 'Het verzenden van het boekingsformulier is een aanvraag. Een reservatie is pas bevestigd nadat wij de beschikbaarheid hebben bevestigd en u een bevestiging ontvangt.',
+        },
+        {
+          title: 'Prijs & betaling',
+          list: [
+            'Prijzen zijn in EUR en kunnen een schoonmaakkost bevatten zoals weergegeven.',
+            'Betaling gebeurt via bankoverschrijving.',
+            'De reservatie is definitief zodra de betaling is ontvangen.',
+          ],
+        },
+        {
+          title: 'Inchecken / uitchecken',
+          body: 'Inchecken is na 15:00 en uitchecken voor 12:00, tenzij anders overeengekomen.',
+        },
+        {
+          title: 'Gebruik van het appartement',
+          body: 'Gasten gebruiken het appartement met zorg, respecteren buren en huisregels van de residentie, en houden zich aan het aantal gasten uit de boeking.',
+        },
+        {
+          title: 'Schade',
+          body: 'Gasten zijn verantwoordelijk voor schade die tijdens het verblijf wordt veroorzaakt. Kosten kunnen na beoordeling worden aangerekend.',
+        },
+        {
+          title: 'Annuleringen',
+          body: 'Annuleringsvoorwaarden worden gecommuniceerd in uw boekingsbevestiging. Bij annulering vóór bevestiging worden geen kosten aangerekend.',
+        },
+        {
+          title: 'Aansprakelijkheid',
+          body: 'Wij zijn niet aansprakelijk voor verlies van persoonlijke eigendommen of onderbrekingen buiten onze controle (bv. nutsvoorzieningen of overmacht), behalve waar aansprakelijkheid wettelijk niet kan worden uitgesloten.',
+        },
+        {
+          title: 'Contact',
+          body: 'Vragen over deze voorwaarden? Contacteer ons via {email} of {phone}.',
+        },
+      ],
+    },
     admin: {
       dashboard: 'Dashboard',
       bookings: 'Boekingen',
@@ -625,7 +849,112 @@ Práctico:
     footer: {
       rights: 'Todos los derechos reservados',
       privacy: 'Política de Privacidad',
-      terms: 'Términos de Servicio',
+      terms: 'Términos y Condiciones',
+    },
+    privacy: {
+      title: 'Política de Privacidad',
+      updated: 'Última actualización: 10 de febrero de 2026',
+      intro: 'Esta política explica cómo tratamos los datos personales cuando visitas la web de Costa Caleta o te pones en contacto con nosotros.',
+      sections: [
+        {
+          title: 'Quiénes somos',
+          body: 'Costa Caleta es un alquiler vacacional privado en La Caleta, Tenerife. Actuamos como responsable del tratamiento. Contacto: {email}, {phone}.',
+        },
+        {
+          title: 'Qué datos recopilamos',
+          list: [
+            'Datos de identificación y contacto que proporcionas (nombre, email, teléfono).',
+            'Datos de reserva (fechas, número de huéspedes, mensajes).',
+            'Comunicaciones y consultas que nos envías.',
+            'Datos técnicos necesarios para operar la web (dirección IP, navegador/dispositivo, registros).',
+          ],
+        },
+        {
+          title: 'Por qué usamos tus datos (base legal)',
+          list: [
+            'Responder consultas y gestionar reservas (contrato/pasos previos).',
+            'Enviar comunicaciones relacionadas con la reserva (contrato/interés legítimo).',
+            'Cumplir obligaciones legales (contabilidad, impuestos, seguridad).',
+            'Proteger y mejorar nuestros servicios (interés legítimo).',
+          ],
+        },
+        {
+          title: 'Compartición de datos',
+          body: 'No vendemos tus datos. Solo los compartimos con proveedores que ayudan a operar la web y la comunicación de reservas (hosting, email), o cuando la ley lo exige.',
+        },
+        {
+          title: 'Conservación',
+          body: 'Conservamos los datos solo el tiempo necesario para los fines anteriores. Los datos de reservas pueden conservarse para cumplir obligaciones legales y contables.',
+        },
+        {
+          title: 'Tus derechos',
+          list: [
+            'Acceso, rectificación, supresión, limitación.',
+            'Oposición y portabilidad de datos.',
+            'Retirar el consentimiento cuando corresponda.',
+            'Presentar una reclamación ante tu autoridad de control local.',
+          ],
+        },
+        {
+          title: 'Cookies y almacenamiento local',
+          body: 'Usamos cookies esenciales y almacenamiento local para recordar tu idioma y asegurar el funcionamiento del sitio.',
+        },
+        {
+          title: 'Transferencias internacionales',
+          body: 'Si los datos se procesan fuera del EEE, aplicamos salvaguardas adecuadas como cláusulas contractuales tipo.',
+        },
+        {
+          title: 'Seguridad',
+          body: 'Aplicamos medidas técnicas y organizativas razonables para proteger tus datos, pero ningún sistema es 100% seguro.',
+        },
+        {
+          title: 'Contacto',
+          body: 'Para cuestiones de privacidad: {email} o {phone}.',
+        },
+      ],
+    },
+    terms: {
+      title: 'Términos y Condiciones',
+      updated: 'Última actualización: 10 de febrero de 2026',
+      intro: 'Al usar este sitio y enviar una solicitud de reserva, aceptas estos términos.',
+      sections: [
+        {
+          title: 'Solicitud y confirmación de reserva',
+          body: 'Enviar el formulario es una solicitud. La reserva se confirma solo cuando confirmamos disponibilidad y te enviamos la confirmación.',
+        },
+        {
+          title: 'Precio y pago',
+          list: [
+            'Los precios se muestran en EUR y pueden incluir la tarifa de limpieza mostrada.',
+            'El pago se realiza por transferencia bancaria.',
+            'La reserva queda confirmada cuando se recibe el pago.',
+          ],
+        },
+        {
+          title: 'Entrada / salida',
+          body: 'La entrada es después de las 15:00 y la salida antes de las 12:00, salvo acuerdo diferente.',
+        },
+        {
+          title: 'Uso del alojamiento',
+          body: 'Los huéspedes deben cuidar el apartamento, respetar a los vecinos y las normas de la residencia, y cumplir la ocupación indicada en la reserva.',
+        },
+        {
+          title: 'Daños',
+          body: 'Los huéspedes son responsables de los daños causados durante la estancia. Los costes podrán cobrarse tras evaluación.',
+        },
+        {
+          title: 'Cancelaciones',
+          body: 'Las condiciones de cancelación se comunicarán en la confirmación de la reserva. Si cancelas antes de la confirmación, no se aplican cargos.',
+        },
+        {
+          title: 'Responsabilidad',
+          body: 'No somos responsables por la pérdida de pertenencias personales ni por interrupciones fuera de nuestro control (p. ej., servicios o fuerza mayor), salvo que la ley establezca lo contrario.',
+        },
+        {
+          title: 'Contacto',
+          body: '¿Preguntas sobre estos términos? Contáctanos en {email} o {phone}.',
+        },
+      ],
     },
     admin: {
       dashboard: 'Panel',

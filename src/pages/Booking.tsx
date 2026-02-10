@@ -15,6 +15,7 @@ import { useCreateBooking, useBookedDates } from '@/hooks/useBookings';
 import { usePricingRules } from '@/hooks/usePricing';
 import { useSettings } from '@/hooks/useSettings';
 import { useBlockedDates } from '@/hooks/useBlockedDates';
+import { contactInfo } from '@/lib/contactInfo';
 
 const Booking = () => {
   const { t, language } = useLanguage();
@@ -41,7 +42,7 @@ const Booking = () => {
   const basePrice = settings?.base_price?.amount ?? 85;
   const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
   const maxGuests = settings?.max_guests?.count ?? 6;
-  const whatsappNumber = settings?.whatsapp_number?.number ?? '+32 475 96 51 41';
+  const whatsappNumber = settings?.whatsapp_number?.number ?? contactInfo.phone;
   const checkInTime = settings?.check_in_time?.time ?? '15:00';
   const checkOutTime = settings?.check_out_time?.time ?? '12:00';
   const currencySymbol = settings?.currency?.symbol ?? '€';

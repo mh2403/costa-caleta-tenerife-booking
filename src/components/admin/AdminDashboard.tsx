@@ -1,10 +1,10 @@
-import { useLanguage } from '@/i18n';
+import { translations } from '@/i18n';
 import { Calendar, DollarSign, Users, TrendingUp, Loader2 } from 'lucide-react';
 import { useBookings } from '@/hooks/useBookings';
 import { format } from 'date-fns';
 
 export function AdminDashboard() {
-  const { t } = useLanguage();
+  const t = translations.nl;
   const { data: bookings = [], isLoading } = useBookings();
 
   // Calculate stats from real data
@@ -34,7 +34,7 @@ export function AdminDashboard() {
         <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
           {t.admin.dashboard}
         </h1>
-        <p className="text-muted-foreground mt-1">Welcome back! Here's your overview.</p>
+        <p className="text-muted-foreground mt-1">Welkom terug! Hier is uw overzicht.</p>
       </div>
 
       {/* Stats Grid */}
@@ -46,7 +46,7 @@ export function AdminDashboard() {
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground">{stats.totalBookings}</p>
-          <p className="text-sm text-muted-foreground">Total Bookings</p>
+          <p className="text-sm text-muted-foreground">Totaal boekingen</p>
         </div>
 
         <div className="bg-card rounded-xl p-6 shadow-soft">
@@ -56,7 +56,7 @@ export function AdminDashboard() {
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground">{stats.pendingBookings}</p>
-          <p className="text-sm text-muted-foreground">Pending</p>
+          <p className="text-sm text-muted-foreground">In afwachting</p>
         </div>
 
         <div className="bg-card rounded-xl p-6 shadow-soft">
@@ -66,7 +66,7 @@ export function AdminDashboard() {
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground">€{stats.revenue.toLocaleString()}</p>
-          <p className="text-sm text-muted-foreground">Revenue</p>
+          <p className="text-sm text-muted-foreground">Omzet</p>
         </div>
 
         <div className="bg-card rounded-xl p-6 shadow-soft">
@@ -76,18 +76,18 @@ export function AdminDashboard() {
             </div>
           </div>
           <p className="text-2xl font-bold text-foreground">{stats.confirmedBookings}</p>
-          <p className="text-sm text-muted-foreground">Confirmed</p>
+          <p className="text-sm text-muted-foreground">Bevestigd</p>
         </div>
       </div>
 
       {/* Recent Bookings */}
       <div className="bg-card rounded-xl shadow-soft">
         <div className="p-6 border-b border-border">
-          <h2 className="font-heading text-lg font-semibold">Recent Bookings</h2>
+          <h2 className="font-heading text-lg font-semibold">Recente boekingen</h2>
         </div>
         {recentBookings.length === 0 ? (
           <div className="p-6 text-center text-muted-foreground">
-            No bookings yet
+            Nog geen boekingen
           </div>
         ) : (
           <div className="divide-y divide-border">

@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Phone, Mail, MessageCircle, Clock, MapPin, Send, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { contactInfo } from '@/lib/contactInfo';
 
 const Contact = () => {
   const { t } = useLanguage();
@@ -19,10 +20,8 @@ const Contact = () => {
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const contactInfo = {
-    phone: '+32 475 96 51 41',
-    email: 'martine.govaert@gmail.com',
-    whatsapp: '32475965141',
+  const contactDetails = {
+    ...contactInfo,
     address: 'Costa Adeje, Tenerife, Canary Islands',
   };
 
@@ -71,7 +70,7 @@ const Contact = () => {
                 <div className="space-y-6">
                   {/* Phone */}
                   <a
-                    href={`tel:${contactInfo.phone}`}
+                    href={`tel:${contactDetails.phone}`}
                     className="flex items-start gap-4 p-4 rounded-xl bg-card shadow-soft hover:shadow-medium transition-all group"
                   >
                     <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -79,13 +78,13 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">{t.contact.phone}</p>
-                      <p className="text-primary text-lg">{contactInfo.phone}</p>
+                      <p className="text-primary text-lg">{contactDetails.phone}</p>
                     </div>
                   </a>
 
                   {/* Email */}
                   <a
-                    href={`mailto:${contactInfo.email}`}
+                    href={`mailto:${contactDetails.email}`}
                     className="flex items-start gap-4 p-4 rounded-xl bg-card shadow-soft hover:shadow-medium transition-all group"
                   >
                     <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center group-hover:bg-secondary/20 transition-colors">
@@ -93,13 +92,13 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">{t.contact.email}</p>
-                      <p className="text-secondary text-lg">{contactInfo.email}</p>
+                      <p className="text-secondary text-lg">{contactDetails.email}</p>
                     </div>
                   </a>
 
                   {/* WhatsApp */}
                   <a
-                    href={`https://wa.me/${contactInfo.whatsapp}`}
+                    href={`https://wa.me/${contactDetails.whatsapp}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-start gap-4 p-4 rounded-xl bg-card shadow-soft hover:shadow-medium transition-all group"
@@ -109,7 +108,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">{t.contact.whatsapp}</p>
-                      <p className="text-[#25D366] text-lg">{contactInfo.phone}</p>
+                      <p className="text-[#25D366] text-lg">{contactDetails.phone}</p>
                     </div>
                   </a>
 
@@ -120,7 +119,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <p className="font-semibold text-foreground">Location</p>
-                      <p className="text-muted-foreground">{contactInfo.address}</p>
+                      <p className="text-muted-foreground">{contactDetails.address}</p>
                     </div>
                   </div>
                 </div>

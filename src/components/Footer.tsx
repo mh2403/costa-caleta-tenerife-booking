@@ -1,17 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/i18n';
+import { contactInfo } from '@/lib/contactInfo';
 
 export function Footer() {
   const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
-
-  // Placeholder contact info - admin can customize
-  const contactInfo = {
-    phone: '+32 475 96 51 41',
-    email: 'martine.govaert@gmail.com',
-    whatsapp: '32475965141',
-  };
 
   return (
     <footer className="bg-foreground text-background">

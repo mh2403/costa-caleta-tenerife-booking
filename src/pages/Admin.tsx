@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/i18n';
+import { translations } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,7 +22,7 @@ import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { useAuth } from '@/hooks/useAuth';
 
 const Admin = () => {
-  const { t } = useLanguage();
+  const t = translations.nl;
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAdmin, loading, signIn, signOut } = useAuth();
@@ -90,7 +90,7 @@ const Admin = () => {
               </h1>
               {user && !isAdmin && (
                 <p className="text-sm text-muted-foreground mt-2">
-                  You don't have admin access. Please contact the owner.
+                  U heeft geen beheerrechten. Neem contact op met de eigenaar.
                 </p>
               )}
             </div>
@@ -98,7 +98,7 @@ const Admin = () => {
             {!user ? (
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">E-mail</Label>
                   <Input
                     id="email"
                     type="email"
@@ -141,7 +141,7 @@ const Admin = () => {
 
             <div className="mt-6 text-center">
               <Link to="/" className="text-sm text-muted-foreground hover:text-primary">
-                ← Back to website
+                ← Terug naar website
               </Link>
             </div>
           </div>
