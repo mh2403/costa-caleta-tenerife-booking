@@ -37,6 +37,9 @@ export function Footer() {
               <Link to="/contact" className="text-background/70 hover:text-background transition-colors text-sm">
                 {t.nav.contact}
               </Link>
+              <Link to="/instructions" className="text-background/70 hover:text-background transition-colors text-sm">
+                {t.footer.instructions}
+              </Link>
             </div>
           </div>
 

@@ -115,6 +115,7 @@ export interface Translations {
     rights: string;
     privacy: string;
     terms: string;
+    instructions: string;
   };
   // Privacy policy
   privacy: {
@@ -129,6 +130,12 @@ export interface Translations {
     updated: string;
     intro: string;
     sections: { title: string; body?: string; list?: string[] }[];
+  };
+  // Instructions
+  instructions: {
+    title: string;
+    subtitle: string;
+    videoLabel: string;
   };
   // Admin
   admin: {
@@ -302,6 +309,7 @@ Practical:
       rights: 'All rights reserved',
       privacy: 'Privacy Policy',
       terms: 'Terms of Service',
+      instructions: 'Instructions',
     },
     privacy: {
       title: 'Privacy Policy',
@@ -407,6 +415,11 @@ Practical:
           body: 'Questions about these terms? Contact us at {email} or {phone}.',
         },
       ],
+    },
+    instructions: {
+      title: 'Instructions',
+      subtitle: 'Video guide for using the TV in the apartment.',
+      videoLabel: 'TV Instruction Video',
     },
     admin: {
       dashboard: 'Dashboard',
@@ -576,6 +589,7 @@ Praktisch:
       rights: 'Alle rechten voorbehouden',
       privacy: 'Privacybeleid',
       terms: 'Algemene Voorwaarden',
+      instructions: 'Instructies',
     },
     privacy: {
       title: 'Privacybeleid',
@@ -681,6 +695,11 @@ Praktisch:
           body: 'Vragen over deze voorwaarden? Contacteer ons via {email} of {phone}.',
         },
       ],
+    },
+    instructions: {
+      title: 'Instructies',
+      subtitle: 'Videogids voor het gebruik van de tv in het appartement.',
+      videoLabel: 'TV-instructievideo',
     },
     admin: {
       dashboard: 'Dashboard',
@@ -850,6 +869,7 @@ Práctico:
       rights: 'Todos los derechos reservados',
       privacy: 'Política de Privacidad',
       terms: 'Términos y Condiciones',
+      instructions: 'Instrucciones',
     },
     privacy: {
       title: 'Política de Privacidad',
@@ -955,6 +975,11 @@ Práctico:
           body: '¿Preguntas sobre estos términos? Contáctanos en {email} o {phone}.',
         },
       ],
+    },
+    instructions: {
+      title: 'Instrucciones',
+      subtitle: 'Guía en video para usar el televisor en el apartamento.',
+      videoLabel: 'Video de instrucciones de TV',
     },
     admin: {
       dashboard: 'Panel',
