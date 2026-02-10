@@ -507,7 +507,7 @@ export function AdminBookings() {
       {/* Booking Details Dialog */}
       <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
         <DialogContent
-          className="sm:max-w-md max-h-[85vh] overflow-y-auto"
+          className="w-[92vw] max-w-[92vw] p-4 sm:p-6 sm:max-w-md max-h-[85vh] overflow-y-auto"
           onOpenAutoFocus={(event) => event.preventDefault()}
         >
           <DialogHeader>
@@ -515,7 +515,7 @@ export function AdminBookings() {
           </DialogHeader>
           {selectedBooking && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-muted rounded-lg p-3">
                   <p className="text-sm text-muted-foreground">Inchecken</p>
                   <p className="font-semibold">{format(new Date(selectedBooking.check_in), 'PPP')}</p>
@@ -554,7 +554,7 @@ export function AdminBookings() {
 
               <div className="bg-muted rounded-lg p-3 space-y-3">
                 <p className="text-sm text-muted-foreground">Boekingsdata aanpassen</p>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-xs text-muted-foreground">Inchecken</label>
                     <Input
@@ -596,10 +596,10 @@ export function AdminBookings() {
                 </div>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <Button
                   variant="whatsapp"
-                  className="flex-1"
+                  className="w-full sm:flex-1"
                   asChild
                 >
                   <a
@@ -615,6 +615,7 @@ export function AdminBookings() {
                   <>
                     <Button
                       variant="default"
+                      className="w-full sm:w-auto"
                       onClick={() => handleStatusChange(selectedBooking.id, 'confirmed')}
                       disabled={updateBooking.isPending}
                     >
@@ -623,6 +624,7 @@ export function AdminBookings() {
                     </Button>
                     <Button
                       variant="destructive"
+                      className="w-full sm:w-auto"
                       onClick={() => handleStatusChange(selectedBooking.id, 'declined')}
                       disabled={updateBooking.isPending}
                     >
@@ -634,6 +636,7 @@ export function AdminBookings() {
                 {selectedBooking.status === 'confirmed' && (
                   <Button
                     variant="outline"
+                    className="w-full sm:w-auto"
                     onClick={() => handleStatusChange(selectedBooking.id, 'cancelled')}
                     disabled={updateBooking.isPending}
                   >
