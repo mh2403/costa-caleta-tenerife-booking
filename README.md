@@ -27,7 +27,7 @@ npm run preview
 ```
 
 ## Environment Variables
-Create a `.env` file with:
+Copy `.env.example` to `.env` and fill in:
 ```
 VITE_SUPABASE_PROJECT_ID="your_project_ref"
 VITE_SUPABASE_URL="https://your_project_ref.supabase.co"
@@ -37,4 +37,3 @@ VITE_SUPABASE_PUBLISHABLE_KEY="your_anon_key"
 ## Deployment (GitHub Pages)
 This repo uses GitHub Actions to build and deploy the `dist/` folder to GitHub Pages.
 If your repo name changes, update `base` in `vite.config.ts`.
-
