@@ -4,7 +4,8 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === "production" ? "/costa-caleta-tenerife-booking/" : "/",
+  // Custom domain is the root, so use "/" in production.
+  base: mode === "production" ? "/" : "/",
   server: {
     host: "::",
     port: 8080,
