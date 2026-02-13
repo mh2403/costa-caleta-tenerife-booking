@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { format, addDays, differenceInDays, isWithinInterval, isBefore, startOfDay } from 'date-fns';
+import type { DateRange } from 'react-day-picker';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -64,14 +65,6 @@ const Booking = () => {
   const isDateDisabled = (date: Date) => {
     const today = startOfDay(new Date());
     return isBefore(date, today) || isDateBooked(date) || isDateBlocked(date);
-  };
-
-  const isCheckOutDisabled = (date: Date) => {
-    if (!checkIn) return isDateDisabled(date);
-    if (isDateDisabled(date)) return true;
-    if (isBefore(date, addDays(checkIn, 1))) return true;
-    if (differenceInDays(date, checkIn) < minStayForCheckIn) return true;
-    return !isRangeAvailable(checkIn, date);
   };
 
   const rangesOverlap = (startA: Date, endA: Date, startB: Date, endB: Date) => {
@@ -146,6 +139,59 @@ const Booking = () => {
     if (!checkIn || !checkOut) return minStayForCheckIn;
     return getMinStayForRange(checkIn, checkOut);
   }, [checkIn, checkOut, minStayForCheckIn, pricingRules]);
+
+  const selectedDateRange = useMemo<DateRange | undefined>(() => {
+    if (!checkIn) return undefined;
+    return { from: checkIn, to: checkOut };
+  }, [checkIn, checkOut]);
+
+  const handleRangeSelect = (range: DateRange | undefined) => {
+    if (!range?.from) {
+      setCheckIn(undefined);
+      setCheckOut(undefined);
+      return;
+    }
+
+    if (!range.to) {
+      setCheckIn(range.from);
+      setCheckOut(undefined);
+      return;
+    }
+
+    const start = startOfDay(range.from);
+    const end = startOfDay(range.to);
+    const nightsCount = differenceInDays(end, start);
+
+    if (nightsCount < 1) {
+      setCheckIn(start);
+      setCheckOut(undefined);
+      return;
+    }
+
+    if (!isRangeAvailable(start, end)) {
+      toast({
+        title: t.booking.unavailableRange,
+        variant: 'destructive',
+      });
+      setCheckIn(start);
+      setCheckOut(undefined);
+      return;
+    }
+
+    const minStay = getMinStayForRange(start, end);
+    if (nightsCount < minStay) {
+      toast({
+        title: t.booking.minStayError.replace('{n}', String(minStay)),
+        variant: 'destructive',
+      });
+      setCheckIn(start);
+      setCheckOut(undefined);
+      return;
+    }
+
+    setCheckIn(start);
+    setCheckOut(end);
+  };
 
   useEffect(() => {
     if (!checkIn || !checkOut) return;
@@ -391,7 +437,7 @@ const Booking = () => {
           <div className="max-w-4xl mx-auto">
             {/* Step 1: Dates */}
             {step === 1 && (
-              <div className="grid md:grid-cols-2 gap-8 animate-fade-in">
+              <div className="grid md:grid-cols-[1.35fr_1fr] gap-8 animate-fade-in">
                 <div className="bg-card rounded-2xl p-6 shadow-soft">
                   <h3 className="font-heading text-xl font-semibold mb-4 flex items-center gap-2">
                     <CalendarIcon className="h-5 w-5 text-primary" />
@@ -399,12 +445,16 @@ const Booking = () => {
                   </h3>
                   <div className="space-y-4">
                     <div>
-                      <Label>{t.booking.checkIn}</Label>
+                      <Label>
+                        {t.booking.checkIn} - {t.booking.checkOut}
+                      </Label>
                       <Calendar
-                        mode="single"
-                        selected={checkIn}
-                        onSelect={setCheckIn}
+                        mode="range"
+                        selected={selectedDateRange}
+                        onSelect={handleRangeSelect}
                         disabled={isDateDisabled}
+                        numberOfMonths={2}
+                        pagedNavigation
                         className="rounded-md border pointer-events-auto"
                       />
                     </div>
@@ -413,14 +463,21 @@ const Booking = () => {
 
                 <div className="space-y-6">
                   <div className="bg-card rounded-2xl p-6 shadow-soft">
-                    <Label>{t.booking.checkOut}</Label>
-                    <Calendar
-                      mode="single"
-                      selected={checkOut}
-                      onSelect={setCheckOut}
-                      disabled={isCheckOutDisabled}
-                      className="rounded-md border pointer-events-auto"
-                    />
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">{t.booking.checkIn}</p>
+                        <p className="font-semibold">{checkIn ? format(checkIn, 'PPP') : '-'}</p>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">{t.booking.checkOut}</p>
+                        <p className="font-semibold">{checkOut ? format(checkOut, 'PPP') : '-'}</p>
+                      </div>
+                    </div>
+                    {checkIn && checkOut && nights > 0 && (
+                      <p className="text-sm text-muted-foreground mt-3">
+                        {nights} {t.booking.nights}
+                      </p>
+                    )}
                   </div>
 
                   <div className="bg-card rounded-2xl p-6 shadow-soft">

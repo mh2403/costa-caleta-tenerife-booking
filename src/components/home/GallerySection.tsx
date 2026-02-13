@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import balconyMorningImage from '@/assets/CostaCaleta/BalconyView-Pic1.JPG';
-import balconyBreakfastImage from '@/assets/CostaCaleta/BalconyView-pic4.jpg';
 import balconyMountainBreakfastImage from '@/assets/CostaCaleta/BalconyView-pic5.jpg';
 import bedroomImage from '@/assets/CostaCaleta/Bedroom-pic1.JPG';
 import livingroomImage from '@/assets/CostaCaleta/Livingroom-pic1.JPG';
@@ -21,7 +20,6 @@ import roadImage from '@/assets/CostaCaleta/TenerifeRoad-pic1.jpg';
 const images = [
   // Apartment photos
   { src: balconyMorningImage, alt: 'Balcony breakfast setup' },
-  { src: balconyBreakfastImage, alt: 'Breakfast table on the terrace' },
   { src: balconyMountainBreakfastImage, alt: 'Breakfast with mountain view' },
   { src: bedroomImage, alt: 'Bedroom' },
   { src: livingroomImage, alt: 'Living room and kitchen' },
