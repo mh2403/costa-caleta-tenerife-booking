@@ -16,11 +16,23 @@ export interface Translations {
     bookNow: string;
     fromPrice: string;
     perNight: string;
+    trustItems: string[];
+    imageAlt: string;
   };
   // CTA section
   cta: {
     title: string;
     subtitle: string;
+    eyebrow: string;
+    trustItems: string[];
+  };
+  // Gallery
+  gallery: {
+    filterAll: string;
+    filterApartment: string;
+    filterTenerife: string;
+    loadMore: string;
+    imageAlts: string[];
   };
   // Facilities
   facilities: {
@@ -114,6 +126,15 @@ export interface Translations {
     successTitle: string;
     successBody: string;
     requiredFields: string;
+    helperText: string;
+    trustItems: string[];
+    locationLabel: string;
+    mapCardTitle: string;
+    mapCardDescription: string;
+    mapLoadButton: string;
+    mapOpenExternal: string;
+    mapEmbedTitle: string;
+    address: string;
   };
   // Footer
   footer: {
@@ -121,6 +142,9 @@ export interface Translations {
     privacy: string;
     terms: string;
     instructions: string;
+    quickLinks: string;
+    directBooking: string;
+    whatsappLabel: string;
   };
   // Privacy policy
   privacy: {
@@ -184,6 +208,10 @@ export interface Translations {
     viewDetails: string;
     noResults: string;
   };
+  notFound: {
+    title: string;
+    backHome: string;
+  };
 }
 
 export const translations: Record<Language, Translations> = {
@@ -201,10 +229,45 @@ export const translations: Record<Language, Translations> = {
       bookNow: 'Book Now',
       fromPrice: 'From',
       perNight: '/ night',
+      trustItems: [
+        'Direct booking, no platform fees',
+        'Prime La Caleta location',
+        'Fast host response',
+      ],
+      imageAlt: 'Breakfast table with ocean view in La Caleta',
     },
     cta: {
       title: 'Ready for Your Tenerife Escape?',
       subtitle: 'Book directly with us for the best rates. No hidden fees, no middlemen — just your perfect vacation home.',
+      eyebrow: 'Costa Caleta Tenerife',
+      trustItems: [
+        'Prime La Caleta location',
+        'Direct booking, no hidden fees',
+        'Fast host response',
+      ],
+    },
+    gallery: {
+      filterAll: 'All',
+      filterApartment: 'Apartment',
+      filterTenerife: 'Tenerife',
+      loadMore: 'Load more photos',
+      imageAlts: [
+        'Balcony breakfast setup',
+        'Breakfast with mountain view',
+        'Bedroom',
+        'Living room and kitchen',
+        'Living room view from the terrace',
+        'Bathroom with vanity',
+        'Bathroom with shower',
+        'Dining area',
+        'Pool',
+        'Pool view',
+        'Poolside at the residence',
+        'Pool terrace at sunset',
+        'Sunset at the beach',
+        'Coastline view of Tenerife',
+        'Scenic road in Tenerife',
+      ],
     },
     facilities: {
       title: 'Amenities & Facilities',
@@ -315,12 +378,24 @@ Practical:
       successTitle: 'Message sent!',
       successBody: 'We will get back to you within 24 hours.',
       requiredFields: 'Please fill in all required fields.',
+      helperText: 'Choose your preferred way to get in touch.',
+      trustItems: ['Direct contact', 'No platform fees', 'Top-rated area'],
+      locationLabel: 'Location',
+      mapCardTitle: 'Interactive map',
+      mapCardDescription: 'Google Maps content is only loaded after you choose to display it.',
+      mapLoadButton: 'Load map',
+      mapOpenExternal: 'Open in Google Maps',
+      mapEmbedTitle: 'Costa Caleta map',
+      address: 'Costa Adeje, Tenerife, Canary Islands',
     },
     footer: {
       rights: 'All rights reserved',
       privacy: 'Privacy Policy',
       terms: 'Terms of Service',
       instructions: 'Instructions',
+      quickLinks: 'Quick links',
+      directBooking: 'Direct booking in La Caleta',
+      whatsappLabel: 'WhatsApp',
     },
     privacy: {
       title: 'Privacy Policy',
@@ -472,6 +547,10 @@ Practical:
       viewDetails: 'View Details',
       noResults: 'No results found',
     },
+    notFound: {
+      title: 'Oops! Page not found',
+      backHome: 'Return to Home',
+    },
   },
   nl: {
     nav: {
@@ -487,10 +566,45 @@ Practical:
       bookNow: 'Nu Boeken',
       fromPrice: 'Vanaf',
       perNight: '/ nacht',
+      trustItems: [
+        'Direct boeken, geen platformkosten',
+        'Toplocatie in La Caleta',
+        'Snelle reactie van host',
+      ],
+      imageAlt: 'Ontbijttafel met oceaanzicht in La Caleta',
     },
     cta: {
       title: 'Klaar voor uw Tenerife-escape?',
       subtitle: 'Boek direct bij ons voor de beste tarieven. Geen verborgen kosten, geen tussenpersonen — gewoon uw perfecte vakantieverblijf.',
+      eyebrow: 'Costa Caleta Tenerife',
+      trustItems: [
+        'Toplocatie in La Caleta',
+        'Direct boeken, geen verborgen kosten',
+        'Snelle reactie van host',
+      ],
+    },
+    gallery: {
+      filterAll: 'Alles',
+      filterApartment: 'Appartement',
+      filterTenerife: 'Tenerife',
+      loadMore: "Meer foto's laden",
+      imageAlts: [
+        'Balkon met ontbijt',
+        'Ontbijt met bergzicht',
+        'Slaapkamer',
+        'Woonkamer en keuken',
+        'Woonkamerzicht vanaf het terras',
+        'Badkamer met wastafel',
+        'Badkamer met douche',
+        'Eethoek',
+        'Zwembad',
+        'Zicht op het zwembad',
+        'Zwembadgedeelte van de residentie',
+        'Zwembadterras bij zonsondergang',
+        'Zonsondergang op het strand',
+        'Kustzicht op Tenerife',
+        'Scenische weg op Tenerife',
+      ],
     },
     facilities: {
       title: 'Voorzieningen & Faciliteiten',
@@ -601,12 +715,24 @@ Praktisch:
       successTitle: 'Bericht verzonden!',
       successBody: 'We nemen binnen 24 uur contact met u op.',
       requiredFields: 'Vul alle verplichte velden in.',
+      helperText: 'Kies uw voorkeursmanier om contact op te nemen.',
+      trustItems: ['Rechtstreeks contact', 'Geen platformkosten', 'Toplocatie'],
+      locationLabel: 'Locatie',
+      mapCardTitle: 'Interactieve kaart',
+      mapCardDescription: 'Google Maps wordt pas geladen nadat u ervoor kiest om de kaart te tonen.',
+      mapLoadButton: 'Kaart laden',
+      mapOpenExternal: 'Openen in Google Maps',
+      mapEmbedTitle: 'Kaart van Costa Caleta',
+      address: 'Costa Adeje, Tenerife, Canarische Eilanden',
     },
     footer: {
       rights: 'Alle rechten voorbehouden',
       privacy: 'Privacybeleid',
       terms: 'Algemene Voorwaarden',
       instructions: 'Instructies',
+      quickLinks: 'Snelle links',
+      directBooking: 'Direct boeken in La Caleta',
+      whatsappLabel: 'WhatsApp',
     },
     privacy: {
       title: 'Privacybeleid',
@@ -758,6 +884,10 @@ Praktisch:
       viewDetails: 'Details Bekijken',
       noResults: 'Geen resultaten gevonden',
     },
+    notFound: {
+      title: "Oeps! Pagina niet gevonden",
+      backHome: 'Terug naar Home',
+    },
   },
   es: {
     nav: {
@@ -773,10 +903,45 @@ Praktisch:
       bookNow: 'Reservar Ahora',
       fromPrice: 'Desde',
       perNight: '/ noche',
+      trustItems: [
+        'Reserva directa, sin comisiones de plataforma',
+        'Ubicación ideal en La Caleta',
+        'Respuesta rápida del anfitrión',
+      ],
+      imageAlt: 'Mesa de desayuno con vista al océano en La Caleta',
     },
     cta: {
       title: '¿Listo para tu escapada en Tenerife?',
       subtitle: 'Reserva directamente con nosotros para las mejores tarifas. Sin cargos ocultos, sin intermediarios — solo tu hogar vacacional perfecto.',
+      eyebrow: 'Costa Caleta Tenerife',
+      trustItems: [
+        'Ubicación ideal en La Caleta',
+        'Reserva directa, sin costes ocultos',
+        'Respuesta rápida del anfitrión',
+      ],
+    },
+    gallery: {
+      filterAll: 'Todo',
+      filterApartment: 'Apartamento',
+      filterTenerife: 'Tenerife',
+      loadMore: 'Cargar más fotos',
+      imageAlts: [
+        'Balcón con desayuno',
+        'Desayuno con vista a la montaña',
+        'Dormitorio',
+        'Sala de estar y cocina',
+        'Vista de la sala desde la terraza',
+        'Baño con lavabo',
+        'Baño con ducha',
+        'Comedor',
+        'Piscina',
+        'Vista de la piscina',
+        'Zona de piscina de la residencia',
+        'Terraza de la piscina al atardecer',
+        'Atardecer en la playa',
+        'Vista de la costa de Tenerife',
+        'Carretera panorámica en Tenerife',
+      ],
     },
     facilities: {
       title: 'Servicios e Instalaciones',
@@ -887,12 +1052,24 @@ Práctico:
       successTitle: '¡Mensaje enviado!',
       successBody: 'Te responderemos en un plazo de 24 horas.',
       requiredFields: 'Completa todos los campos obligatorios.',
+      helperText: 'Elige tu forma preferida de contacto.',
+      trustItems: ['Contacto directo', 'Sin comisiones', 'Zona destacada'],
+      locationLabel: 'Ubicación',
+      mapCardTitle: 'Mapa interactivo',
+      mapCardDescription: 'Google Maps solo se carga después de que decidas mostrarlo.',
+      mapLoadButton: 'Cargar mapa',
+      mapOpenExternal: 'Abrir en Google Maps',
+      mapEmbedTitle: 'Mapa de Costa Caleta',
+      address: 'Costa Adeje, Tenerife, Islas Canarias',
     },
     footer: {
       rights: 'Todos los derechos reservados',
       privacy: 'Política de Privacidad',
       terms: 'Términos y Condiciones',
       instructions: 'Instrucciones',
+      quickLinks: 'Enlaces rápidos',
+      directBooking: 'Reserva directa en La Caleta',
+      whatsappLabel: 'WhatsApp',
     },
     privacy: {
       title: 'Política de Privacidad',
@@ -1043,6 +1220,10 @@ Práctico:
       close: 'Cerrar',
       viewDetails: 'Ver Detalles',
       noResults: 'No se encontraron resultados',
+    },
+    notFound: {
+      title: 'Ups, no se encontró la página',
+      backHome: 'Volver al inicio',
     },
   },
 };

@@ -30,6 +30,7 @@ const Instructions = () => {
                   src={tvVideo}
                   controls
                   playsInline
+                  preload="none"
                   className="w-full rounded-xl shadow-soft bg-black"
                 />
               </div>

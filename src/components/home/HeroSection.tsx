@@ -1,24 +1,28 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
+import { useSettings } from '@/hooks/useSettings';
 import heroImage from '@/assets/CostaCaleta/BreakfastView-Pic2-hero.jpeg';
 
 export function HeroSection() {
   const { t } = useLanguage();
+  const { data: settings } = useSettings();
+  const fromPrice = settings?.base_price?.amount ?? 85;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src={heroImage}
-          alt="Breakfast table with ocean view in La Caleta"
+          alt={t.hero.imageAlt}
           className="w-full h-full object-cover object-[center_60%]"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/55 via-foreground/30 to-foreground/75" />
       </div>
 
-      {/* Content */}
       <div className="relative z-10 container mx-auto px-4 text-center pt-20">
         <div className="max-w-3xl mx-auto animate-fade-in-up">
           <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 leading-tight text-shadow-hero">
@@ -28,14 +32,12 @@ export function HeroSection() {
             {t.hero.subtitle}
           </p>
 
-          {/* Price Badge */}
           <div className="inline-flex items-center gap-2 bg-primary-foreground/10 backdrop-blur-md rounded-full px-6 py-3 mb-8 border border-primary-foreground/20">
             <span className="text-primary-foreground/80">{t.hero.fromPrice}</span>
-            <span className="text-2xl font-bold text-primary-foreground">€80</span>
+            <span className="text-2xl font-bold text-primary-foreground">€{fromPrice}</span>
             <span className="text-primary-foreground/80">{t.hero.perNight}</span>
           </div>
 
-          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild variant="hero" size="xl">
               <Link to="/booking">{t.hero.bookNow}</Link>
@@ -45,7 +47,6 @@ export function HeroSection() {
             </Button>
           </div>
         </div>
-
       </div>
     </section>
   );

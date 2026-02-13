@@ -1,38 +1,50 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export function CTASection() {
   const { t } = useLanguage();
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-sunset text-primary-foreground">
-      <div className="container mx-auto px-4 text-center">
-        <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
-          {t.cta.title}
-        </h2>
-        <p className="text-primary-foreground/90 text-lg max-w-2xl mx-auto mb-8">
-          {t.cta.subtitle}
-        </p>
+    <section className="relative overflow-hidden py-14 md:py-20 bg-gradient-sunset text-primary-foreground">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-20 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-primary-foreground/20 blur-3xl" />
+        <div className="absolute bottom-0 -left-12 h-60 w-60 rounded-full bg-foreground/20 blur-3xl" />
+        <div className="absolute top-1/3 -right-10 h-48 w-48 rounded-full bg-accent/25 blur-3xl" />
+      </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild variant="heroOutline" size="xl">
-            <Link to="/booking" className="flex items-center gap-2">
-              {t.hero.bookNow}
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" size="xl" className="text-primary-foreground hover:bg-primary-foreground/10">
-            <Link to="/contact">{t.nav.contact}</Link>
-          </Button>
-        </div>
+      <div className="container mx-auto px-4">
+        <div className="relative mx-auto max-w-3xl rounded-[1.75rem] border border-primary-foreground/25 bg-foreground/20 px-5 py-7 md:px-8 md:py-9 text-center backdrop-blur-xl shadow-[0_20px_60px_-24px_rgba(0,0,0,0.55)]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/35 bg-primary-foreground/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground/95 mb-4">
+            <Sparkles className="h-4 w-4" />
+            <span>{t.cta.eyebrow}</span>
+          </div>
 
-        {/* Price reminder */}
-        <div className="mt-8 inline-flex items-center gap-2 text-primary-foreground/80">
-          <span>{t.hero.fromPrice}</span>
-          <span className="text-2xl font-bold">€80</span>
-          <span>{t.hero.perNight}</span>
+          <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6 text-balance">
+            {t.cta.title}
+          </h2>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button
+              asChild
+              size="lg"
+              className="min-w-[190px] rounded-full bg-primary-foreground text-foreground hover:bg-primary-foreground/90 shadow-large"
+            >
+              <Link to="/booking" className="flex items-center justify-center gap-2">
+                {t.hero.bookNow}
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="heroOutline"
+              size="lg"
+              className="min-w-[190px] rounded-full border-primary-foreground/70 bg-primary-foreground/5 hover:bg-primary-foreground/15"
+            >
+              <Link to="/contact">{t.nav.contact}</Link>
+            </Button>
+          </div>
         </div>
       </div>
     </section>

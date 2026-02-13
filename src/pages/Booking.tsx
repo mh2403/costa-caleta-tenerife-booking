@@ -9,18 +9,20 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { useLanguage, Language } from '@/i18n';
+import { useLanguage } from '@/i18n';
 import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateBooking, useBookedDates } from '@/hooks/useBookings';
 import { usePricingRules } from '@/hooks/usePricing';
 import { useSettings } from '@/hooks/useSettings';
 import { useBlockedDates } from '@/hooks/useBlockedDates';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { contactInfo } from '@/lib/contactInfo';
 
 const Booking = () => {
   const { t, language } = useLanguage();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
   const [step, setStep] = useState(1);
   const [checkIn, setCheckIn] = useState<Date>();
   const [checkOut, setCheckOut] = useState<Date>();
@@ -140,6 +142,11 @@ const Booking = () => {
     return getMinStayForRange(checkIn, checkOut);
   }, [checkIn, checkOut, minStayForCheckIn, pricingRules]);
 
+  const guestOptions = useMemo(
+    () => Array.from({ length: Math.max(1, maxGuests) }, (_, index) => index + 1),
+    [maxGuests]
+  );
+
   const selectedDateRange = useMemo<DateRange | undefined>(() => {
     if (!checkIn) return undefined;
     return { from: checkIn, to: checkOut };
@@ -200,6 +207,15 @@ const Booking = () => {
       setCheckOut(undefined);
     }
   }, [checkIn, checkOut, bookedDates, blockedDates, isRangeAvailable]);
+
+  useEffect(() => {
+    const currentGuests = Number(guests) || 1;
+    const safeMaxGuests = Math.max(1, maxGuests);
+    const clampedGuests = Math.min(Math.max(currentGuests, 1), safeMaxGuests);
+    if (clampedGuests !== currentGuests) {
+      setGuests(String(clampedGuests));
+    }
+  }, [guests, maxGuests]);
 
   const { nights, totalNightsCost, totalPrice } = useMemo(() => {
     if (!checkIn || !checkOut) {
@@ -453,7 +469,7 @@ const Booking = () => {
                         selected={selectedDateRange}
                         onSelect={handleRangeSelect}
                         disabled={isDateDisabled}
-                        numberOfMonths={2}
+                        numberOfMonths={isMobile ? 1 : 2}
                         pagedNavigation
                         className="rounded-md border pointer-events-auto"
                       />
@@ -487,7 +503,7 @@ const Booking = () => {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-popover z-50">
-                        {[1, 2].map((n) => (
+                        {guestOptions.map((n) => (
                           <SelectItem key={n} value={n.toString()}>
                             {n} {t.booking.guestsCount}
                           </SelectItem>

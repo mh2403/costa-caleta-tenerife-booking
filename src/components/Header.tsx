@@ -22,6 +22,7 @@ export function Header() {
   }, []);
 
   const isActive = (path: string) => location.pathname === path;
+  const isHomeHero = location.pathname === '/' && !isScrolled;
 
   const navLinks = [
     { path: '/', label: t.nav.home },
@@ -30,110 +31,120 @@ export function Header() {
   ];
 
   return (
-    <header
-      className={cn(
-        'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
-        isScrolled
-          ? 'bg-card/95 backdrop-blur-md shadow-soft'
-          : 'bg-transparent'
-      )}
-    >
-      <div className="container mx-auto px-4">
-        <nav className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2">
-            <img
-              src={logoUrl}
-              alt="Costa Caleta"
-              className="h-7 w-7 rounded-full shadow-soft"
-            />
-            <span className={cn(
-              'font-heading text-xl font-semibold transition-colors',
-              isScrolled ? 'text-foreground' : 'text-foreground'
-            )}>
-              Costa Caleta
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
+    <header className="fixed top-3 left-0 right-0 z-50 px-3 md:px-4">
+      <div className="mx-auto max-w-7xl">
+        <div
+          className={cn(
+            'relative rounded-2xl border px-4 md:px-6 transition-all duration-300',
+            isHomeHero
+              ? 'border-primary-foreground/25 bg-foreground/20 backdrop-blur-xl shadow-[0_10px_40px_-12px_rgba(0,0,0,0.55)]'
+              : 'border-border bg-card/95 backdrop-blur-xl shadow-soft'
+          )}
+        >
+          <nav className="flex h-14 md:h-16 items-center justify-between">
+            <Link to="/" className="flex items-center gap-2">
+              <img
+                src={logoUrl}
+                alt="Costa Caleta"
+                className="h-7 w-7 rounded-full shadow-soft"
+              />
+              <span
                 className={cn(
-                  'text-sm font-medium transition-colors hover:text-primary',
-                  isActive(link.path)
-                    ? 'text-primary'
-                    : isScrolled
-                    ? 'text-foreground'
-                    : 'text-foreground'
+                  'font-heading text-lg md:text-xl font-semibold transition-colors',
+                  isHomeHero ? 'text-primary-foreground' : 'text-foreground'
                 )}
               >
-                {link.label}
-              </Link>
-            ))}
-            <LanguageSwitcher
-              className={cn(
-                'transition-colors text-foreground',
-                isScrolled
-                  ? 'bg-background/90 border-border hover:bg-muted'
-                  : 'bg-background/80 border-border hover:bg-background'
-              )}
-            />
-            <Button asChild variant="hero" size="sm">
-              <Link to="/booking">{t.hero.bookNow}</Link>
-            </Button>
-          </div>
+                Costa Caleta
+              </span>
+            </Link>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
-            <LanguageSwitcher
-              variant="minimal"
-              className={cn(
-                'transition-colors text-foreground',
-                isScrolled
-                  ? 'bg-background/90 hover:bg-muted'
-                  : 'bg-background/80 hover:bg-background'
-              )}
-            />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-          </div>
-        </nav>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 right-0 bg-card/95 backdrop-blur-md shadow-medium animate-fade-in-down">
-            <div className="container mx-auto px-4 py-4 flex flex-col gap-2">
+            <div className="hidden md:flex items-center gap-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    'px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                    'rounded-full px-4 py-2 text-sm font-medium transition-colors',
                     isActive(link.path)
-                      ? 'bg-primary/10 text-primary'
-                      : 'text-foreground hover:bg-muted'
+                      ? isHomeHero
+                        ? 'bg-primary-foreground/20 text-primary-foreground'
+                        : 'bg-primary/10 text-primary'
+                      : isHomeHero
+                      ? 'text-primary-foreground/85 hover:text-primary-foreground hover:bg-primary-foreground/10'
+                      : 'text-foreground hover:text-primary hover:bg-muted'
                   )}
                 >
                   {link.label}
                 </Link>
               ))}
-              <Button asChild variant="hero" className="mt-2">
-                <Link to="/booking" onClick={() => setMobileMenuOpen(false)}>
-                  {t.hero.bookNow}
-                </Link>
+
+              <LanguageSwitcher
+                className={cn(
+                  'ml-2 transition-colors',
+                  isHomeHero
+                    ? 'text-primary-foreground border-primary-foreground/40 bg-primary-foreground/10 hover:bg-primary-foreground/20'
+                    : 'text-foreground bg-background/90 border-border hover:bg-muted'
+                )}
+              />
+
+              <Button asChild variant={isHomeHero ? 'heroOutline' : 'hero'} size="sm" className="ml-2 rounded-full px-5">
+                <Link to="/booking">{t.hero.bookNow}</Link>
               </Button>
             </div>
-          </div>
-        )}
+
+            <div className="flex md:hidden items-center gap-2">
+              <LanguageSwitcher
+                variant="minimal"
+                className={cn(
+                  'transition-colors',
+                  isHomeHero
+                    ? 'text-primary-foreground bg-primary-foreground/10 hover:bg-primary-foreground/20'
+                    : 'text-foreground bg-background/90 hover:bg-muted'
+                )}
+              />
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className={cn(
+                  'rounded-full',
+                  isHomeHero
+                    ? 'text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground'
+                    : ''
+                )}
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+            </div>
+          </nav>
+
+          {mobileMenuOpen && (
+            <div className="md:hidden pb-3 animate-fade-in-down">
+              <div className="rounded-xl border border-border/70 bg-card/90 p-2 shadow-soft">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      'block rounded-lg px-4 py-3 text-sm font-medium transition-colors',
+                      isActive(link.path)
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-foreground hover:bg-muted'
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <Button asChild variant="hero" className="mt-2 w-full">
+                  <Link to="/booking" onClick={() => setMobileMenuOpen(false)}>
+                    {t.hero.bookNow}
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

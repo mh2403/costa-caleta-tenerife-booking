@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useLanguage } from '@/i18n';
 import balconyMorningImage from '@/assets/CostaCaleta/BalconyView-Pic1.JPG';
 import balconyMountainBreakfastImage from '@/assets/CostaCaleta/BalconyView-pic5.jpg';
 import bedroomImage from '@/assets/CostaCaleta/Bedroom-pic1.JPG';
@@ -17,29 +19,66 @@ import sunsetBeachImage from '@/assets/CostaCaleta/Nature-pic13.jpg';
 import coastalViewImage from '@/assets/CostaCaleta/Nature-pic3.JPG';
 import roadImage from '@/assets/CostaCaleta/TenerifeRoad-pic1.jpg';
 
-const images = [
-  // Apartment photos
-  { src: balconyMorningImage, alt: 'Balcony breakfast setup' },
-  { src: balconyMountainBreakfastImage, alt: 'Breakfast with mountain view' },
-  { src: bedroomImage, alt: 'Bedroom' },
-  { src: livingroomImage, alt: 'Living room and kitchen' },
-  { src: livingroomAltImage, alt: 'Living room view from the terrace' },
-  { src: bathroomImage, alt: 'Bathroom with vanity' },
-  { src: bathroomAltImage, alt: 'Bathroom with shower' },
-  { src: diningImage, alt: 'Dining area' },
-  { src: poolImage, alt: 'Pool' },
-  { src: poolAltImage, alt: 'Pool view' },
-  { src: poolsideImage, alt: 'Poolside at the residence' },
-  { src: poolsideSunsetImage, alt: 'Pool terrace at sunset' },
-  // Tenerife atmosphere photos
-  { src: sunsetBeachImage, alt: 'Sunset at the beach' },
-  { src: coastalViewImage, alt: 'Coastline view of Tenerife' },
-  { src: roadImage, alt: 'Scenic road in Tenerife' },
+type GalleryCategory = 'all' | 'apartment' | 'tenerife';
+
+type GalleryImage = {
+  src: string;
+  category: Exclude<GalleryCategory, 'all'>;
+};
+
+const INITIAL_IMAGE_COUNT = 8;
+
+const images: GalleryImage[] = [
+  { src: balconyMorningImage, category: 'apartment' },
+  { src: balconyMountainBreakfastImage, category: 'apartment' },
+  { src: bedroomImage, category: 'apartment' },
+  { src: livingroomImage, category: 'apartment' },
+  { src: livingroomAltImage, category: 'apartment' },
+  { src: bathroomImage, category: 'apartment' },
+  { src: bathroomAltImage, category: 'apartment' },
+  { src: diningImage, category: 'apartment' },
+  { src: poolImage, category: 'apartment' },
+  { src: poolAltImage, category: 'apartment' },
+  { src: poolsideImage, category: 'apartment' },
+  { src: poolsideSunsetImage, category: 'apartment' },
+  { src: sunsetBeachImage, category: 'tenerife' },
+  { src: coastalViewImage, category: 'tenerife' },
+  { src: roadImage, category: 'tenerife' },
 ];
 
 export function GallerySection() {
+  const { t } = useLanguage();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [category, setCategory] = useState<GalleryCategory>('all');
+  const [visibleCount, setVisibleCount] = useState(INITIAL_IMAGE_COUNT);
+
+  const categoryLabels: Record<GalleryCategory, string> = {
+    all: t.gallery.filterAll,
+    apartment: t.gallery.filterApartment,
+    tenerife: t.gallery.filterTenerife,
+  };
+
+  const visibleImages = useMemo(() => {
+    if (category === 'all') return images;
+    return images.filter((image) => image.category === category);
+  }, [category]);
+
+  const displayedImages = useMemo(
+    () => visibleImages.slice(0, visibleCount),
+    [visibleImages, visibleCount]
+  );
+
+  const canLoadMore = visibleCount < visibleImages.length;
+
+  const getAltText = (index: number) =>
+    t.gallery.imageAlts[index] ?? `Gallery image ${index + 1}`;
+
+  useEffect(() => {
+    setCurrentIndex(0);
+    setLightboxOpen(false);
+    setVisibleCount(INITIAL_IMAGE_COUNT);
+  }, [category]);
 
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
@@ -51,41 +90,73 @@ export function GallerySection() {
   };
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? displayedImages.length - 1 : prev - 1));
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === displayedImages.length - 1 ? 0 : prev + 1));
   };
 
   return (
     <section id="gallery" className="py-16 md:py-24 bg-card">
       <div className="container mx-auto px-4">
-        {/* Gallery Grid */}
+        <div className="flex items-center justify-center mb-8">
+          <div className="inline-flex rounded-full border border-border bg-background p-1 shadow-soft">
+            {(Object.keys(categoryLabels) as GalleryCategory[]).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setCategory(cat)}
+                className={cn(
+                  'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                  category === cat
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
+              >
+                {categoryLabels[cat]}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {images.map((image, index) => (
+          {displayedImages.map((image, index) => (
             <button
-              key={index}
+              key={`${image.category}-${index}`}
               onClick={() => openLightbox(index)}
-              className={`relative overflow-hidden rounded-lg group cursor-pointer ${
+              className={cn(
+                'relative overflow-hidden rounded-lg group cursor-pointer',
                 index === 0 ? 'col-span-2 row-span-2' : ''
-              }`}
+              )}
             >
               <img
                 src={image.src}
-                alt={image.alt}
-                className={`w-full object-cover transition-transform duration-500 group-hover:scale-110 ${
+                alt={getAltText(index)}
+                loading={index < 2 ? 'eager' : 'lazy'}
+                decoding="async"
+                sizes={index === 0 ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
+                className={cn(
+                  'w-full object-cover transition-transform duration-500 group-hover:scale-110',
                   index === 0 ? 'h-[400px] md:h-[500px]' : 'h-48 md:h-60'
-                }`}
+                )}
               />
-              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-colors duration-300" />
             </button>
           ))}
         </div>
+
+        {canLoadMore && (
+          <div className="mt-8 flex justify-center">
+            <Button
+              variant="outline"
+              onClick={() => setVisibleCount((prev) => prev + INITIAL_IMAGE_COUNT)}
+            >
+              {t.gallery.loadMore}
+            </Button>
+          </div>
+        )}
       </div>
 
-      {/* Lightbox */}
-      {lightboxOpen && (
+      {lightboxOpen && displayedImages.length > 0 && (
         <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center animate-fade-in">
           <Button
             variant="ghost"
@@ -106,8 +177,10 @@ export function GallerySection() {
           </Button>
 
           <img
-            src={images[currentIndex].src}
-            alt={images[currentIndex].alt}
+            src={displayedImages[currentIndex].src}
+            alt={getAltText(currentIndex)}
+            loading="eager"
+            decoding="async"
             className="max-w-[90vw] max-h-[85vh] object-contain animate-scale-in"
           />
 
@@ -120,17 +193,15 @@ export function GallerySection() {
             <ChevronRight className="h-8 w-8" />
           </Button>
 
-          {/* Dots */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-            {images.map((_, index) => (
+            {displayedImages.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-2 h-2 rounded-full transition-colors ${
-                  index === currentIndex
-                    ? 'bg-primary-foreground'
-                    : 'bg-primary-foreground/40'
-                }`}
+                className={cn(
+                  'w-2 h-2 rounded-full transition-colors',
+                  index === currentIndex ? 'bg-primary-foreground' : 'bg-primary-foreground/40'
+                )}
               />
             ))}
           </div>
