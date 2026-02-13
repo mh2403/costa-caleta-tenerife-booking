@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export function CTASection() {
   const { t } = useLanguage();
+  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg`;
 
   return (
     <section className="relative overflow-hidden py-14 md:py-20 bg-gradient-sunset text-primary-foreground">
@@ -17,7 +18,12 @@ export function CTASection() {
       <div className="container mx-auto px-4">
         <div className="relative mx-auto max-w-3xl rounded-[1.75rem] border border-primary-foreground/25 bg-foreground/20 px-5 py-7 md:px-8 md:py-9 text-center backdrop-blur-xl shadow-[0_20px_60px_-24px_rgba(0,0,0,0.55)]">
           <div className="inline-flex items-center gap-2 rounded-full border border-primary-foreground/35 bg-primary-foreground/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.12em] text-primary-foreground/95 mb-4">
-            <Sparkles className="h-4 w-4" />
+            <img
+              src={logoUrl}
+              alt=""
+              aria-hidden="true"
+              className="h-4 w-4 rounded-full object-cover"
+            />
             <span>{t.cta.eyebrow}</span>
           </div>
 
