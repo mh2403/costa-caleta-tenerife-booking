@@ -6,13 +6,25 @@
     <title>Costa Caleta</title>
     <script>
       (function () {
-        const base = '/costa-caleta-tenerife-booking';
-        const { pathname, search, hash } = window.location;
-        const path = pathname.startsWith(base) ? pathname.slice(base.length) : pathname;
-        const normalizedPath = path.replace(/^\/+/, '');
-        const encoded = normalizedPath.replace(/&/g, '~and~');
+        // SPA fallback redirect for static hosting.
+        const pathSegmentsToKeep = 0;
+        const { protocol, hostname, port, pathname, search, hash } = window.location;
+        const l = pathname.split('/').slice(1);
+        const basePath = l.slice(0, pathSegmentsToKeep).join('/');
+        const routePath = l
+          .slice(pathSegmentsToKeep)
+          .join('/')
+          .replace(/&/g, '~and~');
         const query = search.slice(1).replace(/&/g, '~and~');
-        const redirect = `${base}/?/${encoded}${query ? `&${query}` : ''}${hash || ''}`;
+        const origin = protocol + '//' + hostname + (port ? ':' + port : '');
+        const redirect =
+          origin +
+          '/' +
+          (basePath ? basePath + '/' : '') +
+          '?/' +
+          routePath +
+          (query ? '&' + query : '') +
+          (hash || '');
         window.location.replace(redirect);
       })();
     </script>
