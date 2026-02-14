@@ -21,6 +21,10 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
   const isActive = (path: string) => location.pathname === path;
   const isHomeHero = location.pathname === '/' && !isScrolled;
 
@@ -31,26 +35,26 @@ export function Header() {
   ];
 
   return (
-    <header className="fixed top-3 left-0 right-0 z-50 px-3 md:px-4">
+    <header className="fixed left-0 right-0 top-3 z-50 px-3 md:top-4 md:px-4">
       <div className="mx-auto max-w-7xl">
         <div
           className={cn(
-            'relative rounded-2xl border px-4 md:px-6 transition-all duration-300',
+            'relative rounded-2xl border px-4 transition-all duration-300 md:px-6',
             isHomeHero
-              ? 'border-primary-foreground/25 bg-foreground/20 backdrop-blur-xl shadow-[0_10px_40px_-12px_rgba(0,0,0,0.55)]'
-              : 'border-border bg-card/95 backdrop-blur-xl shadow-soft'
+              ? 'border-primary-foreground/30 bg-foreground/28 backdrop-blur-2xl shadow-[0_16px_45px_-18px_rgba(0,0,0,0.7)]'
+              : 'border-border/80 bg-card/92 backdrop-blur-2xl shadow-medium'
           )}
         >
-          <nav className="flex h-14 md:h-16 items-center justify-between">
-            <Link to="/" className="flex items-center gap-2">
+          <nav className="flex h-14 items-center justify-between md:h-16">
+            <Link to="/" className="flex items-center gap-2.5">
               <img
                 src={logoUrl}
                 alt="Costa Caleta"
-                className="h-7 w-7 rounded-full shadow-soft"
+                className="h-8 w-8 rounded-full border border-primary-foreground/20 shadow-soft"
               />
               <span
                 className={cn(
-                  'font-heading text-lg md:text-xl font-semibold transition-colors',
+                  'font-heading text-lg font-semibold tracking-tight transition-colors md:text-xl',
                   isHomeHero ? 'text-primary-foreground' : 'text-foreground'
                 )}
               >
@@ -64,14 +68,14 @@ export function Header() {
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                    'rounded-full px-4 py-2 text-sm font-medium transition-all',
                     isActive(link.path)
                       ? isHomeHero
-                        ? 'bg-primary-foreground/20 text-primary-foreground'
-                        : 'bg-primary/10 text-primary'
+                        ? 'bg-primary-foreground/18 text-primary-foreground shadow-inner'
+                        : 'border border-primary/20 bg-primary/12 text-primary'
                       : isHomeHero
-                      ? 'text-primary-foreground/85 hover:text-primary-foreground hover:bg-primary-foreground/10'
-                      : 'text-foreground hover:text-primary hover:bg-muted'
+                      ? 'text-primary-foreground/85 hover:bg-primary-foreground/12 hover:text-primary-foreground'
+                      : 'text-foreground/80 hover:bg-muted/70 hover:text-foreground'
                   )}
                 >
                   {link.label}
@@ -82,8 +86,8 @@ export function Header() {
                 className={cn(
                   'ml-2 transition-colors',
                   isHomeHero
-                    ? 'text-primary-foreground border-primary-foreground/40 bg-primary-foreground/10 hover:bg-primary-foreground/20'
-                    : 'text-foreground bg-background/90 border-border hover:bg-muted'
+                    ? 'border-primary-foreground/45 bg-primary-foreground/12 text-primary-foreground hover:bg-primary-foreground/22'
+                    : 'border-border bg-background/90 text-foreground hover:bg-muted'
                 )}
               />
 
@@ -98,8 +102,8 @@ export function Header() {
                 className={cn(
                   'transition-colors',
                   isHomeHero
-                    ? 'text-primary-foreground bg-primary-foreground/10 hover:bg-primary-foreground/20'
-                    : 'text-foreground bg-background/90 hover:bg-muted'
+                    ? 'bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20'
+                    : 'bg-background/90 text-foreground hover:bg-muted'
                 )}
               />
               <Button
@@ -110,7 +114,7 @@ export function Header() {
                   'rounded-full',
                   isHomeHero
                     ? 'text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground'
-                    : ''
+                    : 'text-foreground'
                 )}
               >
                 {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -120,7 +124,7 @@ export function Header() {
 
           {mobileMenuOpen && (
             <div className="md:hidden pb-3 animate-fade-in-down">
-              <div className="rounded-xl border border-border/70 bg-card/90 p-2 shadow-soft">
+              <div className="rounded-xl border border-border/75 bg-card/92 p-2 shadow-soft">
                 {navLinks.map((link) => (
                   <Link
                     key={link.path}

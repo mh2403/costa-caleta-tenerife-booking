@@ -44,37 +44,44 @@ export function FacilitiesSection() {
   ];
 
   return (
-    <section className="py-16 md:py-24 bg-background">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
-            {t.facilities.title}
-          </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            {t.facilities.subtitle}
-          </p>
-        </div>
+    <section className="relative overflow-hidden bg-gradient-warm py-16 md:py-24">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-20 left-8 h-56 w-56 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute bottom-0 right-8 h-44 w-44 rounded-full bg-secondary/10 blur-3xl" />
+      </div>
 
-        {/* Facilities Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 md:gap-6">
-          {facilities.map((facility, index) => {
-            const Icon = facilityIcons[facility.key];
-            return (
-              <div
-                key={facility.key}
-                className="flex flex-col items-center p-6 rounded-xl bg-card shadow-soft hover:shadow-medium transition-all duration-300 hover:-translate-y-1"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                  <Icon className="h-7 w-7 text-primary" />
-                </div>
-                <span className="text-sm font-medium text-foreground text-center">
-                  {facility.label}
-                </span>
-              </div>
-            );
-          })}
+      <div className="container relative mx-auto px-4">
+        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.85fr_1.15fr]">
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <h2 className="font-heading text-3xl font-bold text-foreground md:text-4xl">
+              {t.facilities.title}
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground">
+              {t.facilities.subtitle}
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {facilities.map((facility, index) => {
+              const Icon = facilityIcons[facility.key];
+              return (
+                <article
+                  key={facility.key}
+                  className="group rounded-2xl border border-border/70 bg-card p-4 shadow-soft transition-all duration-300 hover:border-primary/30 hover:shadow-medium"
+                  style={{ animationDelay: `${index * 40}ms` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/12 transition-colors group-hover:bg-primary/18">
+                      <Icon className="h-5 w-5 text-primary" />
+                    </div>
+                    <p className="pt-1 text-sm font-medium leading-relaxed text-foreground md:text-base">
+                      {facility.label}
+                    </p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

@@ -37,8 +37,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
+        <div className="mx-auto mb-12 max-w-3xl text-center">
           <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">
             {t.testimonials.title}
           </h2>
@@ -47,32 +46,28 @@ export function TestimonialsSection() {
           </p>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
           {testimonials.map((testimonial, index) => (
-            <div
+            <article
               key={index}
-              className="bg-card rounded-2xl p-6 shadow-soft hover:shadow-medium transition-all duration-300"
+              className="relative overflow-hidden rounded-2xl border border-border/70 bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:shadow-medium"
             >
-              {/* Quote Icon */}
-              <Quote className="h-8 w-8 text-primary/20 mb-4" />
+              <div className="absolute inset-x-0 top-0 h-1 bg-gradient-sunset opacity-80" />
+              <Quote className="mb-4 h-8 w-8 text-primary/25" />
 
-              {/* Stars */}
               <div className="flex gap-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-accent text-accent" />
+                  <Star key={i} className="h-4 w-4 fill-primary/25 text-primary" />
                 ))}
               </div>
 
-              {/* Text */}
               <p className="text-foreground mb-6 leading-relaxed">
                 "{testimonial.text[language]}"
               </p>
 
-              {/* Author */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <span className="text-primary font-semibold">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10">
+                  <span className="font-semibold text-primary">
                     {testimonial.name.charAt(0)}
                   </span>
                 </div>
@@ -80,7 +75,7 @@ export function TestimonialsSection() {
                   <p className="font-semibold text-foreground">{testimonial.name}</p>
                 </div>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </div>

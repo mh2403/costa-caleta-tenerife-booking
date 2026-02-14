@@ -26,6 +26,17 @@ export interface Translations {
     eyebrow: string;
     trustItems: string[];
   };
+  journey: {
+    eyebrow: string;
+    title: string;
+    subtitle: string;
+    steps: {
+      title: string;
+      description: string;
+    }[];
+    primaryCta: string;
+    secondaryCta: string;
+  };
   // Gallery
   gallery: {
     filterAll: string;
@@ -245,6 +256,27 @@ export const translations: Record<Language, Translations> = {
         'Direct booking, no hidden fees',
         'Fast host response',
       ],
+    },
+    journey: {
+      eyebrow: 'How It Works',
+      title: 'From first click to check-in in three clear steps',
+      subtitle: 'A cleaner flow with less friction, so guests can decide and book faster.',
+      steps: [
+        {
+          title: 'Choose your dates',
+          description: 'Check availability and send your booking request in just a few clicks.',
+        },
+        {
+          title: 'Receive confirmation',
+          description: 'We confirm quickly and share the practical details for your stay.',
+        },
+        {
+          title: 'Arrive and enjoy',
+          description: 'Meet & greet on site, then start your Tenerife stay stress-free.',
+        },
+      ],
+      primaryCta: 'Start booking',
+      secondaryCta: 'Ask a question',
     },
     gallery: {
       filterAll: 'All',
@@ -583,6 +615,27 @@ Practical:
         'Snelle reactie van host',
       ],
     },
+    journey: {
+      eyebrow: 'Hoe Het Werkt',
+      title: 'Van eerste klik tot check-in in drie heldere stappen',
+      subtitle: 'Een duidelijke flow met minder frictie, zodat gasten sneller beslissen en boeken.',
+      steps: [
+        {
+          title: 'Kies uw data',
+          description: 'Controleer de beschikbaarheid en stuur uw boekingsaanvraag in enkele klikken.',
+        },
+        {
+          title: 'Ontvang bevestiging',
+          description: 'Wij bevestigen snel en delen alle praktische informatie voor uw verblijf.',
+        },
+        {
+          title: 'Aankomen en genieten',
+          description: 'Meet & greet ter plaatse en daarna zorgeloos genieten van Tenerife.',
+        },
+      ],
+      primaryCta: 'Start met boeken',
+      secondaryCta: 'Stel een vraag',
+    },
     gallery: {
       filterAll: 'Alles',
       filterApartment: 'Appartement',
@@ -919,6 +972,27 @@ Praktisch:
         'Reserva directa, sin costes ocultos',
         'Respuesta rápida del anfitrión',
       ],
+    },
+    journey: {
+      eyebrow: 'Cómo Funciona',
+      title: 'De tu primer clic al check-in en tres pasos claros',
+      subtitle: 'Un flujo más claro y con menos fricción para decidir y reservar más rápido.',
+      steps: [
+        {
+          title: 'Elige tus fechas',
+          description: 'Consulta disponibilidad y envía tu solicitud de reserva en pocos clics.',
+        },
+        {
+          title: 'Recibe confirmación',
+          description: 'Confirmamos rápidamente y compartimos los detalles prácticos de tu estancia.',
+        },
+        {
+          title: 'Llega y disfruta',
+          description: 'Meet & greet en el lugar y empieza tu estancia en Tenerife sin estrés.',
+        },
+      ],
+      primaryCta: 'Empezar reserva',
+      secondaryCta: 'Hacer una consulta',
     },
     gallery: {
       filterAll: 'Todo',
