@@ -32,6 +32,7 @@ import {
   CheckCircle2,
   Circle,
   Copy,
+  ExternalLink,
   FileText,
   Loader2,
   MessageCircle,
@@ -45,6 +46,10 @@ const BookingDossier = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { isAdmin, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
 
   const {
     data: booking,
@@ -875,14 +880,23 @@ const BookingDossier = () => {
             <div className="rounded-xl border border-border bg-muted/30 p-4 md:p-5 space-y-3">
               <p className="text-sm text-muted-foreground">{t.booking.dossierLinkLabel}</p>
               <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                <code className="flex-1 rounded-md bg-background px-3 py-2 text-xs md:text-sm break-all">
+                <a
+                  href={dossierUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 rounded-md bg-background px-3 py-2 text-xs md:text-sm break-all text-primary underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                >
                   {dossierUrl}
-                </code>
+                </a>
                 <Button type="button" variant="outline" onClick={copyLink}>
                   <Copy className="h-4 w-4" />
                   {t.booking.dossierCopyLink}
                 </Button>
               </div>
+              <p className="inline-flex items-center gap-1 text-xs font-medium text-primary/85">
+                <ExternalLink className="h-3.5 w-3.5" />
+                {t.booking.dossierOpenLinkHint}
+              </p>
             </div>
           </section>
 
@@ -1145,14 +1159,14 @@ const BookingDossier = () => {
           </section>
 
           {isAdmin && (
-            <section className="bg-card rounded-2xl border border-border shadow-soft p-5 space-y-4">
+            <section className="overflow-hidden bg-card rounded-2xl border border-border shadow-soft p-5 space-y-4">
               <h3 className="font-heading text-xl font-semibold text-foreground">{t.booking.dossierAdminTitle}</h3>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-3">
+              <div className="grid items-start gap-4 md:grid-cols-2">
+                <div className="min-w-0 space-y-3">
                   <Label>{t.booking.dossierStatusLabel}</Label>
                   <Select value={statusDraft} onValueChange={(value) => setStatusDraft(value as BookingStatus)}>
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -1164,13 +1178,14 @@ const BookingDossier = () => {
                   </Select>
                 </div>
 
-                <div className="space-y-3">
+                <div className="min-w-0 space-y-3">
                   <Label htmlFor="contract-file">{t.booking.dossierUploadContractLabel}</Label>
                   <Input
                     id="contract-file"
                     type="file"
                     accept="application/pdf"
                     onChange={(event) => setContractFile(event.target.files?.[0] ?? null)}
+                    className="w-full min-w-0 max-w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-muted file:px-3 file:py-1.5 file:text-xs file:font-medium"
                   />
                   <Button
                     type="button"
@@ -1196,24 +1211,24 @@ const BookingDossier = () => {
               <div className="rounded-lg border border-border bg-muted/25 p-4 space-y-3">
                 <p className="text-sm text-muted-foreground">Boekingsdata aanpassen</p>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <div>
+                  <div className="min-w-0">
                     <Label htmlFor="edit-checkin" className="text-xs text-muted-foreground">Inchecken</Label>
                     <Input
                       id="edit-checkin"
                       type="date"
                       value={editCheckIn}
                       onChange={(event) => setEditCheckIn(event.target.value)}
-                      className="mt-1"
+                      className="mt-1 w-full min-w-0 max-w-full text-left [color-scheme:light] [&::-webkit-date-and-time-value]:text-left [&::-webkit-date-and-time-value]:text-base [&::-webkit-datetime-edit]:p-0"
                     />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <Label htmlFor="edit-checkout" className="text-xs text-muted-foreground">Uitchecken</Label>
                     <Input
                       id="edit-checkout"
                       type="date"
                       value={editCheckOut}
                       onChange={(event) => setEditCheckOut(event.target.value)}
-                      className="mt-1"
+                      className="mt-1 w-full min-w-0 max-w-full text-left [color-scheme:light] [&::-webkit-date-and-time-value]:text-left [&::-webkit-date-and-time-value]:text-base [&::-webkit-datetime-edit]:p-0"
                     />
                   </div>
                 </div>

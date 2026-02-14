@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { useLanguage } from '@/i18n';
-import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, Loader2, Copy } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, Loader2, Copy, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateBooking, useBookedDates } from '@/hooks/useBookings';
 import type { PublicBookingCreateResult } from '@/hooks/useBookings';
@@ -38,6 +38,16 @@ const Booking = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [submittedBooking, setSubmittedBooking] = useState<PublicBookingCreateResult | null>(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
+
+  useEffect(() => {
+    if (submitted) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [submitted]);
 
   const dateLocale = useMemo(() => {
     if (language === 'nl') return nl;
@@ -480,9 +490,18 @@ const Booking = () => {
                   <p className="text-sm text-muted-foreground mb-2">
                     {t.booking.dossierLinkLabel}
                   </p>
-                  <code className="block rounded-md bg-muted px-3 py-2 text-xs break-all text-foreground">
+                  <a
+                    href={bookingDossierUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-md bg-muted px-3 py-2 text-xs break-all text-primary underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
                     {bookingDossierUrl}
-                  </code>
+                  </a>
+                  <p className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary/85">
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t.booking.dossierOpenLinkHint}
+                  </p>
                   <Button
                     type="button"
                     variant="outline"

@@ -139,6 +139,7 @@ export interface Translations {
     dossierCopyLink: string;
     dossierLinkCopied: string;
     dossierCopyError: string;
+    dossierOpenLinkHint: string;
     dossierDone: string;
     dossierPending: string;
     dossierMark: string;
@@ -437,7 +438,7 @@ Practical:
       submit: 'Submit Booking Request',
       priceBreakdown: 'Price Breakdown',
       nights: 'nights',
-      cleaningFee: 'Includes mandatory costs',
+      cleaningFee: 'Includes costs',
       total: 'Total',
       selectDates: 'Please select your dates',
       unavailable: 'Unavailable',
@@ -490,6 +491,7 @@ Practical:
       dossierCopyLink: 'Copy link',
       dossierLinkCopied: 'Booking link copied.',
       dossierCopyError: 'Could not copy the link. Please copy it manually.',
+      dossierOpenLinkHint: 'Tap the link to open your booking dossier in a new tab.',
       dossierDone: 'Completed',
       dossierPending: 'Pending',
       dossierMark: 'Mark',
@@ -886,7 +888,7 @@ Praktisch:
       submit: 'Boekingsverzoek Indienen',
       priceBreakdown: 'Prijsoverzicht',
       nights: 'nachten',
-      cleaningFee: 'Inclusief verplichte kosten',
+      cleaningFee: 'Inclusief kosten',
       total: 'Totaal',
       selectDates: 'Selecteer uw data',
       unavailable: 'Niet beschikbaar',
@@ -939,6 +941,7 @@ Praktisch:
       dossierCopyLink: 'Link kopiëren',
       dossierLinkCopied: 'Boekingslink gekopieerd.',
       dossierCopyError: 'Link kopiëren mislukt. Kopieer de link handmatig.',
+      dossierOpenLinkHint: 'Tik op de link om uw boekingsdossier in een nieuw tabblad te openen.',
       dossierDone: 'Afgerond',
       dossierPending: 'In afwachting',
       dossierMark: 'Markeer',
@@ -1335,7 +1338,7 @@ Práctico:
       submit: 'Enviar Solicitud de Reserva',
       priceBreakdown: 'Desglose de Precios',
       nights: 'noches',
-      cleaningFee: 'Incluye costes obligatorios',
+      cleaningFee: 'Incluye costes',
       total: 'Total',
       selectDates: 'Por favor selecciona tus fechas',
       unavailable: 'No Disponible',
@@ -1388,6 +1391,7 @@ Práctico:
       dossierCopyLink: 'Copiar enlace',
       dossierLinkCopied: 'Enlace de reserva copiado.',
       dossierCopyError: 'No se pudo copiar el enlace. Cópialo manualmente.',
+      dossierOpenLinkHint: 'Toca el enlace para abrir tu expediente de reserva en una nueva pestaña.',
       dossierDone: 'Completado',
       dossierPending: 'Pendiente',
       dossierMark: 'Marcar',
