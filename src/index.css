@@ -215,6 +215,17 @@
     text-shadow: 0 6px 22px hsl(220 20% 10% / 0.55);
   }
 
+  .content-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 820px;
+  }
+
+  @media (max-width: 768px) {
+    .content-auto {
+      contain-intrinsic-size: 1px 700px;
+    }
+  }
+
   @keyframes fadeIn {
     from {
       opacity: 0;

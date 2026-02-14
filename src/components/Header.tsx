@@ -25,8 +25,10 @@ export function Header() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const isActive = (path: string) => location.pathname === path;
+  const normalizePath = (path: string) => (path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path);
+  const isActive = (path: string) => normalizePath(location.pathname) === normalizePath(path);
   const isHomeHero = location.pathname === '/' && !isScrolled;
+  const useHeroHeaderStyle = isHomeHero && !mobileMenuOpen;
 
   const navLinks = [
     { path: '/', label: t.nav.home },
@@ -40,9 +42,9 @@ export function Header() {
         <div
           className={cn(
             'relative rounded-2xl border px-4 transition-all duration-300 md:px-6',
-            isHomeHero
-              ? 'border-primary-foreground/30 bg-foreground/28 backdrop-blur-2xl shadow-[0_16px_45px_-18px_rgba(0,0,0,0.7)]'
-              : 'border-border/80 bg-card/92 backdrop-blur-2xl shadow-medium'
+            useHeroHeaderStyle
+              ? 'border-primary-foreground/30 bg-foreground/55 md:bg-foreground/28 md:backdrop-blur-2xl shadow-[0_16px_45px_-18px_rgba(0,0,0,0.7)]'
+              : 'border-border/80 bg-card md:bg-card/92 md:backdrop-blur-2xl shadow-medium'
           )}
         >
           <nav className="flex h-14 items-center justify-between md:h-16">
@@ -55,7 +57,7 @@ export function Header() {
               <span
                 className={cn(
                   'font-heading text-lg font-semibold tracking-tight transition-colors md:text-xl',
-                  isHomeHero ? 'text-primary-foreground' : 'text-foreground'
+                  useHeroHeaderStyle ? 'text-primary-foreground' : 'text-foreground'
                 )}
               >
                 Costa Caleta
@@ -68,14 +70,14 @@ export function Header() {
                   key={link.path}
                   to={link.path}
                   className={cn(
-                    'rounded-full px-4 py-2 text-sm font-medium transition-all',
+                    'rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200',
                     isActive(link.path)
-                      ? isHomeHero
-                        ? 'bg-primary-foreground/18 text-primary-foreground shadow-inner'
-                        : 'border border-primary/20 bg-primary/12 text-primary'
-                      : isHomeHero
-                      ? 'text-primary-foreground/85 hover:bg-primary-foreground/12 hover:text-primary-foreground'
-                      : 'text-foreground/80 hover:bg-muted/70 hover:text-foreground'
+                      ? useHeroHeaderStyle
+                        ? 'border-primary/80 bg-primary text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.9)]'
+                        : 'border-primary/60 bg-primary text-primary-foreground shadow-[0_10px_24px_-14px_hsl(var(--primary)/0.78)]'
+                      : useHeroHeaderStyle
+                      ? 'border-transparent text-primary-foreground/85 hover:border-primary-foreground/25 hover:bg-primary-foreground/12 hover:text-primary-foreground'
+                      : 'border-transparent text-foreground/80 hover:border-border hover:bg-muted/70 hover:text-foreground'
                   )}
                 >
                   {link.label}
@@ -85,13 +87,13 @@ export function Header() {
               <LanguageSwitcher
                 className={cn(
                   'ml-2 transition-colors',
-                  isHomeHero
+                  useHeroHeaderStyle
                     ? 'border-primary-foreground/45 bg-primary-foreground/12 text-primary-foreground hover:bg-primary-foreground/22'
                     : 'border-border bg-background/90 text-foreground hover:bg-muted'
                 )}
               />
 
-              <Button asChild variant={isHomeHero ? 'heroOutline' : 'hero'} size="sm" className="ml-2 rounded-full px-5">
+              <Button asChild variant={useHeroHeaderStyle ? 'heroOutline' : 'hero'} size="sm" className="ml-2 rounded-full px-5">
                 <Link to="/booking">{t.hero.bookNow}</Link>
               </Button>
             </div>
@@ -101,7 +103,7 @@ export function Header() {
                 variant="minimal"
                 className={cn(
                   'transition-colors',
-                  isHomeHero
+                  useHeroHeaderStyle
                     ? 'bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20'
                     : 'bg-background/90 text-foreground hover:bg-muted'
                 )}
@@ -112,7 +114,7 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className={cn(
                   'rounded-full',
-                  isHomeHero
+                  useHeroHeaderStyle
                     ? 'text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground'
                     : 'text-foreground'
                 )}
@@ -124,7 +126,7 @@ export function Header() {
 
           {mobileMenuOpen && (
             <div className="md:hidden pb-3 animate-fade-in-down">
-              <div className="rounded-xl border border-border/75 bg-card/92 p-2 shadow-soft">
+              <div className="rounded-xl border border-border/75 bg-card p-2 shadow-soft">
                 {navLinks.map((link) => (
                   <Link
                     key={link.path}
@@ -133,7 +135,7 @@ export function Header() {
                     className={cn(
                       'block rounded-lg px-4 py-3 text-sm font-medium transition-colors',
                       isActive(link.path)
-                        ? 'bg-primary/10 text-primary'
+                        ? 'border border-primary/45 bg-primary/14 font-semibold text-primary'
                         : 'text-foreground hover:bg-muted'
                     )}
                   >

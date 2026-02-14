@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { translations } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Table,
@@ -17,7 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Check, X, Eye, Loader2, Mail, Phone, User, MessageCircle, Trash2 } from 'lucide-react';
+import { Check, X, Eye, Loader2, Mail, Phone, User, Trash2 } from 'lucide-react';
 import { useBookings, useUpdateBooking, useDeleteBooking, Booking, BookingStatus } from '@/hooks/useBookings';
 import { addDays, differenceInDays, format, isWithinInterval, startOfDay } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
@@ -40,6 +41,7 @@ export function AdminBookings() {
   const [editCheckIn, setEditCheckIn] = useState('');
   const [editCheckOut, setEditCheckOut] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
+  const [paymentNotesDraft, setPaymentNotesDraft] = useState('');
 
   const basePrice = settings?.base_price?.amount ?? 85;
   const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
@@ -68,10 +70,12 @@ export function AdminBookings() {
       setEditCheckIn(format(new Date(selectedBooking.check_in), 'yyyy-MM-dd'));
       setEditCheckOut(format(new Date(selectedBooking.check_out), 'yyyy-MM-dd'));
       setDeleteReason('');
+      setPaymentNotesDraft(selectedBooking.payment_notes ?? '');
     } else {
       setEditCheckIn('');
       setEditCheckOut('');
       setDeleteReason('');
+      setPaymentNotesDraft('');
     }
   }, [selectedBooking]);
 
@@ -294,6 +298,67 @@ export function AdminBookings() {
     }
   };
 
+  const formatCurrency = (amount: number) => `€${Number(amount).toLocaleString()}`;
+
+  const getDepositAmount = (booking: Booking) => Number(booking.deposit_amount ?? 100);
+
+  const getRemainingAmount = (booking: Booking) => {
+    const total = Number(booking.total_price ?? 0);
+    const deposit = getDepositAmount(booking);
+    return Math.max(total - deposit, 0);
+  };
+
+  const getPaymentSummary = (booking: Booking) => {
+    if (booking.remaining_paid) {
+      return {
+        label: 'Volledig betaald',
+        className: 'bg-primary/10 text-primary',
+      };
+    }
+    if (booking.deposit_paid) {
+      return {
+        label: 'Voorschot ontvangen',
+        className: 'bg-secondary/15 text-secondary',
+      };
+    }
+    return {
+      label: 'Voorschot open',
+      className: 'bg-accent/20 text-accent-foreground',
+    };
+  };
+
+  const getContractSummary = (booking: Booking) => {
+    if (booking.contract_signed) return 'Contract getekend';
+    if (booking.contract_sent) return 'Contract verzonden';
+    if (booking.whatsapp_notified) return 'WhatsApp gemeld';
+    return 'Nog niet opgestart';
+  };
+
+  const formatDateTime = (value: string | null) =>
+    value ? format(new Date(value), 'dd/MM/yyyy HH:mm') : '-';
+
+  const handleProgressUpdate = async (updates: Partial<Booking>, successMessage: string) => {
+    if (!selectedBooking) return;
+
+    try {
+      const updated = await updateBooking.mutateAsync({
+        id: selectedBooking.id,
+        ...updates,
+      });
+      setSelectedBooking(updated);
+      toast({
+        title: t.common.success,
+        description: successMessage,
+      });
+    } catch (error) {
+      toast({
+        title: t.common.error,
+        description: 'Betalings- of contractstatus bijwerken mislukt',
+        variant: 'destructive',
+      });
+    }
+  };
+
   if (isLoadingAll) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -382,7 +447,16 @@ export function AdminBookings() {
                 </div>
                 <div>
                   <p className="text-muted-foreground">Totaal</p>
-                  <p className="font-medium">€{Number(booking.total_price).toLocaleString()}</p>
+                  <p className="font-medium">{formatCurrency(Number(booking.total_price))}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-muted-foreground">Betaling</p>
+                  <div className="flex flex-wrap items-center gap-2 mt-1">
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${getPaymentSummary(booking).className}`}>
+                      {getPaymentSummary(booking).label}
+                    </span>
+                    <span className="text-xs text-muted-foreground">{getContractSummary(booking)}</span>
+                  </div>
                 </div>
               </div>
 
@@ -437,12 +511,13 @@ export function AdminBookings() {
               <TableRow>
                 <TableHead>Gast</TableHead>
                 <TableHead>Data</TableHead>
-                <TableHead>Gasten</TableHead>
-                <TableHead>Totaal</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Acties</TableHead>
-              </TableRow>
-            </TableHeader>
+              <TableHead>Gasten</TableHead>
+              <TableHead>Totaal</TableHead>
+              <TableHead>Betaling</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Acties</TableHead>
+            </TableRow>
+          </TableHeader>
             <TableBody>
               {filteredBookings.map((booking) => (
                 <TableRow key={booking.id}>
@@ -458,7 +533,15 @@ export function AdminBookings() {
                     </p>
                   </TableCell>
                   <TableCell>{booking.num_guests}</TableCell>
-                  <TableCell className="font-semibold">€{Number(booking.total_price).toLocaleString()}</TableCell>
+                  <TableCell className="font-semibold">{formatCurrency(Number(booking.total_price))}</TableCell>
+                  <TableCell>
+                    <div className="space-y-1">
+                      <span className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${getPaymentSummary(booking).className}`}>
+                        {getPaymentSummary(booking).label}
+                      </span>
+                      <p className="text-xs text-muted-foreground">{getContractSummary(booking)}</p>
+                    </div>
+                  </TableCell>
                   <TableCell>
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
                       {t.admin[booking.status as keyof typeof t.admin] || booking.status}
@@ -507,7 +590,7 @@ export function AdminBookings() {
       {/* Booking Details Dialog */}
       <Dialog open={!!selectedBooking} onOpenChange={() => setSelectedBooking(null)}>
         <DialogContent
-          className="w-[92vw] max-w-[92vw] p-4 sm:p-6 sm:max-w-md max-h-[85vh] overflow-y-auto"
+          className="w-[94vw] max-w-[94vw] p-4 sm:w-full sm:max-w-lg sm:p-6 max-h-[88vh] overflow-y-auto overflow-x-hidden"
           onOpenAutoFocus={(event) => event.preventDefault()}
         >
           <DialogHeader>
@@ -589,33 +672,212 @@ export function AdminBookings() {
                 </Button>
               </div>
 
-              <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
+              <div className="bg-primary/5 rounded-lg p-3 border border-primary/20 space-y-2">
                 <div className="flex justify-between items-center">
                   <span>Totaal</span>
-                  <span className="text-xl font-bold text-primary">€{Number(selectedBooking.total_price).toLocaleString()}</span>
+                  <span className="text-xl font-bold text-primary">{formatCurrency(Number(selectedBooking.total_price))}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Voorschot</span>
+                  <span className="font-medium">{formatCurrency(getDepositAmount(selectedBooking))}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm">
+                  <span className="text-muted-foreground">Resterend bedrag</span>
+                  <span className="font-medium">{formatCurrency(getRemainingAmount(selectedBooking))}</span>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <Button
-                  variant="whatsapp"
-                  className="w-full sm:flex-1"
-                  asChild
-                >
-                  <a
-                    href={`https://wa.me/${selectedBooking.guest_phone.replace(/[^0-9]/g, '')}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
+              <div className="rounded-lg border border-border bg-card p-4 space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="font-semibold text-foreground">Betaling & contract opvolging</h4>
+                  <span
+                    className={`shrink-0 whitespace-nowrap px-2.5 py-1 text-center text-xs font-medium leading-none rounded-full ${getPaymentSummary(selectedBooking).className}`}
                   >
-                    <MessageCircle className="h-4 w-4 mr-2" />
-                    WhatsApp
-                  </a>
-                </Button>
+                    {getPaymentSummary(selectedBooking).label}
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">1. Voorschot ontvangen</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.deposit_paid
+                          ? `Ontvangen op ${formatDateTime(selectedBooking.deposit_paid_at)}`
+                          : 'Nog niet ontvangen'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.deposit_paid ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending}
+                      onClick={() => {
+                        const nextValue = !selectedBooking.deposit_paid;
+                        handleProgressUpdate(
+                          {
+                            deposit_paid: nextValue,
+                            deposit_paid_at: nextValue ? new Date().toISOString() : null,
+                            remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
+                            remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                          },
+                          nextValue ? 'Voorschot gemarkeerd als ontvangen' : 'Voorschotstatus teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.deposit_paid ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">2. WhatsApp melding ontvangen</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.whatsapp_notified
+                          ? `Gemeld op ${formatDateTime(selectedBooking.whatsapp_notified_at)}`
+                          : 'Nog niet gemeld'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.whatsapp_notified ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending}
+                      onClick={() => {
+                        const nextValue = !selectedBooking.whatsapp_notified;
+                        handleProgressUpdate(
+                          {
+                            whatsapp_notified: nextValue,
+                            whatsapp_notified_at: nextValue ? new Date().toISOString() : null,
+                            contract_sent: nextValue ? selectedBooking.contract_sent : false,
+                            contract_sent_at: nextValue ? selectedBooking.contract_sent_at : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
+                            remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
+                            remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                          },
+                          nextValue ? 'WhatsApp melding gemarkeerd' : 'WhatsApp status teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.whatsapp_notified ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">3. Contract verzonden</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.contract_sent
+                          ? `Verzonden op ${formatDateTime(selectedBooking.contract_sent_at)}`
+                          : 'Nog niet verzonden'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.contract_sent ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending || !selectedBooking.whatsapp_notified}
+                      onClick={() => {
+                        const nextValue = !selectedBooking.contract_sent;
+                        handleProgressUpdate(
+                          {
+                            contract_sent: nextValue,
+                            contract_sent_at: nextValue ? new Date().toISOString() : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
+                            remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
+                            remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                          },
+                          nextValue ? 'Contract gemarkeerd als verzonden' : 'Contract verzendstatus teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.contract_sent ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">4. Contract ondertekend</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.contract_signed
+                          ? `Ondertekend op ${formatDateTime(selectedBooking.contract_signed_at)}`
+                          : 'Nog niet ondertekend'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.contract_signed ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending || !selectedBooking.contract_sent}
+                      onClick={() => {
+                        const nextValue = !selectedBooking.contract_signed;
+                        handleProgressUpdate(
+                          {
+                            contract_signed: nextValue,
+                            contract_signed_at: nextValue ? new Date().toISOString() : null,
+                            remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
+                            remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                          },
+                          nextValue ? 'Contract gemarkeerd als ondertekend' : 'Contract ondertekenstatus teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.contract_signed ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">5. Resterend bedrag ontvangen</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.remaining_paid
+                          ? `Ontvangen op ${formatDateTime(selectedBooking.remaining_paid_at)}`
+                          : 'Nog niet ontvangen'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.remaining_paid ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending || !selectedBooking.deposit_paid || !selectedBooking.contract_signed}
+                      onClick={() => {
+                        const nextValue = !selectedBooking.remaining_paid;
+                        handleProgressUpdate(
+                          {
+                            remaining_paid: nextValue,
+                            remaining_paid_at: nextValue ? new Date().toISOString() : null,
+                          },
+                          nextValue ? 'Resterend bedrag gemarkeerd als ontvangen' : 'Restsaldo-status teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.remaining_paid ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-xs text-muted-foreground">Interne notities (betalingen/contract)</label>
+                  <Textarea
+                    value={paymentNotesDraft}
+                    onChange={(e) => setPaymentNotesDraft(e.target.value)}
+                    rows={3}
+                    placeholder="Bijv. voorschot ontvangen op 14/02, contract verzonden op 15/02..."
+                  />
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleProgressUpdate({ payment_notes: paymentNotesDraft.trim() || null }, 'Notities opgeslagen')}
+                    disabled={updateBooking.isPending}
+                  >
+                    Notities opslaan
+                  </Button>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
                 {selectedBooking.status === 'pending' && (
                   <>
                     <Button
                       variant="default"
-                      className="w-full sm:w-auto"
+                      className="w-full sm:flex-1"
                       onClick={() => handleStatusChange(selectedBooking.id, 'confirmed')}
                       disabled={updateBooking.isPending}
                     >
@@ -624,7 +886,7 @@ export function AdminBookings() {
                     </Button>
                     <Button
                       variant="destructive"
-                      className="w-full sm:w-auto"
+                      className="w-full sm:flex-1"
                       onClick={() => handleStatusChange(selectedBooking.id, 'declined')}
                       disabled={updateBooking.isPending}
                     >
@@ -636,7 +898,7 @@ export function AdminBookings() {
                 {selectedBooking.status === 'confirmed' && (
                   <Button
                     variant="outline"
-                    className="w-full sm:w-auto"
+                    className="w-full sm:flex-1"
                     onClick={() => handleStatusChange(selectedBooking.id, 'cancelled')}
                     disabled={updateBooking.isPending}
                   >

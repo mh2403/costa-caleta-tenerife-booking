@@ -10,7 +10,7 @@ export function JourneySection() {
 
   return (
     <section className="relative overflow-hidden bg-background py-16 md:py-24">
-      <div className="pointer-events-none absolute inset-0">
+      <div className="pointer-events-none absolute inset-0 hidden md:block">
         <div className="absolute -top-24 right-8 h-52 w-52 rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute bottom-0 left-6 h-44 w-44 rounded-full bg-secondary/10 blur-3xl" />
       </div>

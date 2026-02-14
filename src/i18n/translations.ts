@@ -112,11 +112,23 @@ export interface Translations {
     submitError: string;
     paymentTitle: string;
     paymentIntro: string;
+    paymentDepositLabel: string;
+    paymentDepositHelp: string;
+    remainingBalanceLabel: string;
+    paymentLabelAccount: string;
+    paymentLabelIban: string;
+    paymentLabelBic: string;
+    paymentLabelReference: string;
+    paymentFlowTitle: string;
+    paymentFlowSteps: string[];
     paymentDetailAccount: string;
     paymentDetailIban: string;
     paymentDetailBic: string;
     paymentDetailReference: string;
     paymentNote: string;
+    whatsappBookingCta: string;
+    whatsappBookingHint: string;
+    whatsappBookingMessage: string;
     checkInTime: string;
     checkOutTime: string;
   };
@@ -385,12 +397,31 @@ Practical:
       requiredFields: 'Please fill in all required fields.',
       submitError: 'Failed to submit booking. Please try again.',
       paymentTitle: 'Payment by bank transfer',
-      paymentIntro: 'We only accept bank transfer. You will receive the payment details after we confirm availability.',
+      paymentIntro: 'To secure your dates, we ask for a €100 deposit after your booking request.',
+      paymentDepositLabel: 'Deposit to secure booking',
+      paymentDepositHelp: 'Please transfer this amount right after submitting your booking request.',
+      remainingBalanceLabel: 'Remaining balance after deposit',
+      paymentLabelAccount: 'Account holder',
+      paymentLabelIban: 'IBAN',
+      paymentLabelBic: 'BIC/SWIFT',
+      paymentLabelReference: 'Reference',
+      paymentFlowTitle: 'How your booking is finalized',
+      paymentFlowSteps: [
+        'Submit your booking request through this form.',
+        'Transfer the €100 deposit to the bank account below.',
+        'Send a WhatsApp message once your booking request and deposit are sent.',
+        'The owner replies on WhatsApp and prepares the official contract.',
+        'Both parties review and sign the contract.',
+        'After signing, transfer the remaining balance by bank transfer.',
+      ],
       paymentDetailAccount: 'Account name: [add later]',
       paymentDetailIban: 'IBAN: [add later]',
       paymentDetailBic: 'BIC/SWIFT: [add later]',
       paymentDetailReference: 'Reference: Your name + dates',
-      paymentNote: 'Your reservation is secured once payment is received.',
+      paymentNote: 'Your booking is only final after the contract is signed and the full amount is received.',
+      whatsappBookingCta: 'I placed a booking and paid the deposit — continue via WhatsApp',
+      whatsappBookingHint: 'Send this message after your transfer so we can finalize your file quickly.',
+      whatsappBookingMessage: 'Hi, I just placed a booking request for Costa Caleta.\nName: {name}\nDates: {checkIn} - {checkOut}\nDeposit paid: {deposit}\nTotal booking amount: {total}\nPlease send the contract. Thank you!',
       checkInTime: 'Check-in time',
       checkOutTime: 'Check-out time',
     },
@@ -431,8 +462,8 @@ Practical:
     },
     privacy: {
       title: 'Privacy Policy',
-      updated: 'Last updated: February 10, 2026',
-      intro: 'This policy explains how we process personal data when you visit the Costa Caleta website or contact us.',
+      updated: 'Last updated: February 14, 2026',
+      intro: 'This policy explains how we process personal data when you visit the Costa Caleta website, submit a booking request, or contact us.',
       sections: [
         {
           title: 'Who we are',
@@ -443,26 +474,28 @@ Practical:
           list: [
             'Identification and contact details you provide (name, email, phone).',
             'Booking details (dates, number of guests, messages).',
-            'Communications and inquiries you send us.',
+            'Payment follow-up data related to your booking (deposit status, remaining balance status, reference and internal notes).',
+            'Contract progress data related to your booking (contract sent/signed status).',
+            'Communications and inquiries you send us, including WhatsApp messages if you contact us there.',
             'Technical data needed to operate the site (IP address, browser/device, log data).',
           ],
         },
         {
           title: 'Why we use your data (legal basis)',
           list: [
-            'To respond to inquiries and manage bookings (contract/steps prior to contract).',
-            'To send booking-related communications (contract/legitimate interest).',
+            'To respond to inquiries, process booking requests, and manage deposit/contract steps (contract/steps prior to contract).',
+            'To send booking-related communications, including via WhatsApp when chosen by you (contract/legitimate interest).',
             'To comply with legal obligations (accounting, tax, security).',
             'To protect and improve our services (legitimate interests).',
           ],
         },
         {
           title: 'Sharing',
-          body: 'We do not sell your data. We share it only with service providers that help operate the website and booking communications (hosting, email), or when required by law.',
+          body: 'We do not sell your data. We share it only with service providers that help operate the website and booking communications (hosting, email, messaging tools), and with parties needed for legal/accounting administration when required, or when required by law.',
         },
         {
           title: 'Retention',
-          body: 'We keep data only as long as necessary for the purposes above. Booking records may be retained to meet legal and accounting obligations.',
+          body: 'We keep data only as long as necessary for the purposes above. Booking, contract, and payment records may be retained to meet legal and accounting obligations.',
         },
         {
           title: 'Your rights',
@@ -493,20 +526,26 @@ Practical:
     },
     terms: {
       title: 'Terms & Conditions',
-      updated: 'Last updated: February 10, 2026',
+      updated: 'Last updated: February 14, 2026',
       intro: 'By using this website and submitting a booking request, you agree to these terms.',
       sections: [
         {
           title: 'Booking requests & confirmation',
-          body: 'Submitting the booking form is a request. A reservation is confirmed only after we confirm availability and send a confirmation.',
+          body: 'Submitting the booking form is a request. To reserve dates, a €100 deposit is required after the request. A reservation becomes final only after the contract is signed by both parties and the full amount is received.',
         },
         {
           title: 'Pricing & payment',
           list: [
             'Prices are shown in EUR and may include a cleaning fee as displayed.',
             'Payment is by bank transfer.',
-            'Your reservation is confirmed once payment is received.',
+            'A €100 deposit is required to block your requested dates.',
+            'After paying the deposit, the guest sends a WhatsApp message to confirm payment.',
+            'After contract signing, the remaining balance is paid by bank transfer under the terms stated in the contract.',
           ],
+        },
+        {
+          title: 'Contract & communication',
+          body: 'After the deposit and WhatsApp notification, the owner sends the official contract. Both parties must review and sign the contract. Booking follow-up can take place by WhatsApp and email.',
         },
         {
           title: 'Check-in / check-out',
@@ -522,7 +561,7 @@ Practical:
         },
         {
           title: 'Cancellations',
-          body: 'Cancellation terms will be communicated in your booking confirmation. If you cancel before confirmation, no charges apply.',
+          body: 'Cancellation and refund terms are defined in the official contract. If you cancel before deposit payment and before contract processing starts, no final reservation has been completed.',
         },
         {
           title: 'Liability',
@@ -743,12 +782,31 @@ Praktisch:
       requiredFields: 'Vul alle verplichte velden in.',
       submitError: 'Boeking versturen mislukt. Probeer het opnieuw.',
       paymentTitle: 'Betaling via bankoverschrijving',
-      paymentIntro: 'We accepteren alleen bankoverschrijving. Na bevestiging sturen we de betaalgegevens.',
+      paymentIntro: 'Om uw data vast te leggen, vragen we na uw boekingsaanvraag eerst een voorschot van €100.',
+      paymentDepositLabel: 'Voorschot om boeking vast te leggen',
+      paymentDepositHelp: 'Schrijf dit bedrag meteen over na het verzenden van uw boekingsaanvraag.',
+      remainingBalanceLabel: 'Resterend saldo na voorschot',
+      paymentLabelAccount: 'Rekeninghouder',
+      paymentLabelIban: 'IBAN',
+      paymentLabelBic: 'BIC/SWIFT',
+      paymentLabelReference: 'Referentie',
+      paymentFlowTitle: 'Hoe uw boeking officieel wordt afgerond',
+      paymentFlowSteps: [
+        'Plaats uw boekingsaanvraag via dit formulier.',
+        'Schrijf het voorschot van €100 over op de rekening hieronder.',
+        'Stuur daarna een WhatsApp-bericht dat uw boekingsaanvraag en voorschot verzonden zijn.',
+        'De eigenaar reageert via WhatsApp en stelt het officiële contract op.',
+        'Beide partijen bekijken en ondertekenen het contract.',
+        'Na ondertekening maakt u het resterende bedrag over via bankoverschrijving.',
+      ],
       paymentDetailAccount: 'Rekeninghouder: [later invullen]',
       paymentDetailIban: 'IBAN: [later invullen]',
       paymentDetailBic: 'BIC/SWIFT: [later invullen]',
       paymentDetailReference: 'Referentie: uw naam + data',
-      paymentNote: 'Uw reservering is definitief zodra de betaling is ontvangen.',
+      paymentNote: 'Uw boeking is pas definitief na ondertekend contract en ontvangst van het volledige bedrag.',
+      whatsappBookingCta: 'Ik heb geboekt en het voorschot betaald — ga verder via WhatsApp',
+      whatsappBookingHint: 'Stuur dit bericht na uw overschrijving zodat we uw dossier meteen kunnen afwerken.',
+      whatsappBookingMessage: 'Hallo, ik heb net een boekingsaanvraag geplaatst voor Costa Caleta.\nNaam: {name}\nData: {checkIn} - {checkOut}\nVoorschot betaald: {deposit}\nTotaal boekingsbedrag: {total}\nGraag het contract doorsturen. Bedankt!',
       checkInTime: 'Inchecktijd',
       checkOutTime: 'Uitchecktijd',
     },
@@ -789,8 +847,8 @@ Praktisch:
     },
     privacy: {
       title: 'Privacybeleid',
-      updated: 'Laatst bijgewerkt: 10 februari 2026',
-      intro: 'Dit beleid legt uit hoe wij persoonsgegevens verwerken wanneer u de website van Costa Caleta bezoekt of contact met ons opneemt.',
+      updated: 'Laatst bijgewerkt: 14 februari 2026',
+      intro: 'Dit beleid legt uit hoe wij persoonsgegevens verwerken wanneer u de website van Costa Caleta bezoekt, een boekingsaanvraag plaatst of contact met ons opneemt.',
       sections: [
         {
           title: 'Wie we zijn',
@@ -801,26 +859,28 @@ Praktisch:
           list: [
             'Identificatie- en contactgegevens die u zelf verstrekt (naam, e-mail, telefoon).',
             'Boekingsgegevens (data, aantal gasten, berichten).',
-            'Communicatie en vragen die u naar ons stuurt.',
+            'Opvolggegevens rond betaling van uw boeking (status voorschot, status restsaldo, referentie en interne notities).',
+            'Contractopvolging van uw boeking (status contract verzonden/ondertekend).',
+            'Communicatie en vragen die u naar ons stuurt, inclusief WhatsApp-berichten wanneer u dat kanaal gebruikt.',
             'Technische gegevens die nodig zijn om de site te laten werken (IP-adres, browser/apparaat, loggegevens).',
           ],
         },
         {
           title: 'Waarom we uw gegevens gebruiken (rechtsgrond)',
           list: [
-            'Om te reageren op vragen en boekingen te beheren (contract/voorafgaande stappen).',
-            'Om boekingsgerelateerde communicatie te versturen (contract/gerechtvaardigd belang).',
+            'Om te reageren op vragen, boekingsaanvragen te verwerken en voorschot/contractstappen op te volgen (contract/voorafgaande stappen).',
+            'Om boekingsgerelateerde communicatie te versturen, inclusief via WhatsApp wanneer u daarvoor kiest (contract/gerechtvaardigd belang).',
             'Om te voldoen aan wettelijke verplichtingen (boekhouding, belasting, veiligheid).',
             'Om onze diensten te beschermen en te verbeteren (gerechtvaardigd belang).',
           ],
         },
         {
           title: 'Delen van gegevens',
-          body: 'Wij verkopen uw gegevens niet. We delen ze enkel met dienstverleners die helpen bij het runnen van de website en boekingscommunicatie (hosting, e-mail), of wanneer dit wettelijk verplicht is.',
+          body: 'Wij verkopen uw gegevens niet. We delen ze enkel met dienstverleners die helpen bij het runnen van de website en boekingscommunicatie (hosting, e-mail, berichtenplatformen), en met partijen die nodig zijn voor wettelijke/boekhoudkundige administratie wanneer nodig, of wanneer dit wettelijk verplicht is.',
         },
         {
           title: 'Bewaartermijn',
-          body: 'We bewaren gegevens enkel zolang nodig voor de bovenstaande doeleinden. Boekingsgegevens kunnen langer bewaard worden om aan wettelijke en boekhoudkundige verplichtingen te voldoen.',
+          body: 'We bewaren gegevens enkel zolang nodig voor de bovenstaande doeleinden. Boekings-, contract- en betalingsgegevens kunnen langer bewaard worden om aan wettelijke en boekhoudkundige verplichtingen te voldoen.',
         },
         {
           title: 'Uw rechten',
@@ -851,20 +911,26 @@ Praktisch:
     },
     terms: {
       title: 'Algemene Voorwaarden',
-      updated: 'Laatst bijgewerkt: 10 februari 2026',
+      updated: 'Laatst bijgewerkt: 14 februari 2026',
       intro: 'Door deze website te gebruiken en een boekingsaanvraag te plaatsen, gaat u akkoord met deze voorwaarden.',
       sections: [
         {
           title: 'Boekingsaanvraag & bevestiging',
-          body: 'Het verzenden van het boekingsformulier is een aanvraag. Een reservatie is pas bevestigd nadat wij de beschikbaarheid hebben bevestigd en u een bevestiging ontvangt.',
+          body: 'Het verzenden van het boekingsformulier is een aanvraag. Om data te reserveren is na de aanvraag een voorschot van €100 vereist. Een reservatie is pas definitief nadat het contract door beide partijen is ondertekend en het volledige bedrag is ontvangen.',
         },
         {
           title: 'Prijs & betaling',
           list: [
             'Prijzen zijn in EUR en kunnen een schoonmaakkost bevatten zoals weergegeven.',
             'Betaling gebeurt via bankoverschrijving.',
-            'De reservatie is definitief zodra de betaling is ontvangen.',
+            'Een voorschot van €100 is vereist om de gevraagde data te blokkeren.',
+            'Na betaling van het voorschot stuurt de gast een WhatsApp-bericht als betalingsmelding.',
+            'Na ondertekening van het contract wordt het restsaldo via bankoverschrijving betaald volgens de voorwaarden in het contract.',
           ],
+        },
+        {
+          title: 'Contract & communicatie',
+          body: 'Na voorschot en WhatsApp-melding stuurt de eigenaar het officiële contract. Beide partijen bekijken en ondertekenen dit contract. Opvolging van de boeking kan via WhatsApp en e-mail verlopen.',
         },
         {
           title: 'Inchecken / uitchecken',
@@ -880,7 +946,7 @@ Praktisch:
         },
         {
           title: 'Annuleringen',
-          body: 'Annuleringsvoorwaarden worden gecommuniceerd in uw boekingsbevestiging. Bij annulering vóór bevestiging worden geen kosten aangerekend.',
+          body: 'Annulerings- en terugbetalingsvoorwaarden worden vastgelegd in het officiële contract. Bij annulering vóór betaling van het voorschot en vóór opstart van de contractprocedure is geen definitieve reservatie tot stand gekomen.',
         },
         {
           title: 'Aansprakelijkheid',
@@ -1101,12 +1167,31 @@ Práctico:
       requiredFields: 'Completa todos los campos obligatorios.',
       submitError: 'No se pudo enviar la reserva. Inténtalo de nuevo.',
       paymentTitle: 'Pago por transferencia bancaria',
-      paymentIntro: 'Solo aceptamos transferencia bancaria. Recibirás los datos de pago después de confirmar la disponibilidad.',
+      paymentIntro: 'Para asegurar tus fechas, pedimos primero un anticipo de €100 tras tu solicitud de reserva.',
+      paymentDepositLabel: 'Anticipo para bloquear la reserva',
+      paymentDepositHelp: 'Realiza esta transferencia justo después de enviar tu solicitud.',
+      remainingBalanceLabel: 'Saldo restante después del anticipo',
+      paymentLabelAccount: 'Titular de la cuenta',
+      paymentLabelIban: 'IBAN',
+      paymentLabelBic: 'BIC/SWIFT',
+      paymentLabelReference: 'Referencia',
+      paymentFlowTitle: 'Cómo se completa oficialmente tu reserva',
+      paymentFlowSteps: [
+        'Envía tu solicitud de reserva mediante este formulario.',
+        'Transfiere el anticipo de €100 a la cuenta bancaria indicada abajo.',
+        'Después, envía un mensaje por WhatsApp indicando que ya enviaste la solicitud y el anticipo.',
+        'La propietaria responde por WhatsApp y prepara el contrato oficial.',
+        'Ambas partes revisan y firman el contrato.',
+        'Tras la firma, transfieres el importe restante por transferencia bancaria.',
+      ],
       paymentDetailAccount: 'Titular de la cuenta: [añadir después]',
       paymentDetailIban: 'IBAN: [añadir después]',
       paymentDetailBic: 'BIC/SWIFT: [añadir después]',
       paymentDetailReference: 'Referencia: tu nombre + fechas',
-      paymentNote: 'La reserva queda confirmada una vez recibido el pago.',
+      paymentNote: 'La reserva queda cerrada solo tras la firma del contrato y el pago completo.',
+      whatsappBookingCta: 'Ya reservé y pagué el anticipo — continuar por WhatsApp',
+      whatsappBookingHint: 'Envía este mensaje tras tu transferencia para cerrar el proceso más rápido.',
+      whatsappBookingMessage: 'Hola, acabo de enviar una solicitud de reserva para Costa Caleta.\nNombre: {name}\nFechas: {checkIn} - {checkOut}\nAnticipo pagado: {deposit}\nImporte total de la reserva: {total}\nPor favor, enviadme el contrato. ¡Gracias!',
       checkInTime: 'Hora de entrada',
       checkOutTime: 'Hora de salida',
     },
@@ -1147,8 +1232,8 @@ Práctico:
     },
     privacy: {
       title: 'Política de Privacidad',
-      updated: 'Última actualización: 10 de febrero de 2026',
-      intro: 'Esta política explica cómo tratamos los datos personales cuando visitas la web de Costa Caleta o te pones en contacto con nosotros.',
+      updated: 'Última actualización: 14 de febrero de 2026',
+      intro: 'Esta política explica cómo tratamos los datos personales cuando visitas la web de Costa Caleta, envías una solicitud de reserva o te pones en contacto con nosotros.',
       sections: [
         {
           title: 'Quiénes somos',
@@ -1159,26 +1244,28 @@ Práctico:
           list: [
             'Datos de identificación y contacto que proporcionas (nombre, email, teléfono).',
             'Datos de reserva (fechas, número de huéspedes, mensajes).',
-            'Comunicaciones y consultas que nos envías.',
+            'Datos de seguimiento de pago de tu reserva (estado del anticipo, estado del saldo restante, referencia y notas internas).',
+            'Datos de seguimiento contractual de tu reserva (estado de contrato enviado/firmado).',
+            'Comunicaciones y consultas que nos envías, incluidos mensajes de WhatsApp cuando usas ese canal.',
             'Datos técnicos necesarios para operar la web (dirección IP, navegador/dispositivo, registros).',
           ],
         },
         {
           title: 'Por qué usamos tus datos (base legal)',
           list: [
-            'Responder consultas y gestionar reservas (contrato/pasos previos).',
-            'Enviar comunicaciones relacionadas con la reserva (contrato/interés legítimo).',
+            'Responder consultas, procesar solicitudes de reserva y gestionar pasos de anticipo/contrato (contrato/pasos previos).',
+            'Enviar comunicaciones relacionadas con la reserva, también por WhatsApp cuando tú eliges ese canal (contrato/interés legítimo).',
             'Cumplir obligaciones legales (contabilidad, impuestos, seguridad).',
             'Proteger y mejorar nuestros servicios (interés legítimo).',
           ],
         },
         {
           title: 'Compartición de datos',
-          body: 'No vendemos tus datos. Solo los compartimos con proveedores que ayudan a operar la web y la comunicación de reservas (hosting, email), o cuando la ley lo exige.',
+          body: 'No vendemos tus datos. Solo los compartimos con proveedores que ayudan a operar la web y la comunicación de reservas (hosting, email, herramientas de mensajería), y con partes necesarias para gestión legal/contable cuando corresponda, o cuando la ley lo exige.',
         },
         {
           title: 'Conservación',
-          body: 'Conservamos los datos solo el tiempo necesario para los fines anteriores. Los datos de reservas pueden conservarse para cumplir obligaciones legales y contables.',
+          body: 'Conservamos los datos solo el tiempo necesario para los fines anteriores. Los datos de reserva, contrato y pagos pueden conservarse para cumplir obligaciones legales y contables.',
         },
         {
           title: 'Tus derechos',
@@ -1209,20 +1296,26 @@ Práctico:
     },
     terms: {
       title: 'Términos y Condiciones',
-      updated: 'Última actualización: 10 de febrero de 2026',
+      updated: 'Última actualización: 14 de febrero de 2026',
       intro: 'Al usar este sitio y enviar una solicitud de reserva, aceptas estos términos.',
       sections: [
         {
           title: 'Solicitud y confirmación de reserva',
-          body: 'Enviar el formulario es una solicitud. La reserva se confirma solo cuando confirmamos disponibilidad y te enviamos la confirmación.',
+          body: 'Enviar el formulario es una solicitud. Para bloquear fechas, se requiere un anticipo de €100 tras la solicitud. La reserva queda cerrada solo después de que ambas partes firmen el contrato y se reciba el importe total.',
         },
         {
           title: 'Precio y pago',
           list: [
             'Los precios se muestran en EUR y pueden incluir la tarifa de limpieza mostrada.',
             'El pago se realiza por transferencia bancaria.',
-            'La reserva queda confirmada cuando se recibe el pago.',
+            'Se requiere un anticipo de €100 para bloquear las fechas solicitadas.',
+            'Después de pagar el anticipo, el huésped envía un mensaje de WhatsApp para avisar del pago.',
+            'Después de firmar el contrato, el saldo restante se paga por transferencia según las condiciones indicadas en el contrato.',
           ],
+        },
+        {
+          title: 'Contrato y comunicación',
+          body: 'Tras el anticipo y el aviso por WhatsApp, el propietario envía el contrato oficial. Ambas partes deben revisarlo y firmarlo. El seguimiento de la reserva puede realizarse por WhatsApp y email.',
         },
         {
           title: 'Entrada / salida',
@@ -1238,7 +1331,7 @@ Práctico:
         },
         {
           title: 'Cancelaciones',
-          body: 'Las condiciones de cancelación se comunicarán en la confirmación de la reserva. Si cancelas antes de la confirmación, no se aplican cargos.',
+          body: 'Las condiciones de cancelación y reembolso se definen en el contrato oficial. Si cancelas antes de pagar el anticipo y antes de iniciar el proceso contractual, no existe una reserva finalizada.',
         },
         {
           title: 'Responsabilidad',

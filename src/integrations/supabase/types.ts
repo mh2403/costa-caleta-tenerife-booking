@@ -43,7 +43,14 @@ export type Database = {
           check_in: string
           check_out: string
           cleaning_fee: number | null
+          contract_sent: boolean
+          contract_sent_at: string | null
+          contract_signed: boolean
+          contract_signed_at: string | null
           created_at: string
+          deposit_amount: number
+          deposit_paid: boolean
+          deposit_paid_at: string | null
           guest_email: string
           guest_name: string
           guest_phone: string
@@ -51,15 +58,27 @@ export type Database = {
           language: Database["public"]["Enums"]["language"]
           message: string | null
           num_guests: number
+          payment_notes: string | null
+          remaining_paid: boolean
+          remaining_paid_at: string | null
           status: Database["public"]["Enums"]["booking_status"]
           total_price: number
           updated_at: string
+          whatsapp_notified: boolean
+          whatsapp_notified_at: string | null
         }
         Insert: {
           check_in: string
           check_out: string
           cleaning_fee?: number | null
+          contract_sent?: boolean
+          contract_sent_at?: string | null
+          contract_signed?: boolean
+          contract_signed_at?: string | null
           created_at?: string
+          deposit_amount?: number
+          deposit_paid?: boolean
+          deposit_paid_at?: string | null
           guest_email: string
           guest_name: string
           guest_phone: string
@@ -67,15 +86,27 @@ export type Database = {
           language?: Database["public"]["Enums"]["language"]
           message?: string | null
           num_guests?: number
+          payment_notes?: string | null
+          remaining_paid?: boolean
+          remaining_paid_at?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
           total_price: number
           updated_at?: string
+          whatsapp_notified?: boolean
+          whatsapp_notified_at?: string | null
         }
         Update: {
           check_in?: string
           check_out?: string
           cleaning_fee?: number | null
+          contract_sent?: boolean
+          contract_sent_at?: string | null
+          contract_signed?: boolean
+          contract_signed_at?: string | null
           created_at?: string
+          deposit_amount?: number
+          deposit_paid?: boolean
+          deposit_paid_at?: string | null
           guest_email?: string
           guest_name?: string
           guest_phone?: string
@@ -83,9 +114,14 @@ export type Database = {
           language?: Database["public"]["Enums"]["language"]
           message?: string | null
           num_guests?: number
+          payment_notes?: string | null
+          remaining_paid?: boolean
+          remaining_paid_at?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
           total_price?: number
           updated_at?: string
+          whatsapp_notified?: boolean
+          whatsapp_notified_at?: string | null
         }
         Relationships: []
       }

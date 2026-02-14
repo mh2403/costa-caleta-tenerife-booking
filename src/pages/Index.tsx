@@ -14,12 +14,24 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection />
-        <JourneySection />
-        <GallerySection />
-        <FacilitiesSection />
-        <LocationSection />
-        <TestimonialsSection />
-        <CTASection />
+        <div className="content-auto">
+          <JourneySection />
+        </div>
+        <div className="content-auto">
+          <GallerySection />
+        </div>
+        <div className="content-auto">
+          <FacilitiesSection />
+        </div>
+        <div className="content-auto">
+          <LocationSection />
+        </div>
+        <div className="content-auto">
+          <TestimonialsSection />
+        </div>
+        <div className="content-auto">
+          <CTASection />
+        </div>
       </main>
       <Footer />
     </div>

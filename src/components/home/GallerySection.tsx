@@ -132,7 +132,7 @@ export function GallerySection() {
               <img
                 src={image.src}
                 alt={getAltText(index)}
-                loading={index < 2 ? 'eager' : 'lazy'}
+                loading="lazy"
                 decoding="async"
                 sizes={index === 0 ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
                 className={cn(

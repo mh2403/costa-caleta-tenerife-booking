@@ -18,6 +18,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { useBlockedDates } from '@/hooks/useBlockedDates';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { contactInfo } from '@/lib/contactInfo';
+import { bookingPaymentConfig } from '@/lib/bookingPaymentConfig';
 
 const Booking = () => {
   const { t, language } = useLanguage();
@@ -45,7 +46,9 @@ const Booking = () => {
   const basePrice = settings?.base_price?.amount ?? 85;
   const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
   const maxGuests = settings?.max_guests?.count ?? 6;
-  const whatsappNumber = contactInfo.phone;
+  const whatsappNumber = contactInfo.whatsapp.replace(/[^0-9]/g, '');
+  const whatsappDisplayNumber = contactInfo.phone;
+  const depositAmount = bookingPaymentConfig.depositAmount;
   const checkInTime = settings?.check_in_time?.time ?? '15:00';
   const checkOutTime = '12:00';
   const currencySymbol = settings?.currency?.symbol ?? '€';
@@ -234,6 +237,36 @@ const Booking = () => {
     };
   }, [checkIn, checkOut, pricingRules, basePrice, cleaningFee]);
 
+  const remainingAmount = Math.max(totalPrice - depositAmount, 0);
+
+  const paymentReference = useMemo(() => {
+    const name = formData.fullName?.trim() || 'Booking';
+    const from = checkIn ? format(checkIn, 'yyyy-MM-dd') : '';
+    const to = checkOut ? format(checkOut, 'yyyy-MM-dd') : '';
+    return [name, from, to].filter(Boolean).join(' • ');
+  }, [formData.fullName, checkIn, checkOut]);
+
+  const whatsappBookingMessage = useMemo(() => {
+    return encodeURIComponent(
+      t.booking.whatsappBookingMessage
+        .replace('{name}', formData.fullName?.trim() || '-')
+        .replace('{checkIn}', checkIn ? format(checkIn, 'PPP') : '-')
+        .replace('{checkOut}', checkOut ? format(checkOut, 'PPP') : '-')
+        .replace('{deposit}', `${currencySymbol}${depositAmount}`)
+        .replace('{total}', `${currencySymbol}${totalPrice}`)
+    );
+  }, [
+    t.booking.whatsappBookingMessage,
+    formData.fullName,
+    checkIn,
+    checkOut,
+    currencySymbol,
+    depositAmount,
+    totalPrice,
+  ]);
+
+  const whatsappBookingUrl = `https://wa.me/${whatsappNumber}?text=${whatsappBookingMessage}`;
+
   const handleNext = () => {
     if (step === 1) {
       if (!checkIn || !checkOut) {
@@ -311,20 +344,65 @@ const Booking = () => {
   };
 
   const paymentDetails = (
-    <div className="bg-card rounded-xl p-6 shadow-soft">
+    <div className="bg-card rounded-xl p-6 shadow-soft border border-border/70 space-y-5">
       <h3 className="font-heading text-lg font-semibold mb-2">
         {t.booking.paymentTitle}
       </h3>
       <p className="text-sm text-muted-foreground mb-4">
         {t.booking.paymentIntro}
       </p>
-      <ul className="space-y-1 text-sm">
-        <li>{t.booking.paymentDetailAccount}</li>
-        <li>{t.booking.paymentDetailIban}</li>
-        <li>{t.booking.paymentDetailBic}</li>
-        <li>{t.booking.paymentDetailReference}</li>
-      </ul>
-      <p className="text-xs text-muted-foreground mt-3">
+
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="rounded-lg border border-primary/25 bg-primary/5 p-4">
+          <p className="text-sm text-muted-foreground">{t.booking.paymentDepositLabel}</p>
+          <p className="text-2xl font-bold text-primary mt-1">{currencySymbol}{depositAmount}</p>
+          <p className="text-xs text-muted-foreground mt-1">{t.booking.paymentDepositHelp}</p>
+        </div>
+        <div className="rounded-lg border border-border bg-muted/40 p-4">
+          <p className="text-sm text-muted-foreground">{t.booking.remainingBalanceLabel}</p>
+          <p className="text-2xl font-bold text-foreground mt-1">{currencySymbol}{remainingAmount}</p>
+          <p className="text-xs text-muted-foreground mt-1">
+            {t.booking.total}: {currencySymbol}{totalPrice}
+          </p>
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-border bg-background p-4">
+        <dl className="space-y-2 text-sm">
+          <div className="flex items-start justify-between gap-3">
+            <dt className="text-muted-foreground">{t.booking.paymentLabelAccount}</dt>
+            <dd className="font-semibold text-right">{bookingPaymentConfig.accountHolder}</dd>
+          </div>
+          <div className="flex items-start justify-between gap-3">
+            <dt className="text-muted-foreground">{t.booking.paymentLabelIban}</dt>
+            <dd className="font-semibold text-right">{bookingPaymentConfig.iban}</dd>
+          </div>
+          <div className="flex items-start justify-between gap-3">
+            <dt className="text-muted-foreground">{t.booking.paymentLabelBic}</dt>
+            <dd className="font-semibold text-right">{bookingPaymentConfig.bic}</dd>
+          </div>
+          <div className="flex items-start justify-between gap-3">
+            <dt className="text-muted-foreground">{t.booking.paymentLabelReference}</dt>
+            <dd className="font-semibold text-right">{paymentReference}</dd>
+          </div>
+        </dl>
+      </div>
+
+      <div>
+        <h4 className="font-semibold text-foreground mb-3">{t.booking.paymentFlowTitle}</h4>
+        <ol className="space-y-2">
+          {t.booking.paymentFlowSteps.map((stepText, index) => (
+            <li key={stepText} className="flex items-start gap-3 text-sm text-foreground">
+              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[11px] font-semibold text-primary">
+                {index + 1}
+              </span>
+              <span>{stepText}</span>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+      <p className="text-xs text-muted-foreground">
         {t.booking.paymentNote}
       </p>
     </div>
@@ -382,15 +460,18 @@ const Booking = () => {
               </div>
               <Button variant="whatsapp" size="lg" asChild className="w-full">
                 <a
-                  href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}`}
+                  href={whatsappBookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 w-full justify-center text-center px-2 whitespace-pre-line leading-tight"
+                  className="flex items-center gap-2 w-full justify-center text-center px-2 leading-tight"
                 >
                   <MessageCircle className="h-5 w-5" />
-                  {t.booking.whatsappNote}
+                  {t.booking.whatsappBookingCta}
                 </a>
               </Button>
+              <p className="text-xs text-muted-foreground mt-2">
+                {t.booking.whatsappBookingHint}
+              </p>
             </div>
           </div>
         </main>
@@ -699,13 +780,13 @@ const Booking = () => {
             <div className="mt-8 flex flex-col items-center gap-2 text-sm text-muted-foreground">
               <span>{t.booking.helpWhatsapp}</span>
               <a
-                href={`https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}`}
+                href={`https://wa.me/${whatsappNumber}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 text-primary hover:underline"
               >
                 <MessageCircle className="h-4 w-4" />
-                {whatsappNumber}
+                {whatsappDisplayNumber}
               </a>
             </div>
           </div>

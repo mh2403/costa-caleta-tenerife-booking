@@ -26,7 +26,7 @@ export function HeroSection() {
 
       <div className="relative z-10 container mx-auto px-4 pb-10 pt-24 md:pt-28">
         <div className="mx-auto max-w-4xl animate-fade-in-up">
-          <div className="rounded-[2rem] border border-primary-foreground/28 bg-foreground/28 px-6 py-8 text-center backdrop-blur-xl shadow-[0_24px_64px_-24px_rgba(0,0,0,0.62)] md:px-10 md:py-10">
+          <div className="rounded-[2rem] border border-primary-foreground/28 bg-foreground/34 px-6 py-8 text-center shadow-[0_24px_64px_-24px_rgba(0,0,0,0.62)] md:px-10 md:py-10">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-primary-foreground/35 bg-primary-foreground/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.14em] text-primary-foreground/95">
               <img src={logoUrl} alt="" aria-hidden="true" className="h-4 w-4 rounded-full" />
               <span>{t.cta.eyebrow}</span>
@@ -39,7 +39,7 @@ export function HeroSection() {
               {t.hero.subtitle}
             </p>
 
-            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary-foreground/30 bg-primary-foreground/12 px-6 py-3 backdrop-blur-md">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary-foreground/30 bg-primary-foreground/12 px-6 py-3">
               <span className="text-primary-foreground/80">{t.hero.fromPrice}</span>
               <span className="text-2xl font-bold text-primary-foreground">€{fromPrice}</span>
               <span className="text-primary-foreground/80">{t.hero.perNight}</span>
