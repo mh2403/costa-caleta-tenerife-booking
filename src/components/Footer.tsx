@@ -6,7 +6,7 @@ import { contactInfo } from '@/lib/contactInfo';
 export function Footer() {
   const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
-  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg`;
+  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   return (
     <footer className="relative overflow-hidden border-t border-border/60 bg-foreground text-background">
@@ -25,9 +25,6 @@ export function Footer() {
             <p className="text-background/75 text-sm leading-relaxed max-w-md">
               {t.hero.subtitle}
             </p>
-            <div className="mt-5 inline-flex items-center rounded-full border border-background/25 bg-background/10 px-4 py-2 text-xs font-medium text-background/90">
-              {t.footer.directBooking}
-            </div>
           </div>
 
           <div>

@@ -8,7 +8,7 @@ export function HeroSection() {
   const { t } = useLanguage();
   const { data: settings } = useSettings();
   const fromPrice = settings?.base_price?.amount ?? 85;
-  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg`;
+  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">

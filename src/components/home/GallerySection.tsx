@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type TouchEvent } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -52,6 +52,7 @@ export function GallerySection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [category, setCategory] = useState<GalleryCategory>('all');
   const [visibleCount, setVisibleCount] = useState(INITIAL_IMAGE_COUNT);
+  const touchStartX = useRef<number | null>(null);
 
   const categoryLabels: Record<GalleryCategory, string> = {
     all: t.gallery.filterAll,
@@ -80,6 +81,31 @@ export function GallerySection() {
     setVisibleCount(INITIAL_IMAGE_COUNT);
   }, [category]);
 
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setLightboxOpen(false);
+        return;
+      }
+      if (event.key === 'ArrowLeft') {
+        setCurrentIndex((prev) => (prev === 0 ? displayedImages.length - 1 : prev - 1));
+      }
+      if (event.key === 'ArrowRight') {
+        setCurrentIndex((prev) => (prev === displayedImages.length - 1 ? 0 : prev + 1));
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lightboxOpen, displayedImages.length]);
+
   const openLightbox = (index: number) => {
     setCurrentIndex(index);
     setLightboxOpen(true);
@@ -95,6 +121,25 @@ export function GallerySection() {
 
   const goToNext = () => {
     setCurrentIndex((prev) => (prev === displayedImages.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const startX = touchStartX.current;
+    const endX = event.changedTouches[0]?.clientX ?? null;
+    touchStartX.current = null;
+    if (startX === null || endX === null) return;
+
+    const distance = endX - startX;
+    if (Math.abs(distance) < 40) return;
+    if (distance > 0) {
+      goToPrevious();
+    } else {
+      goToNext();
+    }
   };
 
   return (
@@ -157,53 +202,95 @@ export function GallerySection() {
       </div>
 
       {lightboxOpen && displayedImages.length > 0 && (
-        <div className="fixed inset-0 z-50 bg-foreground/95 flex items-center justify-center animate-fade-in">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute top-4 right-4 text-primary-foreground hover:bg-primary-foreground/10"
-            onClick={closeLightbox}
+        <div className="fixed inset-0 z-[70] bg-foreground/95 animate-fade-in">
+          <div
+            className="relative flex h-full w-full items-center justify-center p-4 md:p-8"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
-            <X className="h-6 w-6" />
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-4 top-4 z-10 text-primary-foreground hover:bg-primary-foreground/12"
+              onClick={closeLightbox}
+            >
+              <X className="h-6 w-6" />
+            </Button>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute left-4 text-primary-foreground hover:bg-primary-foreground/10"
-            onClick={goToPrevious}
-          >
-            <ChevronLeft className="h-8 w-8" />
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute left-3 hidden h-12 w-12 text-primary-foreground hover:bg-primary-foreground/12 md:flex"
+              onClick={goToPrevious}
+            >
+              <ChevronLeft className="h-8 w-8" />
+            </Button>
 
-          <img
-            src={displayedImages[currentIndex].src}
-            alt={getAltText(currentIndex)}
-            loading="eager"
-            decoding="async"
-            className="max-w-[90vw] max-h-[85vh] object-contain animate-scale-in"
-          />
+            <button
+              type="button"
+              onClick={goToPrevious}
+              className="absolute inset-y-0 left-0 w-1/3 md:hidden"
+              aria-label="Previous photo"
+            />
+            <img
+              src={displayedImages[currentIndex].src}
+              alt={getAltText(currentIndex)}
+              loading="eager"
+              decoding="async"
+              className="max-h-[82vh] w-auto max-w-full rounded-xl object-contain shadow-large animate-scale-in"
+            />
+            <button
+              type="button"
+              onClick={goToNext}
+              className="absolute inset-y-0 right-0 w-1/3 md:hidden"
+              aria-label="Next photo"
+            />
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-4 text-primary-foreground hover:bg-primary-foreground/10"
-            onClick={goToNext}
-          >
-            <ChevronRight className="h-8 w-8" />
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-3 hidden h-12 w-12 text-primary-foreground hover:bg-primary-foreground/12 md:flex"
+              onClick={goToNext}
+            >
+              <ChevronRight className="h-8 w-8" />
+            </Button>
 
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-            {displayedImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={cn(
-                  'w-2 h-2 rounded-full transition-colors',
-                  index === currentIndex ? 'bg-primary-foreground' : 'bg-primary-foreground/40'
-                )}
-              />
-            ))}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full border border-primary-foreground/20 bg-foreground/45 px-3 py-2 md:hidden">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 text-primary-foreground hover:bg-primary-foreground/10"
+                  onClick={goToPrevious}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <span className="min-w-[72px] text-center text-sm font-medium text-primary-foreground">
+                  {currentIndex + 1} / {displayedImages.length}
+                </span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-9 w-9 text-primary-foreground hover:bg-primary-foreground/10"
+                  onClick={goToNext}
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 gap-2 md:flex">
+              {displayedImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={cn(
+                    'h-2 w-2 rounded-full transition-colors',
+                    index === currentIndex ? 'bg-primary-foreground' : 'bg-primary-foreground/40'
+                  )}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}

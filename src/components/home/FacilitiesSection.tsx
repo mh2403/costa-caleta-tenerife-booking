@@ -70,11 +70,11 @@ export function FacilitiesSection() {
                   className="group rounded-2xl border border-border/70 bg-card p-4 shadow-soft transition-all duration-300 hover:border-primary/30 hover:shadow-medium"
                   style={{ animationDelay: `${index * 40}ms` }}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-center gap-3">
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/12 transition-colors group-hover:bg-primary/18">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
-                    <p className="pt-1 text-sm font-medium leading-relaxed text-foreground md:text-base">
+                    <p className="text-sm font-medium leading-relaxed text-foreground md:text-base">
                       {facility.label}
                     </p>
                   </div>

@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export function CTASection() {
   const { t } = useLanguage();
-  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg`;
+  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   return (
     <section className="relative overflow-hidden bg-gradient-sunset py-14 text-primary-foreground md:py-20">

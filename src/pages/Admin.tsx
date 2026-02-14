@@ -31,6 +31,7 @@ const Admin = () => {
   const [error, setError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,7 +84,7 @@ const Admin = () => {
           <div className="bg-card rounded-2xl p-8 shadow-medium">
             <div className="text-center mb-8">
               <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                <span className="text-3xl">🌴</span>
+                <img src={logoUrl} alt="Costa Caleta" className="h-11 w-11 rounded-full border border-primary/20" />
               </div>
               <h1 className="font-heading text-2xl font-bold text-foreground">
                 {t.admin.login}
@@ -171,7 +172,7 @@ const Admin = () => {
           {/* Logo */}
           <div className="p-6 border-b border-border">
             <Link to="/" className="flex items-center gap-2">
-              <span className="text-2xl">🌴</span>
+              <img src={logoUrl} alt="Costa Caleta" className="h-7 w-7 rounded-full border border-primary/20" />
               <span className="font-heading text-xl font-semibold">Costa Caleta</span>
             </Link>
           </div>

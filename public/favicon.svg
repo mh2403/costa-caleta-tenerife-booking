@@ -1,39 +1,25 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
   <defs>
-    <linearGradient id="island" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#9FE3BD" />
-      <stop offset="1" stop-color="#2F9E74" />
+    <radialGradient id="sunsetCore" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20 16) rotate(43) scale(62)">
+      <stop offset="0" stop-color="#F7B261" />
+      <stop offset="1" stop-color="#EB8833" />
+    </radialGradient>
+    <linearGradient id="frond" x1="10" y1="20" x2="56" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7B421C" />
+      <stop offset="1" stop-color="#A25C29" />
+    </linearGradient>
+    <linearGradient id="trunk" x1="30" y1="44" x2="40" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5D3116" />
+      <stop offset="1" stop-color="#8B4B22" />
     </linearGradient>
   </defs>
-  <circle cx="32" cy="32" r="32" fill="url(#island)" />
-  <path
-    d="M30 42 C31 34, 33 27, 36 20"
-    stroke="#6A4A2B"
-    stroke-width="4"
-    stroke-linecap="round"
-  />
-  <path
-    d="M36 22 C44 20, 52 20, 58 24"
-    stroke="#1D7A4D"
-    stroke-width="4"
-    stroke-linecap="round"
-  />
-  <path
-    d="M36 22 C44 16, 52 14, 60 16"
-    stroke="#24965E"
-    stroke-width="3.5"
-    stroke-linecap="round"
-  />
-  <path
-    d="M36 22 C28 16, 20 14, 12 16"
-    stroke="#24965E"
-    stroke-width="3.5"
-    stroke-linecap="round"
-  />
-  <path
-    d="M36 22 C28 20, 20 20, 10 24"
-    stroke="#1D7A4D"
-    stroke-width="4"
-    stroke-linecap="round"
-  />
+
+  <circle cx="32" cy="32" r="31" fill="url(#sunsetCore)" />
+  <circle cx="32" cy="32" r="30" stroke="#FCD9B2" stroke-opacity="0.55" stroke-width="1.5" />
+  <path d="M28.8 43.8C30.2 34.8 32.5 27.8 36.3 19.8" stroke="url(#trunk)" stroke-width="3.6" stroke-linecap="round" />
+  <path d="M35.8 21.2C45 18.2 51.5 19.2 56 23.5" stroke="url(#frond)" stroke-width="3.4" stroke-linecap="round" />
+  <path d="M35.5 20.8C43.8 14.9 50.9 13.3 57.8 15.3" stroke="#945024" stroke-width="3" stroke-linecap="round" />
+  <path d="M35.3 21.1C28.3 14.7 20.9 13.3 12.4 15.9" stroke="#945024" stroke-width="3" stroke-linecap="round" />
+  <path d="M35.6 21.4C28 18.7 19.9 19.2 10.2 23.4" stroke="url(#frond)" stroke-width="3.4" stroke-linecap="round" />
+  <circle cx="19" cy="18" r="2.4" fill="#FFE2B3" fill-opacity="0.75" />
 </svg>

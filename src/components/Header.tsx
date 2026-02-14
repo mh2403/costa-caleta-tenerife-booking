@@ -11,7 +11,7 @@ export function Header() {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg`;
+  const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   useEffect(() => {
     const handleScroll = () => {

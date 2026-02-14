@@ -17,9 +17,7 @@ const Index = () => {
         <div className="content-auto">
           <JourneySection />
         </div>
-        <div className="content-auto">
-          <GallerySection />
-        </div>
+        <GallerySection />
         <div className="content-auto">
           <FacilitiesSection />
         </div>

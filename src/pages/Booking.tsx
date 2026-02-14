@@ -344,30 +344,30 @@ const Booking = () => {
   };
 
   const paymentDetails = (
-    <div className="bg-card rounded-xl p-6 shadow-soft border border-border/70 space-y-5">
-      <h3 className="font-heading text-lg font-semibold mb-2">
+    <div className="bg-card rounded-xl p-4 md:p-5 shadow-soft border border-border/70 space-y-4">
+      <h3 className="font-heading text-base md:text-lg font-semibold mb-1">
         {t.booking.paymentTitle}
       </h3>
-      <p className="text-sm text-muted-foreground mb-4">
+      <p className="text-xs md:text-sm text-muted-foreground">
         {t.booking.paymentIntro}
       </p>
 
-      <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-lg border border-primary/25 bg-primary/5 p-4">
+      <div className="grid md:grid-cols-2 gap-3">
+        <div className="rounded-lg border border-primary/25 bg-primary/5 p-3 md:p-4">
           <p className="text-sm text-muted-foreground">{t.booking.paymentDepositLabel}</p>
-          <p className="text-2xl font-bold text-primary mt-1">{currencySymbol}{depositAmount}</p>
+          <p className="text-xl md:text-2xl font-bold text-primary mt-1">{currencySymbol}{depositAmount}</p>
           <p className="text-xs text-muted-foreground mt-1">{t.booking.paymentDepositHelp}</p>
         </div>
-        <div className="rounded-lg border border-border bg-muted/40 p-4">
+        <div className="rounded-lg border border-border bg-muted/40 p-3 md:p-4">
           <p className="text-sm text-muted-foreground">{t.booking.remainingBalanceLabel}</p>
-          <p className="text-2xl font-bold text-foreground mt-1">{currencySymbol}{remainingAmount}</p>
+          <p className="text-xl md:text-2xl font-bold text-foreground mt-1">{currencySymbol}{remainingAmount}</p>
           <p className="text-xs text-muted-foreground mt-1">
             {t.booking.total}: {currencySymbol}{totalPrice}
           </p>
         </div>
       </div>
 
-      <div className="rounded-lg border border-border bg-background p-4">
+      <div className="rounded-lg border border-border bg-background p-3 md:p-4">
         <dl className="space-y-2 text-sm">
           <div className="flex items-start justify-between gap-3">
             <dt className="text-muted-foreground">{t.booking.paymentLabelAccount}</dt>
@@ -389,10 +389,10 @@ const Booking = () => {
       </div>
 
       <div>
-        <h4 className="font-semibold text-foreground mb-3">{t.booking.paymentFlowTitle}</h4>
-        <ol className="space-y-2">
+        <h4 className="font-semibold text-foreground mb-2">{t.booking.paymentFlowTitle}</h4>
+        <ol className="space-y-1.5">
           {t.booking.paymentFlowSteps.map((stepText, index) => (
-            <li key={stepText} className="flex items-start gap-3 text-sm text-foreground">
+            <li key={stepText} className="flex items-start gap-3 text-sm leading-snug text-foreground">
               <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[11px] font-semibold text-primary">
                 {index + 1}
               </span>
@@ -452,20 +452,22 @@ const Booking = () => {
                   </div>
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground mb-6">
-                {t.booking.disclaimer}
-              </p>
               <div className="mb-6">
                 {paymentDetails}
               </div>
-              <Button variant="whatsapp" size="lg" asChild className="w-full">
+              <Button
+                variant="whatsapp"
+                size="lg"
+                asChild
+                className="w-full h-auto min-h-12 whitespace-normal px-4 py-3"
+              >
                 <a
                   href={whatsappBookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 w-full justify-center text-center px-2 leading-tight"
+                  className="flex w-full items-center justify-center gap-2 text-center text-sm leading-snug"
                 >
-                  <MessageCircle className="h-5 w-5" />
+                  <MessageCircle className="h-5 w-5 shrink-0" />
                   {t.booking.whatsappBookingCta}
                 </a>
               </Button>
@@ -678,35 +680,35 @@ const Booking = () => {
             {/* Step 3: Review */}
             {step === 3 && (
               <div className="max-w-xl mx-auto animate-fade-in">
-                <div className="bg-card rounded-2xl p-6 shadow-soft">
-                  <h3 className="font-heading text-xl font-semibold mb-6 flex items-center gap-2">
+                <div className="bg-card rounded-2xl p-5 md:p-6 shadow-soft">
+                  <h3 className="font-heading text-xl font-semibold mb-5 flex items-center gap-2">
                     <Check className="h-5 w-5 text-primary" />
                     {t.booking.step3}
                   </h3>
 
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {/* Dates Summary */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-muted rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-muted rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{t.booking.checkIn}</p>
                         <p className="font-semibold">{checkIn && format(checkIn, 'PPP')}</p>
                       </div>
-                      <div className="bg-muted rounded-lg p-4">
+                      <div className="bg-muted rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{t.booking.checkOut}</p>
                         <p className="font-semibold">{checkOut && format(checkOut, 'PPP')}</p>
                       </div>
-                      <div className="bg-muted rounded-lg p-4">
+                      <div className="bg-muted rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{t.booking.checkInTime}</p>
                         <p className="font-semibold">{checkInTime}</p>
                       </div>
-                      <div className="bg-muted rounded-lg p-4">
+                      <div className="bg-muted rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{t.booking.checkOutTime}</p>
                         <p className="font-semibold">{checkOutTime}</p>
                       </div>
                     </div>
 
                     {/* Guest Info */}
-                    <div className="bg-muted rounded-lg p-4 space-y-2">
+                    <div className="bg-muted rounded-lg p-3 space-y-2">
                       <div className="flex items-center gap-2">
                         <User className="h-4 w-4 text-muted-foreground" />
                         <span>{formData.fullName}</span>
@@ -722,10 +724,10 @@ const Booking = () => {
                     </div>
 
                     {/* Price */}
-                    <div className="bg-primary/5 rounded-lg p-4 border border-primary/20">
+                    <div className="bg-primary/5 rounded-lg p-3 border border-primary/20">
                       <div className="flex justify-between items-center">
                         <span className="font-semibold">{t.booking.total}</span>
-                        <span className="text-2xl font-bold text-primary">{currencySymbol}{totalPrice}</span>
+                        <span className="text-xl md:text-2xl font-bold text-primary">{currencySymbol}{totalPrice}</span>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
                         {nights} {t.booking.nights} + {t.booking.cleaningFee}
@@ -735,7 +737,7 @@ const Booking = () => {
                     {paymentDetails}
 
                     <p className="text-sm text-muted-foreground text-center">
-                      {t.booking.disclaimer}
+                      {t.contact.responseTime}
                     </p>
                   </div>
                 </div>

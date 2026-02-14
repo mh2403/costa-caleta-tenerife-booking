@@ -247,7 +247,7 @@ export const translations: Record<Language, Translations> = {
     },
     hero: {
       title: 'Escape to the sun of Tenerife',
-      subtitle: 'Book directly — no platforms, no extra fees. Experience the warmth of the Canary Islands.',
+      subtitle: 'Experience the warmth of the Canary Islands.',
       checkAvailability: 'View Gallery',
       bookNow: 'Book Now',
       fromPrice: 'From',
@@ -272,7 +272,7 @@ export const translations: Record<Language, Translations> = {
     journey: {
       eyebrow: 'How It Works',
       title: 'From first click to check-in in three clear steps',
-      subtitle: 'A cleaner flow with less friction, so guests can decide and book faster.',
+      subtitle: '1, 2, 3 GO!',
       steps: [
         {
           title: 'Choose your dates',
@@ -292,8 +292,8 @@ export const translations: Record<Language, Translations> = {
     },
     gallery: {
       filterAll: 'All',
-      filterApartment: 'Apartment',
-      filterTenerife: 'Tenerife',
+      filterApartment: 'Accommodation',
+      filterTenerife: 'Adeje',
       loadMore: 'Load more photos',
       imageAlts: [
         'Balcony breakfast setup',
@@ -419,7 +419,7 @@ Practical:
       paymentDetailBic: 'BIC/SWIFT: [add later]',
       paymentDetailReference: 'Reference: Your name + dates',
       paymentNote: 'Your booking is only final after the contract is signed and the full amount is received.',
-      whatsappBookingCta: 'I placed a booking and paid the deposit — continue via WhatsApp',
+      whatsappBookingCta: 'Deposit paid? Continue via WhatsApp',
       whatsappBookingHint: 'Send this message after your transfer so we can finalize your file quickly.',
       whatsappBookingMessage: 'Hi, I just placed a booking request for Costa Caleta.\nName: {name}\nDates: {checkIn} - {checkOut}\nDeposit paid: {deposit}\nTotal booking amount: {total}\nPlease send the contract. Thank you!',
       checkInTime: 'Check-in time',
@@ -457,7 +457,7 @@ Practical:
       terms: 'Terms of Service',
       instructions: 'Instructions',
       quickLinks: 'Quick links',
-      directBooking: 'Direct booking in La Caleta',
+      directBooking: 'Book directly with the owner for the best terms. Experience the warmth of the Canary Islands.',
       whatsappLabel: 'WhatsApp',
     },
     privacy: {
@@ -632,7 +632,7 @@ Practical:
     },
     hero: {
       title: 'Ontsnap naar de zon van Tenerife',
-      subtitle: 'Boek direct — geen platforms, geen extra kosten. Ervaar de warmte van de Canarische Eilanden.',
+      subtitle: 'Ervaar de warmte van de Canarische Eilanden.',
       checkAvailability: "Bekijk foto's",
       bookNow: 'Nu Boeken',
       fromPrice: 'Vanaf',
@@ -657,7 +657,7 @@ Practical:
     journey: {
       eyebrow: 'Hoe Het Werkt',
       title: 'Van eerste klik tot check-in in drie heldere stappen',
-      subtitle: 'Een duidelijke flow met minder frictie, zodat gasten sneller beslissen en boeken.',
+      subtitle: '1, 2, 3 GO!',
       steps: [
         {
           title: 'Kies uw data',
@@ -677,8 +677,8 @@ Practical:
     },
     gallery: {
       filterAll: 'Alles',
-      filterApartment: 'Appartement',
-      filterTenerife: 'Tenerife',
+      filterApartment: 'Accomodatie',
+      filterTenerife: 'Adeje',
       loadMore: "Meer foto's laden",
       imageAlts: [
         'Balkon met ontbijt',
@@ -804,7 +804,7 @@ Praktisch:
       paymentDetailBic: 'BIC/SWIFT: [later invullen]',
       paymentDetailReference: 'Referentie: uw naam + data',
       paymentNote: 'Uw boeking is pas definitief na ondertekend contract en ontvangst van het volledige bedrag.',
-      whatsappBookingCta: 'Ik heb geboekt en het voorschot betaald — ga verder via WhatsApp',
+      whatsappBookingCta: 'Voorschot betaald? Ga verder via WhatsApp',
       whatsappBookingHint: 'Stuur dit bericht na uw overschrijving zodat we uw dossier meteen kunnen afwerken.',
       whatsappBookingMessage: 'Hallo, ik heb net een boekingsaanvraag geplaatst voor Costa Caleta.\nNaam: {name}\nData: {checkIn} - {checkOut}\nVoorschot betaald: {deposit}\nTotaal boekingsbedrag: {total}\nGraag het contract doorsturen. Bedankt!',
       checkInTime: 'Inchecktijd',
@@ -842,7 +842,7 @@ Praktisch:
       terms: 'Algemene Voorwaarden',
       instructions: 'Instructies',
       quickLinks: 'Snelle links',
-      directBooking: 'Direct boeken in La Caleta',
+      directBooking: 'Boek rechtstreeks bij de eigenaar voor de beste voorwaarden. Ervaar de warmte van de Canarische Eilanden.',
       whatsappLabel: 'WhatsApp',
     },
     privacy: {
@@ -1017,7 +1017,7 @@ Praktisch:
     },
     hero: {
       title: 'Escápate al sol de Tenerife',
-      subtitle: 'Reserva directamente — sin plataformas, sin costes adicionales. Experimenta el calor de las Islas Canarias.',
+      subtitle: 'Experimenta el calor de las Islas Canarias.',
       checkAvailability: 'Ver Fotos',
       bookNow: 'Reservar Ahora',
       fromPrice: 'Desde',
@@ -1042,7 +1042,7 @@ Praktisch:
     journey: {
       eyebrow: 'Cómo Funciona',
       title: 'De tu primer clic al check-in en tres pasos claros',
-      subtitle: 'Un flujo más claro y con menos fricción para decidir y reservar más rápido.',
+      subtitle: '1, 2, 3 GO!',
       steps: [
         {
           title: 'Elige tus fechas',
@@ -1062,8 +1062,8 @@ Praktisch:
     },
     gallery: {
       filterAll: 'Todo',
-      filterApartment: 'Apartamento',
-      filterTenerife: 'Tenerife',
+      filterApartment: 'Alojamiento',
+      filterTenerife: 'Adeje',
       loadMore: 'Cargar más fotos',
       imageAlts: [
         'Balcón con desayuno',
@@ -1189,7 +1189,7 @@ Práctico:
       paymentDetailBic: 'BIC/SWIFT: [añadir después]',
       paymentDetailReference: 'Referencia: tu nombre + fechas',
       paymentNote: 'La reserva queda cerrada solo tras la firma del contrato y el pago completo.',
-      whatsappBookingCta: 'Ya reservé y pagué el anticipo — continuar por WhatsApp',
+      whatsappBookingCta: '¿Anticipo pagado? Continuar por WhatsApp',
       whatsappBookingHint: 'Envía este mensaje tras tu transferencia para cerrar el proceso más rápido.',
       whatsappBookingMessage: 'Hola, acabo de enviar una solicitud de reserva para Costa Caleta.\nNombre: {name}\nFechas: {checkIn} - {checkOut}\nAnticipo pagado: {deposit}\nImporte total de la reserva: {total}\nPor favor, enviadme el contrato. ¡Gracias!',
       checkInTime: 'Hora de entrada',
@@ -1227,7 +1227,7 @@ Práctico:
       terms: 'Términos y Condiciones',
       instructions: 'Instrucciones',
       quickLinks: 'Enlaces rápidos',
-      directBooking: 'Reserva directa en La Caleta',
+      directBooking: 'Reserva directamente con la propietaria y consigue mejores condiciones. Experimenta el calor de las Islas Canarias.',
       whatsappLabel: 'WhatsApp',
     },
     privacy: {
