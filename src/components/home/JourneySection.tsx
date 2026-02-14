@@ -16,21 +16,17 @@ export function JourneySection() {
       </div>
 
       <div className="container relative mx-auto px-4">
-        <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-          <div className="rounded-3xl border border-border/70 bg-card/90 p-6 shadow-soft md:p-8">
+        <div className="mx-auto max-w-5xl space-y-8">
+          <div className="rounded-3xl border border-border/70 bg-card/90 p-6 text-center shadow-soft md:p-10">
             <span className="inline-flex items-center rounded-full border border-primary/25 bg-primary/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-primary">
               {t.journey.eyebrow}
             </span>
 
-            <h2 className="mt-4 font-heading text-3xl font-bold text-foreground md:text-4xl">
+            <h2 className="mx-auto mt-4 max-w-3xl font-heading text-3xl font-bold text-foreground md:text-6xl">
               {t.journey.title}
             </h2>
 
-            <p className="mt-4 text-base leading-relaxed text-muted-foreground md:text-lg">
-              {t.journey.subtitle}
-            </p>
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg" className="rounded-full">
                 <Link to="/booking" className="inline-flex items-center gap-2">
                   {t.journey.primaryCta}
@@ -43,7 +39,7 @@ export function JourneySection() {
             </div>
           </div>
 
-          <div className="space-y-3">
+          <div className="mx-auto w-full space-y-3 md:space-y-4">
             {t.journey.steps.map((step, index) => {
               const Icon = stepIcons[index] ?? KeyRound;
               const stepNumber = String(index + 1).padStart(2, '0');
@@ -51,24 +47,20 @@ export function JourneySection() {
               return (
                 <article
                   key={step.title}
-                  className="group rounded-2xl border border-border/70 bg-card p-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-medium md:p-6"
+                  className="group relative w-full rounded-2xl border border-border/70 bg-card p-5 shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-medium md:p-6"
                 >
-                  <div className="flex items-start gap-4">
-                    <span className="mt-0.5 text-xs font-semibold tracking-[0.2em] text-muted-foreground">
-                      {stepNumber}
-                    </span>
+                  <span className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 font-heading text-2xl font-semibold leading-none text-primary/45 md:left-7 md:text-3xl">
+                    {stepNumber}
+                  </span>
 
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <div className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <h3 className="text-lg font-semibold text-foreground">{step.title}</h3>
-                      </div>
-                      <p className="mt-2 pl-11 text-sm leading-relaxed text-muted-foreground md:text-base">
-                        {step.description}
-                      </p>
+                  <div className="mx-auto flex w-full max-w-2xl flex-col items-center text-center">
+                    <div className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-primary transition-colors group-hover:bg-primary/15">
+                      <Icon className="h-4 w-4" />
                     </div>
+                    <h3 className="mt-2 text-lg font-semibold text-foreground">{step.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground md:text-base">
+                      {step.description}
+                    </p>
                   </div>
                 </article>
               );

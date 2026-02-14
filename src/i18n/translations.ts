@@ -131,6 +131,62 @@ export interface Translations {
     whatsappBookingMessage: string;
     checkInTime: string;
     checkOutTime: string;
+    dossierTitle: string;
+    dossierSubtitle: string;
+    dossierNotFoundTitle: string;
+    dossierNotFoundDescription: string;
+    dossierLinkLabel: string;
+    dossierCopyLink: string;
+    dossierLinkCopied: string;
+    dossierCopyError: string;
+    dossierDone: string;
+    dossierPending: string;
+    dossierMark: string;
+    dossierUndo: string;
+    dossierStepDepositWhatsapp: string;
+    dossierStepDeposit: string;
+    dossierStepWhatsapp: string;
+    dossierStepContractSent: string;
+    dossierStepGuestSigned: string;
+    dossierStepOwnerSigned: string;
+    dossierStepRemainingPaid: string;
+    dossierStepSaved: string;
+    dossierStepReset: string;
+    dossierContractTitle: string;
+    dossierContractAvailable: string;
+    dossierContractMissing: string;
+    dossierContractWaiting: string;
+    dossierOpenContract: string;
+    dossierContractUploadedAt: string;
+    dossierGuestSignTitle: string;
+    dossierSignConsent: string;
+    dossierSignAction: string;
+    dossierSignConsentRequired: string;
+    dossierSignSuccess: string;
+    dossierSignError: string;
+    dossierSignSetupHint: string;
+    dossierGuestSignedAt: string;
+    dossierReviewTitle: string;
+    dossierReviewRatingLabel: string;
+    dossierReviewAction: string;
+    dossierReviewNotReady: string;
+    dossierReviewRequired: string;
+    dossierReviewSuccess: string;
+    dossierReviewError: string;
+    dossierAdminTitle: string;
+    dossierStatusLabel: string;
+    dossierUploadContractLabel: string;
+    dossierUploadContractAction: string;
+    dossierContractUploaded: string;
+    dossierContractUploadError: string;
+    dossierAdminNotesLabel: string;
+    dossierAdminNotesPlaceholder: string;
+    dossierSaveStatus: string;
+    dossierSaveNotes: string;
+    dossierStatusSaved: string;
+    dossierNotesSaved: string;
+    dossierUpdateError: string;
+    dossierWhatsappHint: string;
   };
   // Contact
   contact: {
@@ -271,8 +327,8 @@ export const translations: Record<Language, Translations> = {
     },
     journey: {
       eyebrow: 'How It Works',
-      title: 'From first click to check-in in three clear steps',
-      subtitle: '1, 2, 3 GO!',
+      title: 'From first click to check-in in three clear steps.',
+      subtitle: '',
       steps: [
         {
           title: 'Choose your dates',
@@ -293,7 +349,7 @@ export const translations: Record<Language, Translations> = {
     gallery: {
       filterAll: 'All',
       filterApartment: 'Accommodation',
-      filterTenerife: 'Adeje',
+      filterTenerife: 'Location',
       loadMore: 'Load more photos',
       imageAlts: [
         'Balcony breakfast setup',
@@ -304,6 +360,7 @@ export const translations: Record<Language, Translations> = {
         'Bathroom with vanity',
         'Bathroom with shower',
         'Dining area',
+        'Nespresso capsules',
         'Pool',
         'Pool view',
         'Poolside at the residence',
@@ -337,7 +394,7 @@ Very well located, close to supermarket, restaurants, bars, shops, nature and Ad
 Apartment includes:
 - Living room with sunny terrace and sea view, TV and Wi-Fi.
 - Kitchen with fridge, freezer, induction hob, microwave, oven and dishwasher.
-- Nespresso machine, kettle, toaster, juicer.
+- Nespresso machine (Original capsules), kettle, toaster, juicer.
 - Iron, ironing board and vacuum cleaner.
 - Bathroom with walk-in shower, toilet, hairdryer, styler and window.
 - Bedroom with king bed (1.80 x 2m), built-in wardrobe and terrace.
@@ -380,7 +437,7 @@ Practical:
       submit: 'Submit Booking Request',
       priceBreakdown: 'Price Breakdown',
       nights: 'nights',
-      cleaningFee: 'Cleaning Fee',
+      cleaningFee: 'Includes mandatory costs',
       total: 'Total',
       selectDates: 'Please select your dates',
       unavailable: 'Unavailable',
@@ -396,11 +453,11 @@ Practical:
       unavailableRange: 'Selected dates include unavailable days. Please choose another range.',
       requiredFields: 'Please fill in all required fields.',
       submitError: 'Failed to submit booking. Please try again.',
-      paymentTitle: 'Payment by bank transfer',
-      paymentIntro: 'To secure your dates, we ask for a €100 deposit after your booking request.',
-      paymentDepositLabel: 'Deposit to secure booking',
-      paymentDepositHelp: 'Please transfer this amount right after submitting your booking request.',
-      remainingBalanceLabel: 'Remaining balance after deposit',
+      paymentTitle: 'Booking follow-up and payment flow',
+      paymentIntro: 'No advance transfer is required on the website. After owner confirmation, contract and payment details are shared through your booking dossier and WhatsApp.',
+      paymentDepositLabel: '30% deposit (after owner confirmation)',
+      paymentDepositHelp: 'Pay this amount only after your booking is confirmed and the contract is shared.',
+      remainingBalanceLabel: '70% remaining balance (at least 1 month before check-in)',
       paymentLabelAccount: 'Account holder',
       paymentLabelIban: 'IBAN',
       paymentLabelBic: 'BIC/SWIFT',
@@ -408,22 +465,79 @@ Practical:
       paymentFlowTitle: 'How your booking is finalized',
       paymentFlowSteps: [
         'Submit your booking request through this form.',
-        'Transfer the €100 deposit to the bank account below.',
-        'Send a WhatsApp message once your booking request and deposit are sent.',
-        'The owner replies on WhatsApp and prepares the official contract.',
-        'Both parties review and sign the contract.',
-        'After signing, transfer the remaining balance by bank transfer.',
+        'Send a WhatsApp message right away with your name, email, phone number and booking link.',
+        'The owner confirms availability, then uploads the official contract in your booking dossier.',
+        'Download the contract, sign it manually, scan it and upload the signed file in your booking dossier.',
+        'After confirmation, pay the 30% deposit according to the contract.',
+        'Pay the remaining 70% at least one month before check-in.',
+        'The booking is final after signed contract validation and full payment.',
       ],
       paymentDetailAccount: 'Account name: [add later]',
       paymentDetailIban: 'IBAN: [add later]',
       paymentDetailBic: 'BIC/SWIFT: [add later]',
       paymentDetailReference: 'Reference: Your name + dates',
-      paymentNote: 'Your booking is only final after the contract is signed and the full amount is received.',
-      whatsappBookingCta: 'Deposit paid? Continue via WhatsApp',
-      whatsappBookingHint: 'Send this message after your transfer so we can finalize your file quickly.',
-      whatsappBookingMessage: 'Hi, I just placed a booking request for Costa Caleta.\nName: {name}\nDates: {checkIn} - {checkOut}\nDeposit paid: {deposit}\nTotal booking amount: {total}\nPlease send the contract. Thank you!',
+      paymentNote: 'Bank details are not shown on this website and are shared via contract/WhatsApp when needed.',
+      whatsappBookingCta: 'Send WhatsApp booking message now',
+      whatsappBookingHint: 'Important: send this message now so the owner can review and confirm your booking request quickly.',
+      whatsappBookingMessage: 'Hi, I just placed a booking request for Costa Caleta.\nName: {name}\nEmail: {email}\nPhone: {phone}\nDates: {checkIn} - {checkOut}\nTotal booking amount: {total}\nBooking link: {link}\nCould you please review and confirm my booking request? Thank you!',
       checkInTime: 'Check-in time',
       checkOutTime: 'Check-out time',
+      dossierTitle: 'Your booking dossier',
+      dossierSubtitle: 'Follow each step of your booking, contract and payment in one secure page.',
+      dossierNotFoundTitle: 'Booking dossier not found',
+      dossierNotFoundDescription: 'This link is invalid or the booking no longer exists. Check the URL or contact us.',
+      dossierLinkLabel: 'Save this private link to return to your booking dossier anytime:',
+      dossierCopyLink: 'Copy link',
+      dossierLinkCopied: 'Booking link copied.',
+      dossierCopyError: 'Could not copy the link. Please copy it manually.',
+      dossierDone: 'Completed',
+      dossierPending: 'Pending',
+      dossierMark: 'Mark',
+      dossierUndo: 'Reset',
+      dossierStepDepositWhatsapp: 'Booking fully completed',
+      dossierStepDeposit: '30% deposit received',
+      dossierStepWhatsapp: 'WhatsApp message received',
+      dossierStepContractSent: 'Contract sent',
+      dossierStepGuestSigned: 'Guest signed contract',
+      dossierStepOwnerSigned: 'Booking confirmed by owner',
+      dossierStepRemainingPaid: '70% remaining balance received',
+      dossierStepSaved: 'Step updated.',
+      dossierStepReset: 'Step reset.',
+      dossierContractTitle: 'Contract',
+      dossierContractAvailable: 'Contract available',
+      dossierContractMissing: 'Not uploaded yet',
+      dossierContractWaiting: 'The owner will upload the contract here once ready.',
+      dossierOpenContract: 'Open contract',
+      dossierContractUploadedAt: 'Uploaded on',
+      dossierGuestSignTitle: 'Guest signed contract upload',
+      dossierSignConsent: 'Download the contract, sign it manually, scan it and upload the signed file here.',
+      dossierSignAction: 'Upload signed contract',
+      dossierSignConsentRequired: 'Please upload the signed contract file.',
+      dossierSignSuccess: 'Signed contract uploaded successfully.',
+      dossierSignError: 'Signed contract upload failed. Please try again.',
+      dossierSignSetupHint: 'If this keeps failing, the latest Supabase migration for signed-contract uploads is probably not active yet.',
+      dossierGuestSignedAt: 'Uploaded on',
+      dossierReviewTitle: 'Guest review',
+      dossierReviewRatingLabel: 'Rating',
+      dossierReviewAction: 'Submit review',
+      dossierReviewNotReady: 'You can leave a review after checkout and once the booking is confirmed.',
+      dossierReviewRequired: 'Please write a short review before submitting.',
+      dossierReviewSuccess: 'Review submitted successfully.',
+      dossierReviewError: 'Review could not be submitted.',
+      dossierAdminTitle: 'Owner management',
+      dossierStatusLabel: 'Booking status',
+      dossierUploadContractLabel: 'Upload contract (PDF)',
+      dossierUploadContractAction: 'Upload contract',
+      dossierContractUploaded: 'Contract uploaded successfully.',
+      dossierContractUploadError: 'Contract upload failed.',
+      dossierAdminNotesLabel: 'Internal notes',
+      dossierAdminNotesPlaceholder: 'Payment/contract notes visible to admin only...',
+      dossierSaveStatus: 'Save status',
+      dossierSaveNotes: 'Save notes',
+      dossierStatusSaved: 'Booking status saved.',
+      dossierNotesSaved: 'Notes saved.',
+      dossierUpdateError: 'Booking update failed.',
+      dossierWhatsappHint: 'After submitting your booking request, send your WhatsApp booking message immediately.',
     },
     contact: {
       title: 'Get in Touch',
@@ -474,8 +588,10 @@ Practical:
           list: [
             'Identification and contact details you provide (name, email, phone).',
             'Booking details (dates, number of guests, messages).',
-            'Payment follow-up data related to your booking (deposit status, remaining balance status, reference and internal notes).',
-            'Contract progress data related to your booking (contract sent/signed status).',
+            'Payment follow-up data related to your booking (30% deposit status, 70% remaining balance status and internal notes).',
+            'Contract progress data related to your booking (contract sent status, manually signed upload status and completion status).',
+            'Private booking dossier link/token so you can access your booking progress page.',
+            'Guest review content you submit after your stay (name, rating, comment).',
             'Communications and inquiries you send us, including WhatsApp messages if you contact us there.',
             'Technical data needed to operate the site (IP address, browser/device, log data).',
           ],
@@ -483,7 +599,7 @@ Practical:
         {
           title: 'Why we use your data (legal basis)',
           list: [
-            'To respond to inquiries, process booking requests, and manage deposit/contract steps (contract/steps prior to contract).',
+            'To respond to inquiries, process booking requests, and manage booking/contract/payment steps (contract/steps prior to contract).',
             'To send booking-related communications, including via WhatsApp when chosen by you (contract/legitimate interest).',
             'To comply with legal obligations (accounting, tax, security).',
             'To protect and improve our services (legitimate interests).',
@@ -531,21 +647,25 @@ Practical:
       sections: [
         {
           title: 'Booking requests & confirmation',
-          body: 'Submitting the booking form is a request. To reserve dates, a €100 deposit is required after the request. A reservation becomes final only after the contract is signed by both parties and the full amount is received.',
+          body: 'Submitting the booking form is a request. No upfront transfer is required on the website. After your request, you receive a private booking dossier link and send a WhatsApp message with your booking details. The owner then reviews and confirms availability. The reservation is final only after signed contract validation and full payment.',
         },
         {
           title: 'Pricing & payment',
           list: [
-            'Prices are shown in EUR and may include a cleaning fee as displayed.',
+            'Prices are shown in EUR and include mandatory service costs in the total amount.',
             'Payment is by bank transfer.',
-            'A €100 deposit is required to block your requested dates.',
-            'After paying the deposit, the guest sends a WhatsApp message to confirm payment.',
-            'After contract signing, the remaining balance is paid by bank transfer under the terms stated in the contract.',
+            'After owner confirmation, a 30% deposit is due according to the contract.',
+            'The remaining 70% is due at least one month before check-in.',
+            'Bank details are not published on the website and are shared via contract and direct communication when needed.',
           ],
         },
         {
           title: 'Contract & communication',
-          body: 'After the deposit and WhatsApp notification, the owner sends the official contract. Both parties must review and sign the contract. Booking follow-up can take place by WhatsApp and email.',
+          body: 'After owner confirmation, the official contract is uploaded in the booking dossier. The guest must download it, sign it manually, and upload a scanned signed copy via the dossier. Follow-up communication takes place by WhatsApp and email.',
+        },
+        {
+          title: 'Reviews',
+          body: 'After checkout and confirmation, guests may submit a review through their booking dossier link. Reviews should remain respectful and truthful.',
         },
         {
           title: 'Check-in / check-out',
@@ -561,7 +681,7 @@ Practical:
         },
         {
           title: 'Cancellations',
-          body: 'Cancellation and refund terms are defined in the official contract. If you cancel before deposit payment and before contract processing starts, no final reservation has been completed.',
+          body: 'Cancellation and refund terms are defined in the official contract. In line with the contract, cancellation before arrival may still imply a partial fee depending on timing.',
         },
         {
           title: 'Liability',
@@ -656,8 +776,8 @@ Practical:
     },
     journey: {
       eyebrow: 'Hoe Het Werkt',
-      title: 'Van eerste klik tot check-in in drie heldere stappen',
-      subtitle: '1, 2, 3 GO!',
+      title: 'Van eerste klik tot check-in in drie heldere stappen.',
+      subtitle: '',
       steps: [
         {
           title: 'Kies uw data',
@@ -678,7 +798,7 @@ Practical:
     gallery: {
       filterAll: 'Alles',
       filterApartment: 'Accomodatie',
-      filterTenerife: 'Adeje',
+      filterTenerife: 'Locatie',
       loadMore: "Meer foto's laden",
       imageAlts: [
         'Balkon met ontbijt',
@@ -689,6 +809,7 @@ Practical:
         'Badkamer met wastafel',
         'Badkamer met douche',
         'Eethoek',
+        'Nespresso capsules',
         'Zwembad',
         'Zicht op het zwembad',
         'Zwembadgedeelte van de residentie',
@@ -722,7 +843,7 @@ Zeer goed gelegen, dichtbij supermarkt, restaurants, bars, winkels, de natuur en
 Appartement bevat:
 - Woonkamer met zonnig terras en zeezicht, tv en wifi.
 - Keuken met frigo, vriezer, inductie kookplaat, microgolf, oven en afwasmachine.
-- Nespresso machine, waterkoker, broodrooster, fruitpers.
+- Nespresso machine (Original capsules), waterkoker, broodrooster, fruitpers.
 - Strijkijzer, strijkplank en stofzuiger.
 - Badkamer met inloopdouche, wc, haardroger, styletang en raam.
 - Slaapkamer met groot bed (1.80 x 2m), ingemaakte kast en terras.
@@ -737,8 +858,8 @@ Praktisch:
       highlights: [
         { label: 'Dichtbij', desc: 'Supermarkt & winkels' },
         { label: 'Dichtbij', desc: 'Restaurants & bars' },
-        { label: 'Promenade', desc: 'Los Cristianos' },
-        { label: 'Natuur', desc: 'El Puertito / Playa Paraiso' },
+        { label: 'Dichtbij', desc: 'Los Cristianos' },
+        { label: 'Dichtbij', desc: 'El Puertito / Playa Paraiso' },
       ],
     },
     testimonials: {
@@ -765,7 +886,7 @@ Praktisch:
       submit: 'Boekingsverzoek Indienen',
       priceBreakdown: 'Prijsoverzicht',
       nights: 'nachten',
-      cleaningFee: 'Schoonmaakkosten',
+      cleaningFee: 'Inclusief verplichte kosten',
       total: 'Totaal',
       selectDates: 'Selecteer uw data',
       unavailable: 'Niet beschikbaar',
@@ -781,11 +902,11 @@ Praktisch:
       unavailableRange: 'De geselecteerde data bevatten niet-beschikbare dagen. Kies een andere periode.',
       requiredFields: 'Vul alle verplichte velden in.',
       submitError: 'Boeking versturen mislukt. Probeer het opnieuw.',
-      paymentTitle: 'Betaling via bankoverschrijving',
-      paymentIntro: 'Om uw data vast te leggen, vragen we na uw boekingsaanvraag eerst een voorschot van €100.',
-      paymentDepositLabel: 'Voorschot om boeking vast te leggen',
-      paymentDepositHelp: 'Schrijf dit bedrag meteen over na het verzenden van uw boekingsaanvraag.',
-      remainingBalanceLabel: 'Resterend saldo na voorschot',
+      paymentTitle: 'Boekingsopvolging en betalingsflow',
+      paymentIntro: 'Er is geen onmiddellijke overschrijving nodig op de website. Na bevestiging door de eigenaar worden contract en betaalinstructies gedeeld via uw boekingsdossier en WhatsApp.',
+      paymentDepositLabel: '30% voorschot (na bevestiging door eigenaar)',
+      paymentDepositHelp: 'Betaal dit bedrag pas nadat uw boeking bevestigd is en het contract gedeeld is.',
+      remainingBalanceLabel: '70% restbedrag (minstens 1 maand voor aankomst)',
       paymentLabelAccount: 'Rekeninghouder',
       paymentLabelIban: 'IBAN',
       paymentLabelBic: 'BIC/SWIFT',
@@ -793,22 +914,79 @@ Praktisch:
       paymentFlowTitle: 'Hoe uw boeking officieel wordt afgerond',
       paymentFlowSteps: [
         'Plaats uw boekingsaanvraag via dit formulier.',
-        'Schrijf het voorschot van €100 over op de rekening hieronder.',
-        'Stuur daarna een WhatsApp-bericht dat uw boekingsaanvraag en voorschot verzonden zijn.',
-        'De eigenaar reageert via WhatsApp en stelt het officiële contract op.',
-        'Beide partijen bekijken en ondertekenen het contract.',
-        'Na ondertekening maakt u het resterende bedrag over via bankoverschrijving.',
+        'Stuur direct een WhatsApp-bericht met uw naam, e-mail, telefoonnummer en boekingslink.',
+        'De eigenaar bevestigt de beschikbaarheid en uploadt het officiële contract in uw boekingsdossier.',
+        'Download het contract, onderteken het manueel, scan het en upload het ondertekende bestand in uw boekingsdossier.',
+        'Na bevestiging betaalt u het 30% voorschot volgens de contractvoorwaarden.',
+        'Betaal het resterende 70% minstens één maand voor de aankomstdatum.',
+        'De boeking is pas definitief na controle van het ondertekende contract en volledige betaling.',
       ],
       paymentDetailAccount: 'Rekeninghouder: [later invullen]',
       paymentDetailIban: 'IBAN: [later invullen]',
       paymentDetailBic: 'BIC/SWIFT: [later invullen]',
       paymentDetailReference: 'Referentie: uw naam + data',
-      paymentNote: 'Uw boeking is pas definitief na ondertekend contract en ontvangst van het volledige bedrag.',
-      whatsappBookingCta: 'Voorschot betaald? Ga verder via WhatsApp',
-      whatsappBookingHint: 'Stuur dit bericht na uw overschrijving zodat we uw dossier meteen kunnen afwerken.',
-      whatsappBookingMessage: 'Hallo, ik heb net een boekingsaanvraag geplaatst voor Costa Caleta.\nNaam: {name}\nData: {checkIn} - {checkOut}\nVoorschot betaald: {deposit}\nTotaal boekingsbedrag: {total}\nGraag het contract doorsturen. Bedankt!',
+      paymentNote: 'Bankgegevens worden niet op de website getoond en worden indien nodig via contract/WhatsApp gedeeld.',
+      whatsappBookingCta: 'Stuur nu uw WhatsApp boekingsbericht',
+      whatsappBookingHint: 'Belangrijk: stuur dit bericht nu zodat de eigenaar uw boekingsaanvraag snel kan nakijken en bevestigen.',
+      whatsappBookingMessage: 'Hallo, ik heb zonet een boekingsaanvraag geplaatst voor Costa Caleta.\nNaam: {name}\nE-mail: {email}\nTelefoon: {phone}\nData: {checkIn} - {checkOut}\nTotaal boekingsbedrag: {total}\nBoekingslink: {link}\nKan u mijn boekingsaanvraag nakijken en bevestigen? Bedankt!',
       checkInTime: 'Inchecktijd',
       checkOutTime: 'Uitchecktijd',
+      dossierTitle: 'Uw boekingsdossier',
+      dossierSubtitle: 'Volg elke stap van uw boeking, contract en betaling op één beveiligde pagina.',
+      dossierNotFoundTitle: 'Boekingsdossier niet gevonden',
+      dossierNotFoundDescription: 'Deze link is ongeldig of het dossier bestaat niet meer. Controleer de URL of neem contact op.',
+      dossierLinkLabel: 'Bewaar deze privélink om later terug te keren naar uw boekingsdossier:',
+      dossierCopyLink: 'Link kopiëren',
+      dossierLinkCopied: 'Boekingslink gekopieerd.',
+      dossierCopyError: 'Link kopiëren mislukt. Kopieer de link handmatig.',
+      dossierDone: 'Afgerond',
+      dossierPending: 'In afwachting',
+      dossierMark: 'Markeer',
+      dossierUndo: 'Terugzetten',
+      dossierStepDepositWhatsapp: 'Boeking volledig afgehandeld',
+      dossierStepDeposit: '30% voorschot ontvangen',
+      dossierStepWhatsapp: 'WhatsApp melding ontvangen',
+      dossierStepContractSent: 'Contract verzonden',
+      dossierStepGuestSigned: 'Contract getekend door gast',
+      dossierStepOwnerSigned: 'Boeking bevestigd door eigenaar',
+      dossierStepRemainingPaid: '70% restbedrag ontvangen',
+      dossierStepSaved: 'Stap bijgewerkt.',
+      dossierStepReset: 'Stap teruggezet.',
+      dossierContractTitle: 'Contract',
+      dossierContractAvailable: 'Contract beschikbaar',
+      dossierContractMissing: 'Nog niet opgeladen',
+      dossierContractWaiting: 'De eigenaar zal het contract hier uploaden zodra het klaar is.',
+      dossierOpenContract: 'Contract openen',
+      dossierContractUploadedAt: 'Geüpload op',
+      dossierGuestSignTitle: 'Upload ondertekend contract door gast',
+      dossierSignConsent: 'Download het contract, onderteken het manueel, scan het en upload het ondertekende bestand hier.',
+      dossierSignAction: 'Ondertekend contract uploaden',
+      dossierSignConsentRequired: 'Upload eerst het ondertekende contractbestand.',
+      dossierSignSuccess: 'Ondertekend contract succesvol geüpload.',
+      dossierSignError: 'Uploaden van ondertekend contract mislukt. Probeer opnieuw.',
+      dossierSignSetupHint: 'Als dit blijft mislukken, staat de nieuwste Supabase-migratie voor ondertekende contractuploads waarschijnlijk nog niet actief.',
+      dossierGuestSignedAt: 'Geüpload op',
+      dossierReviewTitle: 'Recensie',
+      dossierReviewRatingLabel: 'Score',
+      dossierReviewAction: 'Recensie versturen',
+      dossierReviewNotReady: 'U kunt na uitchecken en na bevestiging van de boeking een recensie plaatsen.',
+      dossierReviewRequired: 'Schrijf eerst een korte recensie.',
+      dossierReviewSuccess: 'Recensie succesvol verstuurd.',
+      dossierReviewError: 'Recensie versturen mislukt.',
+      dossierAdminTitle: 'Beheer door eigenaar',
+      dossierStatusLabel: 'Boekingsstatus',
+      dossierUploadContractLabel: 'Contract uploaden (PDF)',
+      dossierUploadContractAction: 'Contract uploaden',
+      dossierContractUploaded: 'Contract succesvol geüpload.',
+      dossierContractUploadError: 'Uploaden van contract mislukt.',
+      dossierAdminNotesLabel: 'Interne notities',
+      dossierAdminNotesPlaceholder: 'Notities over betalingen/contract, enkel zichtbaar voor admin...',
+      dossierSaveStatus: 'Status opslaan',
+      dossierSaveNotes: 'Notities opslaan',
+      dossierStatusSaved: 'Boekingsstatus opgeslagen.',
+      dossierNotesSaved: 'Notities opgeslagen.',
+      dossierUpdateError: 'Boeking bijwerken mislukt.',
+      dossierWhatsappHint: 'Na het verzenden van uw boekingsaanvraag stuurt u best direct het WhatsApp-boekingsbericht.',
     },
     contact: {
       title: 'Neem Contact Op',
@@ -859,8 +1037,10 @@ Praktisch:
           list: [
             'Identificatie- en contactgegevens die u zelf verstrekt (naam, e-mail, telefoon).',
             'Boekingsgegevens (data, aantal gasten, berichten).',
-            'Opvolggegevens rond betaling van uw boeking (status voorschot, status restsaldo, referentie en interne notities).',
-            'Contractopvolging van uw boeking (status contract verzonden/ondertekend).',
+            'Opvolggegevens rond betaling van uw boeking (status 30% voorschot, status 70% restsaldo en interne notities).',
+            'Contractopvolging van uw boeking (status contract verzonden, status manueel ondertekend contract geüpload en finale afhandeling).',
+            'Privé boekingslink/token waarmee u uw boekingsdossier kunt openen.',
+            'Recensiegegevens die u na verblijf indient (naam, score, opmerking).',
             'Communicatie en vragen die u naar ons stuurt, inclusief WhatsApp-berichten wanneer u dat kanaal gebruikt.',
             'Technische gegevens die nodig zijn om de site te laten werken (IP-adres, browser/apparaat, loggegevens).',
           ],
@@ -868,7 +1048,7 @@ Praktisch:
         {
           title: 'Waarom we uw gegevens gebruiken (rechtsgrond)',
           list: [
-            'Om te reageren op vragen, boekingsaanvragen te verwerken en voorschot/contractstappen op te volgen (contract/voorafgaande stappen).',
+            'Om te reageren op vragen, boekingsaanvragen te verwerken en boeking/contract/betalingsstappen op te volgen (contract/voorafgaande stappen).',
             'Om boekingsgerelateerde communicatie te versturen, inclusief via WhatsApp wanneer u daarvoor kiest (contract/gerechtvaardigd belang).',
             'Om te voldoen aan wettelijke verplichtingen (boekhouding, belasting, veiligheid).',
             'Om onze diensten te beschermen en te verbeteren (gerechtvaardigd belang).',
@@ -916,21 +1096,25 @@ Praktisch:
       sections: [
         {
           title: 'Boekingsaanvraag & bevestiging',
-          body: 'Het verzenden van het boekingsformulier is een aanvraag. Om data te reserveren is na de aanvraag een voorschot van €100 vereist. Een reservatie is pas definitief nadat het contract door beide partijen is ondertekend en het volledige bedrag is ontvangen.',
+          body: 'Het verzenden van het boekingsformulier is een aanvraag. Op de website is geen onmiddellijke overschrijving nodig. Na de aanvraag ontvangt u een privélink naar uw boekingsdossier en stuurt u een WhatsApp-bericht met uw boekingsgegevens. Daarna controleert en bevestigt de eigenaar de beschikbaarheid. Een reservatie is pas definitief na controle van het ondertekende contract en ontvangst van het volledige bedrag.',
         },
         {
           title: 'Prijs & betaling',
           list: [
-            'Prijzen zijn in EUR en kunnen een schoonmaakkost bevatten zoals weergegeven.',
+            'Prijzen zijn in EUR en bevatten verplichte servicekosten in het totaalbedrag.',
             'Betaling gebeurt via bankoverschrijving.',
-            'Een voorschot van €100 is vereist om de gevraagde data te blokkeren.',
-            'Na betaling van het voorschot stuurt de gast een WhatsApp-bericht als betalingsmelding.',
-            'Na ondertekening van het contract wordt het restsaldo via bankoverschrijving betaald volgens de voorwaarden in het contract.',
+            'Na bevestiging door de eigenaar is een voorschot van 30% verschuldigd volgens de contractvoorwaarden.',
+            'Het resterende 70% is uiterlijk één maand voor aankomst verschuldigd.',
+            'Bankgegevens worden niet op de website gepubliceerd en worden indien nodig via contract en rechtstreekse communicatie gedeeld.',
           ],
         },
         {
           title: 'Contract & communicatie',
-          body: 'Na voorschot en WhatsApp-melding stuurt de eigenaar het officiële contract. Beide partijen bekijken en ondertekenen dit contract. Opvolging van de boeking kan via WhatsApp en e-mail verlopen.',
+          body: 'Na bevestiging door de eigenaar wordt het officiële contract geüpload in het boekingsdossier. De gast moet dit downloaden, manueel ondertekenen en als gescand ondertekend bestand terug uploaden via het dossier. Opvolging van de boeking verloopt via WhatsApp en e-mail.',
+        },
+        {
+          title: 'Recensies',
+          body: 'Na uitchecken en bevestigde boeking kan de gast via het boekingsdossier een recensie indienen. Recensies moeten respectvol en correct zijn.',
         },
         {
           title: 'Inchecken / uitchecken',
@@ -946,7 +1130,7 @@ Praktisch:
         },
         {
           title: 'Annuleringen',
-          body: 'Annulerings- en terugbetalingsvoorwaarden worden vastgelegd in het officiële contract. Bij annulering vóór betaling van het voorschot en vóór opstart van de contractprocedure is geen definitieve reservatie tot stand gekomen.',
+          body: 'Annulerings- en terugbetalingsvoorwaarden worden vastgelegd in het officiële contract. Volgens het contract kan annuleren vóór aankomst, afhankelijk van de timing, alsnog een gedeeltelijke kost met zich meebrengen.',
         },
         {
           title: 'Aansprakelijkheid',
@@ -1041,8 +1225,8 @@ Praktisch:
     },
     journey: {
       eyebrow: 'Cómo Funciona',
-      title: 'De tu primer clic al check-in en tres pasos claros',
-      subtitle: '1, 2, 3 GO!',
+      title: 'De tu primer clic al check-in en tres pasos claros.',
+      subtitle: '',
       steps: [
         {
           title: 'Elige tus fechas',
@@ -1063,7 +1247,7 @@ Praktisch:
     gallery: {
       filterAll: 'Todo',
       filterApartment: 'Alojamiento',
-      filterTenerife: 'Adeje',
+      filterTenerife: 'Ubicacion',
       loadMore: 'Cargar más fotos',
       imageAlts: [
         'Balcón con desayuno',
@@ -1074,6 +1258,7 @@ Praktisch:
         'Baño con lavabo',
         'Baño con ducha',
         'Comedor',
+        'Capsulas Nespresso',
         'Piscina',
         'Vista de la piscina',
         'Zona de piscina de la residencia',
@@ -1107,7 +1292,7 @@ Muy bien situado, cerca de supermercado, restaurantes, bares, tiendas, naturalez
 El apartamento incluye:
 - Sala de estar con terraza soleada y vistas al mar, TV y Wi-Fi.
 - Cocina con nevera, congelador, placa de inducción, microondas, horno y lavavajillas.
-- Cafetera Nespresso, hervidor, tostadora, exprimidor.
+- Cafetera Nespresso (capsulas Original), hervidor, tostadora, exprimidor.
 - Plancha, tabla de planchar y aspiradora.
 - Baño con ducha a ras de suelo, WC, secador, plancha de pelo y ventana.
 - Dormitorio con cama grande (1.80 x 2m), armario empotrado y terraza.
@@ -1150,7 +1335,7 @@ Práctico:
       submit: 'Enviar Solicitud de Reserva',
       priceBreakdown: 'Desglose de Precios',
       nights: 'noches',
-      cleaningFee: 'Tarifa de Limpieza',
+      cleaningFee: 'Incluye costes obligatorios',
       total: 'Total',
       selectDates: 'Por favor selecciona tus fechas',
       unavailable: 'No Disponible',
@@ -1166,11 +1351,11 @@ Práctico:
       unavailableRange: 'Las fechas seleccionadas incluyen días no disponibles. Elige otro rango.',
       requiredFields: 'Completa todos los campos obligatorios.',
       submitError: 'No se pudo enviar la reserva. Inténtalo de nuevo.',
-      paymentTitle: 'Pago por transferencia bancaria',
-      paymentIntro: 'Para asegurar tus fechas, pedimos primero un anticipo de €100 tras tu solicitud de reserva.',
-      paymentDepositLabel: 'Anticipo para bloquear la reserva',
-      paymentDepositHelp: 'Realiza esta transferencia justo después de enviar tu solicitud.',
-      remainingBalanceLabel: 'Saldo restante después del anticipo',
+      paymentTitle: 'Seguimiento de reserva y flujo de pago',
+      paymentIntro: 'No se requiere transferencia inmediata en la web. Tras la confirmación de la propietaria, el contrato y los datos de pago se comparten por expediente y WhatsApp.',
+      paymentDepositLabel: 'Anticipo del 30% (tras confirmación de la propietaria)',
+      paymentDepositHelp: 'Paga este importe solo después de la confirmación y de recibir el contrato.',
+      remainingBalanceLabel: 'Saldo restante del 70% (mínimo 1 mes antes del check-in)',
       paymentLabelAccount: 'Titular de la cuenta',
       paymentLabelIban: 'IBAN',
       paymentLabelBic: 'BIC/SWIFT',
@@ -1178,22 +1363,79 @@ Práctico:
       paymentFlowTitle: 'Cómo se completa oficialmente tu reserva',
       paymentFlowSteps: [
         'Envía tu solicitud de reserva mediante este formulario.',
-        'Transfiere el anticipo de €100 a la cuenta bancaria indicada abajo.',
-        'Después, envía un mensaje por WhatsApp indicando que ya enviaste la solicitud y el anticipo.',
-        'La propietaria responde por WhatsApp y prepara el contrato oficial.',
-        'Ambas partes revisan y firman el contrato.',
-        'Tras la firma, transfieres el importe restante por transferencia bancaria.',
+        'Envía de inmediato un mensaje por WhatsApp con tu nombre, email, teléfono y enlace de reserva.',
+        'La propietaria confirma disponibilidad y sube el contrato oficial en tu expediente.',
+        'Descarga el contrato, fírmalo manualmente, escanéalo y sube el archivo firmado en tu expediente.',
+        'Tras la confirmación, paga el anticipo del 30% según las condiciones del contrato.',
+        'Paga el 70% restante al menos un mes antes de la llegada.',
+        'La reserva queda cerrada tras validar contrato firmado y pago completo.',
       ],
       paymentDetailAccount: 'Titular de la cuenta: [añadir después]',
       paymentDetailIban: 'IBAN: [añadir después]',
       paymentDetailBic: 'BIC/SWIFT: [añadir después]',
       paymentDetailReference: 'Referencia: tu nombre + fechas',
-      paymentNote: 'La reserva queda cerrada solo tras la firma del contrato y el pago completo.',
-      whatsappBookingCta: '¿Anticipo pagado? Continuar por WhatsApp',
-      whatsappBookingHint: 'Envía este mensaje tras tu transferencia para cerrar el proceso más rápido.',
-      whatsappBookingMessage: 'Hola, acabo de enviar una solicitud de reserva para Costa Caleta.\nNombre: {name}\nFechas: {checkIn} - {checkOut}\nAnticipo pagado: {deposit}\nImporte total de la reserva: {total}\nPor favor, enviadme el contrato. ¡Gracias!',
+      paymentNote: 'Los datos bancarios no se muestran en esta web y se comparten cuando sea necesario por contrato/WhatsApp.',
+      whatsappBookingCta: 'Enviar ahora mensaje de WhatsApp',
+      whatsappBookingHint: 'Importante: envía este mensaje ahora para que la propietaria pueda revisar y confirmar tu solicitud rápidamente.',
+      whatsappBookingMessage: 'Hola, acabo de enviar una solicitud de reserva para Costa Caleta.\nNombre: {name}\nEmail: {email}\nTeléfono: {phone}\nFechas: {checkIn} - {checkOut}\nImporte total de la reserva: {total}\nEnlace de reserva: {link}\n¿Podéis revisar y confirmar mi solicitud de reserva? ¡Gracias!',
       checkInTime: 'Hora de entrada',
       checkOutTime: 'Hora de salida',
+      dossierTitle: 'Tu expediente de reserva',
+      dossierSubtitle: 'Sigue cada paso de tu reserva, contrato y pago en una sola página segura.',
+      dossierNotFoundTitle: 'No se encontró el expediente',
+      dossierNotFoundDescription: 'Este enlace no es válido o la reserva ya no existe. Revisa la URL o contáctanos.',
+      dossierLinkLabel: 'Guarda este enlace privado para volver a tu expediente cuando quieras:',
+      dossierCopyLink: 'Copiar enlace',
+      dossierLinkCopied: 'Enlace de reserva copiado.',
+      dossierCopyError: 'No se pudo copiar el enlace. Cópialo manualmente.',
+      dossierDone: 'Completado',
+      dossierPending: 'Pendiente',
+      dossierMark: 'Marcar',
+      dossierUndo: 'Restablecer',
+      dossierStepDepositWhatsapp: 'Reserva totalmente finalizada',
+      dossierStepDeposit: 'Anticipo del 30% recibido',
+      dossierStepWhatsapp: 'Mensaje de WhatsApp recibido',
+      dossierStepContractSent: 'Contrato enviado',
+      dossierStepGuestSigned: 'Contrato firmado por huésped',
+      dossierStepOwnerSigned: 'Reserva confirmada por la propietaria',
+      dossierStepRemainingPaid: 'Saldo restante del 70% recibido',
+      dossierStepSaved: 'Paso actualizado.',
+      dossierStepReset: 'Paso restablecido.',
+      dossierContractTitle: 'Contrato',
+      dossierContractAvailable: 'Contrato disponible',
+      dossierContractMissing: 'Aún no subido',
+      dossierContractWaiting: 'La propietaria subirá aquí el contrato cuando esté listo.',
+      dossierOpenContract: 'Abrir contrato',
+      dossierContractUploadedAt: 'Subido el',
+      dossierGuestSignTitle: 'Subida del contrato firmado por huésped',
+      dossierSignConsent: 'Descarga el contrato, fírmalo manualmente, escanéalo y sube aquí el archivo firmado.',
+      dossierSignAction: 'Subir contrato firmado',
+      dossierSignConsentRequired: 'Sube primero el archivo del contrato firmado.',
+      dossierSignSuccess: 'Contrato firmado subido correctamente.',
+      dossierSignError: 'Error al subir el contrato firmado. Inténtalo de nuevo.',
+      dossierSignSetupHint: 'Si esto sigue fallando, probablemente la migración más reciente de Supabase para subida de contratos firmados aún no está activa.',
+      dossierGuestSignedAt: 'Subido el',
+      dossierReviewTitle: 'Reseña del huésped',
+      dossierReviewRatingLabel: 'Valoración',
+      dossierReviewAction: 'Enviar reseña',
+      dossierReviewNotReady: 'Podrás dejar una reseña después del check-out y con la reserva confirmada.',
+      dossierReviewRequired: 'Escribe una reseña breve antes de enviarla.',
+      dossierReviewSuccess: 'Reseña enviada correctamente.',
+      dossierReviewError: 'No se pudo enviar la reseña.',
+      dossierAdminTitle: 'Gestión de la propietaria',
+      dossierStatusLabel: 'Estado de la reserva',
+      dossierUploadContractLabel: 'Subir contrato (PDF)',
+      dossierUploadContractAction: 'Subir contrato',
+      dossierContractUploaded: 'Contrato subido correctamente.',
+      dossierContractUploadError: 'Error al subir el contrato.',
+      dossierAdminNotesLabel: 'Notas internas',
+      dossierAdminNotesPlaceholder: 'Notas sobre pagos/contrato, visibles solo para admin...',
+      dossierSaveStatus: 'Guardar estado',
+      dossierSaveNotes: 'Guardar notas',
+      dossierStatusSaved: 'Estado guardado.',
+      dossierNotesSaved: 'Notas guardadas.',
+      dossierUpdateError: 'No se pudo actualizar la reserva.',
+      dossierWhatsappHint: 'Después de enviar tu solicitud de reserva, envía enseguida el mensaje de WhatsApp de reserva.',
     },
     contact: {
       title: 'Ponte en Contacto',
@@ -1244,8 +1486,10 @@ Práctico:
           list: [
             'Datos de identificación y contacto que proporcionas (nombre, email, teléfono).',
             'Datos de reserva (fechas, número de huéspedes, mensajes).',
-            'Datos de seguimiento de pago de tu reserva (estado del anticipo, estado del saldo restante, referencia y notas internas).',
-            'Datos de seguimiento contractual de tu reserva (estado de contrato enviado/firmado).',
+            'Datos de seguimiento de pago de tu reserva (estado del anticipo del 30%, estado del saldo restante del 70% y notas internas).',
+            'Datos de seguimiento contractual de tu reserva (estado de contrato enviado, estado de contrato firmado manualmente y estado de cierre).',
+            'Enlace/token privado del expediente para acceder a tu página de seguimiento de reserva.',
+            'Contenido de reseña que envías tras tu estancia (nombre, puntuación, comentario).',
             'Comunicaciones y consultas que nos envías, incluidos mensajes de WhatsApp cuando usas ese canal.',
             'Datos técnicos necesarios para operar la web (dirección IP, navegador/dispositivo, registros).',
           ],
@@ -1253,7 +1497,7 @@ Práctico:
         {
           title: 'Por qué usamos tus datos (base legal)',
           list: [
-            'Responder consultas, procesar solicitudes de reserva y gestionar pasos de anticipo/contrato (contrato/pasos previos).',
+            'Responder consultas, procesar solicitudes de reserva y gestionar pasos de reserva/contrato/pago (contrato/pasos previos).',
             'Enviar comunicaciones relacionadas con la reserva, también por WhatsApp cuando tú eliges ese canal (contrato/interés legítimo).',
             'Cumplir obligaciones legales (contabilidad, impuestos, seguridad).',
             'Proteger y mejorar nuestros servicios (interés legítimo).',
@@ -1301,21 +1545,25 @@ Práctico:
       sections: [
         {
           title: 'Solicitud y confirmación de reserva',
-          body: 'Enviar el formulario es una solicitud. Para bloquear fechas, se requiere un anticipo de €100 tras la solicitud. La reserva queda cerrada solo después de que ambas partes firmen el contrato y se reciba el importe total.',
+          body: 'Enviar el formulario es una solicitud. No se requiere transferencia inmediata en la web. Tras la solicitud, recibirás un enlace privado a tu expediente y debes enviar un mensaje de WhatsApp con tus datos de reserva. Luego la propietaria revisa y confirma disponibilidad. La reserva queda cerrada solo tras validar contrato firmado y recibir el importe completo.',
         },
         {
           title: 'Precio y pago',
           list: [
-            'Los precios se muestran en EUR y pueden incluir la tarifa de limpieza mostrada.',
+            'Los precios se muestran en EUR e incluyen los costes obligatorios de servicio dentro del total.',
             'El pago se realiza por transferencia bancaria.',
-            'Se requiere un anticipo de €100 para bloquear las fechas solicitadas.',
-            'Después de pagar el anticipo, el huésped envía un mensaje de WhatsApp para avisar del pago.',
-            'Después de firmar el contrato, el saldo restante se paga por transferencia según las condiciones indicadas en el contrato.',
+            'Tras la confirmación de la propietaria, se debe pagar un anticipo del 30% según las condiciones del contrato.',
+            'El 70% restante debe pagarse al menos un mes antes de la llegada.',
+            'Los datos bancarios no se publican en la web y se comparten cuando hace falta por contrato y comunicación directa.',
           ],
         },
         {
           title: 'Contrato y comunicación',
-          body: 'Tras el anticipo y el aviso por WhatsApp, el propietario envía el contrato oficial. Ambas partes deben revisarlo y firmarlo. El seguimiento de la reserva puede realizarse por WhatsApp y email.',
+          body: 'Tras la confirmación de la propietaria, el contrato oficial se sube al expediente. El huésped debe descargarlo, firmarlo manualmente y volver a subir una copia escaneada firmada desde el expediente. El seguimiento de la reserva se realiza por WhatsApp y email.',
+        },
+        {
+          title: 'Reseñas',
+          body: 'Después del check-out y con la reserva confirmada, el huésped puede enviar una reseña desde su enlace de expediente. Las reseñas deben ser respetuosas y veraces.',
         },
         {
           title: 'Entrada / salida',
@@ -1331,7 +1579,7 @@ Práctico:
         },
         {
           title: 'Cancelaciones',
-          body: 'Las condiciones de cancelación y reembolso se definen en el contrato oficial. Si cancelas antes de pagar el anticipo y antes de iniciar el proceso contractual, no existe una reserva finalizada.',
+          body: 'Las condiciones de cancelación y reembolso se definen en el contrato oficial. Según el contrato, cancelar antes de la llegada puede implicar igualmente un coste parcial según el momento de la cancelación.',
         },
         {
           title: 'Responsabilidad',

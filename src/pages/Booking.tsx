@@ -1,5 +1,6 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { format, addDays, differenceInDays, isWithinInterval, isBefore, startOfDay } from 'date-fns';
+import { enUS, es, nl } from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import { Calendar } from '@/components/ui/calendar';
 import { Button } from '@/components/ui/button';
@@ -10,15 +11,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { useLanguage } from '@/i18n';
-import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, Loader2 } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, Loader2, Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateBooking, useBookedDates } from '@/hooks/useBookings';
+import type { PublicBookingCreateResult } from '@/hooks/useBookings';
 import { usePricingRules } from '@/hooks/usePricing';
 import { useSettings } from '@/hooks/useSettings';
 import { useBlockedDates } from '@/hooks/useBlockedDates';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { contactInfo } from '@/lib/contactInfo';
-import { bookingPaymentConfig } from '@/lib/bookingPaymentConfig';
+import { bookingFlowConfig } from '@/lib/bookingFlowConfig';
 
 const Booking = () => {
   const { t, language } = useLanguage();
@@ -35,6 +37,18 @@ const Booking = () => {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submittedBooking, setSubmittedBooking] = useState<PublicBookingCreateResult | null>(null);
+
+  const dateLocale = useMemo(() => {
+    if (language === 'nl') return nl;
+    if (language === 'es') return es;
+    return enUS;
+  }, [language]);
+
+  const formatLocalizedDate = useCallback((date?: Date) => {
+    if (!date) return '-';
+    return format(date, 'PPP', { locale: dateLocale });
+  }, [dateLocale]);
 
   // Fetch data from database
   const { data: bookedDates = [], isLoading: loadingBookings } = useBookedDates();
@@ -44,11 +58,11 @@ const Booking = () => {
   const createBooking = useCreateBooking();
 
   const basePrice = settings?.base_price?.amount ?? 85;
-  const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
+  const cleaningFee = bookingFlowConfig.cleaningFee;
+  const minStayNights = bookingFlowConfig.minStayNights;
   const maxGuests = settings?.max_guests?.count ?? 6;
   const whatsappNumber = contactInfo.whatsapp.replace(/[^0-9]/g, '');
   const whatsappDisplayNumber = contactInfo.phone;
-  const depositAmount = bookingPaymentConfig.depositAmount;
   const checkInTime = settings?.check_in_time?.time ?? '15:00';
   const checkOutTime = '12:00';
   const currencySymbol = settings?.currency?.symbol ?? '€';
@@ -72,11 +86,11 @@ const Booking = () => {
     return isBefore(date, today) || isDateBooked(date) || isDateBlocked(date);
   };
 
-  const rangesOverlap = (startA: Date, endA: Date, startB: Date, endB: Date) => {
+  const rangesOverlap = useCallback((startA: Date, endA: Date, startB: Date, endB: Date) => {
     return startA <= endB && startB <= endA;
-  };
+  }, []);
 
-  const hasUnavailableInRange = (start: Date, end: Date) => {
+  const hasUnavailableInRange = useCallback((start: Date, end: Date) => {
     const rangeStart = startOfDay(start);
     const rangeEnd = startOfDay(addDays(end, -1));
 
@@ -97,11 +111,14 @@ const Booking = () => {
       const blockedEnd = startOfDay(blocked.end);
       return rangesOverlap(rangeStart, rangeEnd, blockedStart, blockedEnd);
     });
-  };
+  }, [bookedDates, blockedDates, rangesOverlap]);
 
-  const isRangeAvailable = (start: Date, end: Date) => !hasUnavailableInRange(start, end);
+  const isRangeAvailable = useCallback(
+    (start: Date, end: Date) => !hasUnavailableInRange(start, end),
+    [hasUnavailableInRange]
+  );
 
-  const getPriceForDate = (date: Date) => {
+  const getPriceForDate = useCallback((date: Date) => {
     // Check seasonal pricing rules
     const rule = pricingRules.find(r =>
       isWithinInterval(date, {
@@ -110,22 +127,14 @@ const Booking = () => {
       })
     );
     return rule ? Number(rule.price_per_night) : basePrice;
-  };
+  }, [pricingRules, basePrice]);
 
-  const getMinStayForDate = (date: Date) => {
-    const rule = pricingRules.find(r =>
-      isWithinInterval(date, {
-        start: new Date(r.start_date),
-        end: new Date(r.end_date),
-      })
-    );
-    return rule?.min_stay ? Number(rule.min_stay) : 1;
-  };
+  const getMinStayForDate = useCallback((_date: Date) => minStayNights, [minStayNights]);
 
-  const getMinStayForRange = (start: Date, end: Date) => {
+  const getMinStayForRange = useCallback((start: Date, end: Date) => {
     const nightsCount = differenceInDays(end, start);
     const nightsToCheck = nightsCount > 0 ? nightsCount : 1;
-    let minStay = 1;
+    let minStay = minStayNights;
 
     for (let i = 0; i < nightsToCheck; i++) {
       const currentDate = addDays(start, i);
@@ -133,17 +142,17 @@ const Booking = () => {
     }
 
     return minStay;
-  };
+  }, [getMinStayForDate, minStayNights]);
 
   const minStayForCheckIn = useMemo(() => {
-    if (!checkIn) return 1;
+    if (!checkIn) return minStayNights;
     return getMinStayForDate(checkIn);
-  }, [checkIn, pricingRules]);
+  }, [checkIn, minStayNights, getMinStayForDate]);
 
   const minStayForSelection = useMemo(() => {
     if (!checkIn || !checkOut) return minStayForCheckIn;
     return getMinStayForRange(checkIn, checkOut);
-  }, [checkIn, checkOut, minStayForCheckIn, pricingRules]);
+  }, [checkIn, checkOut, minStayForCheckIn, getMinStayForRange]);
 
   const guestOptions = useMemo(
     () => Array.from({ length: Math.max(1, maxGuests) }, (_, index) => index + 1),
@@ -220,9 +229,9 @@ const Booking = () => {
     }
   }, [guests, maxGuests]);
 
-  const { nights, totalNightsCost, totalPrice } = useMemo(() => {
+  const { nights, totalPrice } = useMemo(() => {
     if (!checkIn || !checkOut) {
-      return { nights: 0, totalNightsCost: 0, totalPrice: 0 };
+      return { nights: 0, totalPrice: 0 };
     }
     const nightCount = Math.max(differenceInDays(checkOut, checkIn), 0);
     let nightsCost = 0;
@@ -232,37 +241,50 @@ const Booking = () => {
     }
     return {
       nights: nightCount,
-      totalNightsCost: nightsCost,
       totalPrice: nightsCost + cleaningFee,
     };
-  }, [checkIn, checkOut, pricingRules, basePrice, cleaningFee]);
+  }, [checkIn, checkOut, getPriceForDate, cleaningFee]);
 
-  const remainingAmount = Math.max(totalPrice - depositAmount, 0);
+  const depositAmount = useMemo(
+    () => Number((totalPrice * bookingFlowConfig.depositRatio).toFixed(2)),
+    [totalPrice]
+  );
 
-  const paymentReference = useMemo(() => {
-    const name = formData.fullName?.trim() || 'Booking';
-    const from = checkIn ? format(checkIn, 'yyyy-MM-dd') : '';
-    const to = checkOut ? format(checkOut, 'yyyy-MM-dd') : '';
-    return [name, from, to].filter(Boolean).join(' • ');
-  }, [formData.fullName, checkIn, checkOut]);
+  const remainingAmount = useMemo(
+    () => Math.max(Number((totalPrice - depositAmount).toFixed(2)), 0),
+    [totalPrice, depositAmount]
+  );
+
+  const bookingDossierUrl = useMemo(() => {
+    if (!submittedBooking?.public_token || typeof window === 'undefined') return '';
+    const base = import.meta.env.BASE_URL.endsWith('/')
+      ? import.meta.env.BASE_URL
+      : `${import.meta.env.BASE_URL}/`;
+    return new URL(`${base}booking/dossier/${submittedBooking.public_token}`, window.location.origin).toString();
+  }, [submittedBooking?.public_token]);
 
   const whatsappBookingMessage = useMemo(() => {
     return encodeURIComponent(
       t.booking.whatsappBookingMessage
         .replace('{name}', formData.fullName?.trim() || '-')
-        .replace('{checkIn}', checkIn ? format(checkIn, 'PPP') : '-')
-        .replace('{checkOut}', checkOut ? format(checkOut, 'PPP') : '-')
-        .replace('{deposit}', `${currencySymbol}${depositAmount}`)
+        .replace('{email}', formData.email?.trim() || '-')
+        .replace('{phone}', formData.phone?.trim() || '-')
+        .replace('{checkIn}', formatLocalizedDate(checkIn))
+        .replace('{checkOut}', formatLocalizedDate(checkOut))
         .replace('{total}', `${currencySymbol}${totalPrice}`)
+        .replace('{link}', bookingDossierUrl || '-')
     );
   }, [
     t.booking.whatsappBookingMessage,
     formData.fullName,
+    formData.email,
+    formData.phone,
     checkIn,
     checkOut,
     currencySymbol,
-    depositAmount,
     totalPrice,
+    bookingDossierUrl,
+    formatLocalizedDate,
   ]);
 
   const whatsappBookingUrl = `https://wa.me/${whatsappNumber}?text=${whatsappBookingMessage}`;
@@ -318,7 +340,7 @@ const Booking = () => {
     if (!checkIn || !checkOut) return;
 
     try {
-      await createBooking.mutateAsync({
+      const createdBooking = await createBooking.mutateAsync({
         guest_name: formData.fullName,
         guest_email: formData.email,
         guest_phone: formData.phone,
@@ -332,6 +354,7 @@ const Booking = () => {
         status: 'pending',
       });
 
+      setSubmittedBooking(createdBooking);
       setSubmitted(true);
     } catch (error) {
       console.error('Booking error:', error);
@@ -343,7 +366,24 @@ const Booking = () => {
     }
   };
 
-  const paymentDetails = (
+  const handleCopyDossierLink = async () => {
+    if (!bookingDossierUrl) return;
+    try {
+      await navigator.clipboard.writeText(bookingDossierUrl);
+      toast({
+        title: t.common.success,
+        description: t.booking.dossierLinkCopied,
+      });
+    } catch (error) {
+      toast({
+        title: t.common.error,
+        description: t.booking.dossierCopyError,
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const renderPaymentDetails = (showFlow: boolean) => (
     <div className="bg-card rounded-xl p-4 md:p-5 shadow-soft border border-border/70 space-y-4">
       <h3 className="font-heading text-base md:text-lg font-semibold mb-1">
         {t.booking.paymentTitle}
@@ -356,7 +396,6 @@ const Booking = () => {
         <div className="rounded-lg border border-primary/25 bg-primary/5 p-3 md:p-4">
           <p className="text-sm text-muted-foreground">{t.booking.paymentDepositLabel}</p>
           <p className="text-xl md:text-2xl font-bold text-primary mt-1">{currencySymbol}{depositAmount}</p>
-          <p className="text-xs text-muted-foreground mt-1">{t.booking.paymentDepositHelp}</p>
         </div>
         <div className="rounded-lg border border-border bg-muted/40 p-3 md:p-4">
           <p className="text-sm text-muted-foreground">{t.booking.remainingBalanceLabel}</p>
@@ -367,40 +406,21 @@ const Booking = () => {
         </div>
       </div>
 
-      <div className="rounded-lg border border-border bg-background p-3 md:p-4">
-        <dl className="space-y-2 text-sm">
-          <div className="flex items-start justify-between gap-3">
-            <dt className="text-muted-foreground">{t.booking.paymentLabelAccount}</dt>
-            <dd className="font-semibold text-right">{bookingPaymentConfig.accountHolder}</dd>
-          </div>
-          <div className="flex items-start justify-between gap-3">
-            <dt className="text-muted-foreground">{t.booking.paymentLabelIban}</dt>
-            <dd className="font-semibold text-right">{bookingPaymentConfig.iban}</dd>
-          </div>
-          <div className="flex items-start justify-between gap-3">
-            <dt className="text-muted-foreground">{t.booking.paymentLabelBic}</dt>
-            <dd className="font-semibold text-right">{bookingPaymentConfig.bic}</dd>
-          </div>
-          <div className="flex items-start justify-between gap-3">
-            <dt className="text-muted-foreground">{t.booking.paymentLabelReference}</dt>
-            <dd className="font-semibold text-right">{paymentReference}</dd>
-          </div>
-        </dl>
-      </div>
-
-      <div>
-        <h4 className="font-semibold text-foreground mb-2">{t.booking.paymentFlowTitle}</h4>
-        <ol className="space-y-1.5">
-          {t.booking.paymentFlowSteps.map((stepText, index) => (
-            <li key={stepText} className="flex items-start gap-3 text-sm leading-snug text-foreground">
-              <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[11px] font-semibold text-primary">
-                {index + 1}
-              </span>
-              <span>{stepText}</span>
-            </li>
-          ))}
-        </ol>
-      </div>
+      {showFlow && (
+        <div>
+          <h4 className="font-semibold text-foreground mb-2">{t.booking.paymentFlowTitle}</h4>
+          <ol className="space-y-1.5">
+            {t.booking.paymentFlowSteps.map((stepText, index) => (
+              <li key={stepText} className="flex items-start gap-3 text-sm leading-snug text-foreground">
+                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/15 text-[11px] font-semibold text-primary">
+                  {index + 1}
+                </span>
+                <span>{stepText}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
 
       <p className="text-xs text-muted-foreground">
         {t.booking.paymentNote}
@@ -428,11 +448,11 @@ const Booking = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-muted-foreground">{t.booking.checkIn}</span>
-                    <p className="font-semibold">{checkIn && format(checkIn, 'PPP')}</p>
+                    <p className="font-semibold">{formatLocalizedDate(checkIn)}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">{t.booking.checkOut}</span>
-                    <p className="font-semibold">{checkOut && format(checkOut, 'PPP')}</p>
+                    <p className="font-semibold">{formatLocalizedDate(checkOut)}</p>
                   </div>
                   <div>
                     <span className="text-muted-foreground">{t.booking.checkInTime}</span>
@@ -453,8 +473,27 @@ const Booking = () => {
                 </div>
               </div>
               <div className="mb-6">
-                {paymentDetails}
+                {renderPaymentDetails(false)}
               </div>
+              {bookingDossierUrl && (
+                <div className="bg-card rounded-xl p-4 shadow-soft mb-6 text-left border border-border/80">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {t.booking.dossierLinkLabel}
+                  </p>
+                  <code className="block rounded-md bg-muted px-3 py-2 text-xs break-all text-foreground">
+                    {bookingDossierUrl}
+                  </code>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-3 w-full sm:w-auto"
+                    onClick={handleCopyDossierLink}
+                  >
+                    <Copy className="h-4 w-4" />
+                    {t.booking.dossierCopyLink}
+                  </Button>
+                </div>
+              )}
               <Button
                 variant="whatsapp"
                 size="lg"
@@ -468,10 +507,10 @@ const Booking = () => {
                   className="flex w-full items-center justify-center gap-2 text-center text-sm leading-snug"
                 >
                   <MessageCircle className="h-5 w-5 shrink-0" />
-                  {t.booking.whatsappBookingCta}
+                    {t.booking.whatsappBookingCta}
                 </a>
               </Button>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-sm text-muted-foreground mt-2 text-center">
                 {t.booking.whatsappBookingHint}
               </p>
             </div>
@@ -552,6 +591,7 @@ const Booking = () => {
                         selected={selectedDateRange}
                         onSelect={handleRangeSelect}
                         disabled={isDateDisabled}
+                        locale={dateLocale}
                         numberOfMonths={isMobile ? 1 : 2}
                         pagedNavigation
                         className="rounded-md border pointer-events-auto"
@@ -565,11 +605,11 @@ const Booking = () => {
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
                         <p className="text-muted-foreground">{t.booking.checkIn}</p>
-                        <p className="font-semibold">{checkIn ? format(checkIn, 'PPP') : '-'}</p>
+                        <p className="font-semibold">{formatLocalizedDate(checkIn)}</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">{t.booking.checkOut}</p>
-                        <p className="font-semibold">{checkOut ? format(checkOut, 'PPP') : '-'}</p>
+                        <p className="font-semibold">{formatLocalizedDate(checkOut)}</p>
                       </div>
                     </div>
                     {checkIn && checkOut && nights > 0 && (
@@ -603,22 +643,16 @@ const Booking = () => {
                   {checkIn && checkOut && nights > 0 && (
                     <div className="bg-primary/5 rounded-2xl p-6 border border-primary/20">
                       <h4 className="font-semibold mb-4">{t.booking.priceBreakdown}</h4>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span>{nights} {t.booking.nights}</span>
-                          <span>{currencySymbol}{totalNightsCost}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>{t.booking.cleaningFee}</span>
-                          <span>{currencySymbol}{cleaningFee}</span>
-                        </div>
-                        <div className="border-t border-primary/20 pt-2 mt-2 flex justify-between font-bold text-lg">
-                          <span>{t.booking.total}</span>
-                          <span className="text-primary">{currencySymbol}{totalPrice}</span>
+                        <div className="space-y-2 text-sm">
+                          <p className="text-muted-foreground">{nights} {t.booking.nights}</p>
+                          <div className="border-t border-primary/20 pt-2 mt-2 flex justify-between font-bold text-lg">
+                            <span>{t.booking.total}</span>
+                            <span className="text-primary">{currencySymbol}{totalPrice}</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">{t.booking.cleaningFee}</p>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </div>
               </div>
             )}
@@ -691,11 +725,11 @@ const Booking = () => {
                     <div className="grid grid-cols-2 gap-3">
                       <div className="bg-muted rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{t.booking.checkIn}</p>
-                        <p className="font-semibold">{checkIn && format(checkIn, 'PPP')}</p>
+                        <p className="font-semibold">{formatLocalizedDate(checkIn)}</p>
                       </div>
                       <div className="bg-muted rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{t.booking.checkOut}</p>
-                        <p className="font-semibold">{checkOut && format(checkOut, 'PPP')}</p>
+                        <p className="font-semibold">{formatLocalizedDate(checkOut)}</p>
                       </div>
                       <div className="bg-muted rounded-lg p-3">
                         <p className="text-sm text-muted-foreground">{t.booking.checkInTime}</p>
@@ -730,11 +764,11 @@ const Booking = () => {
                         <span className="text-xl md:text-2xl font-bold text-primary">{currencySymbol}{totalPrice}</span>
                       </div>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {nights} {t.booking.nights} + {t.booking.cleaningFee}
+                        {nights} {t.booking.nights} • {t.booking.cleaningFee}
                       </p>
                     </div>
 
-                    {paymentDetails}
+                    {renderPaymentDetails(true)}
 
                     <p className="text-sm text-muted-foreground text-center">
                       {t.contact.responseTime}
@@ -747,7 +781,7 @@ const Booking = () => {
             {/* Navigation Buttons */}
             <div className="flex justify-between mt-8">
               {step > 1 ? (
-                <Button variant="outline" onClick={handleBack} className="flex items-center gap-2">
+                <Button variant="outline" onClick={handleBack} className="min-w-[170px] justify-center flex items-center gap-2">
                   <ChevronLeft className="h-4 w-4" />
                   {t.booking.back}
                 </Button>
@@ -756,7 +790,7 @@ const Booking = () => {
               )}
 
               {step < 3 ? (
-                <Button variant="hero" onClick={handleNext} className="flex items-center gap-2">
+                <Button variant="hero" onClick={handleNext} className="min-w-[170px] justify-center flex items-center gap-2">
                   {t.booking.next}
                   <ChevronRight className="h-4 w-4" />
                 </Button>
@@ -764,7 +798,7 @@ const Booking = () => {
                 <Button
                   variant="hero"
                   onClick={handleSubmit}
-                  size="lg"
+                  className="min-w-[170px] justify-center"
                   disabled={createBooking.isPending}
                 >
                   {createBooking.isPending ? (

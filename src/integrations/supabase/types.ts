@@ -43,15 +43,22 @@ export type Database = {
           check_in: string
           check_out: string
           cleaning_fee: number | null
+          contract_file_path: string | null
           contract_sent: boolean
           contract_sent_at: string | null
           contract_signed: boolean
           contract_signed_at: string | null
+          contract_uploaded_at: string | null
           created_at: string
           deposit_amount: number
           deposit_paid: boolean
           deposit_paid_at: string | null
           guest_email: string
+          guest_contract_signed: boolean
+          guest_contract_signed_at: string | null
+          guest_contract_signed_name: string | null
+          guest_signed_contract_file_path: string | null
+          guest_signed_contract_uploaded_at: string | null
           guest_name: string
           guest_phone: string
           id: string
@@ -59,8 +66,13 @@ export type Database = {
           message: string | null
           num_guests: number
           payment_notes: string | null
+          public_token: string
           remaining_paid: boolean
           remaining_paid_at: string | null
+          review_author: string | null
+          review_rating: number | null
+          review_submitted_at: string | null
+          review_text: string | null
           status: Database["public"]["Enums"]["booking_status"]
           total_price: number
           updated_at: string
@@ -71,15 +83,22 @@ export type Database = {
           check_in: string
           check_out: string
           cleaning_fee?: number | null
+          contract_file_path?: string | null
           contract_sent?: boolean
           contract_sent_at?: string | null
           contract_signed?: boolean
           contract_signed_at?: string | null
+          contract_uploaded_at?: string | null
           created_at?: string
           deposit_amount?: number
           deposit_paid?: boolean
           deposit_paid_at?: string | null
           guest_email: string
+          guest_contract_signed?: boolean
+          guest_contract_signed_at?: string | null
+          guest_contract_signed_name?: string | null
+          guest_signed_contract_file_path?: string | null
+          guest_signed_contract_uploaded_at?: string | null
           guest_name: string
           guest_phone: string
           id?: string
@@ -87,8 +106,13 @@ export type Database = {
           message?: string | null
           num_guests?: number
           payment_notes?: string | null
+          public_token?: string
           remaining_paid?: boolean
           remaining_paid_at?: string | null
+          review_author?: string | null
+          review_rating?: number | null
+          review_submitted_at?: string | null
+          review_text?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
           total_price: number
           updated_at?: string
@@ -99,15 +123,22 @@ export type Database = {
           check_in?: string
           check_out?: string
           cleaning_fee?: number | null
+          contract_file_path?: string | null
           contract_sent?: boolean
           contract_sent_at?: string | null
           contract_signed?: boolean
           contract_signed_at?: string | null
+          contract_uploaded_at?: string | null
           created_at?: string
           deposit_amount?: number
           deposit_paid?: boolean
           deposit_paid_at?: string | null
           guest_email?: string
+          guest_contract_signed?: boolean
+          guest_contract_signed_at?: string | null
+          guest_contract_signed_name?: string | null
+          guest_signed_contract_file_path?: string | null
+          guest_signed_contract_uploaded_at?: string | null
           guest_name?: string
           guest_phone?: string
           id?: string
@@ -115,8 +146,13 @@ export type Database = {
           message?: string | null
           num_guests?: number
           payment_notes?: string | null
+          public_token?: string
           remaining_paid?: boolean
           remaining_paid_at?: string | null
+          review_author?: string | null
+          review_rating?: number | null
+          review_submitted_at?: string | null
+          review_text?: string | null
           status?: Database["public"]["Enums"]["booking_status"]
           total_price?: number
           updated_at?: string
@@ -268,12 +304,107 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_public_booking: {
+        Args: {
+          _check_in: string
+          _check_out: string
+          _cleaning_fee: number
+          _guest_email: string
+          _guest_name: string
+          _guest_phone: string
+          _language: Database["public"]["Enums"]["language"]
+          _message: string | null
+          _num_guests: number
+          _total_price: number
+        }
+        Returns: {
+          id: string
+          public_token: string
+        }[]
+      }
+      get_booking_dossier: {
+        Args: {
+          _token: string
+        }
+        Returns: {
+          check_in: string
+          check_out: string
+          cleaning_fee: number | null
+          contract_file_path: string | null
+          contract_sent: boolean
+          contract_sent_at: string | null
+          contract_signed: boolean
+          contract_signed_at: string | null
+          contract_uploaded_at: string | null
+          created_at: string
+          deposit_amount: number
+          deposit_paid: boolean
+          deposit_paid_at: string | null
+          guest_contract_signed: boolean
+          guest_contract_signed_at: string | null
+          guest_contract_signed_name: string | null
+          guest_signed_contract_file_path: string | null
+          guest_signed_contract_uploaded_at: string | null
+          guest_email: string
+          guest_name: string
+          guest_phone: string
+          id: string
+          language: Database["public"]["Enums"]["language"]
+          message: string | null
+          num_guests: number
+          payment_notes: string | null
+          public_token: string
+          remaining_paid: boolean
+          remaining_paid_at: string | null
+          review_author: string | null
+          review_rating: number | null
+          review_submitted_at: string | null
+          review_text: string | null
+          status: Database["public"]["Enums"]["booking_status"]
+          total_price: number
+          updated_at: string
+          whatsapp_notified: boolean
+          whatsapp_notified_at: string | null
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      sign_booking_contract: {
+        Args: {
+          _full_name: string
+          _token: string
+        }
+        Returns: {
+          signed_at: string | null
+          success: boolean
+        }[]
+      }
+      submit_signed_contract: {
+        Args: {
+          _file_path: string
+          _token: string
+        }
+        Returns: {
+          success: boolean
+          uploaded_at: string | null
+        }[]
+      }
+      submit_booking_review: {
+        Args: {
+          _author: string
+          _rating: number
+          _review: string
+          _token: string
+        }
+        Returns: {
+          submitted_at: string | null
+          success: boolean
+        }[]
       }
     }
     Enums: {

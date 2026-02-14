@@ -11,6 +11,7 @@ import livingroomAltImage from '@/assets/CostaCaleta/Livingroom-pic2.jpg';
 import bathroomImage from '@/assets/CostaCaleta/Bathroom-pic1.JPG';
 import bathroomAltImage from '@/assets/CostaCaleta/Bathroom-pic2.JPG';
 import diningImage from '@/assets/CostaCaleta/DinnerTable-pic1.JPG';
+import nespressoCapsulesImage from '@/assets/CostaCaleta/capsulesNespresso.jpeg';
 import poolImage from '@/assets/CostaCaleta/Pool-pic3.jpg';
 import poolAltImage from '@/assets/CostaCaleta/Pool-pic1.JPG';
 import poolsideImage from '@/assets/CostaCaleta/Poolside-pic2-crop.jpg';
@@ -37,6 +38,7 @@ const images: GalleryImage[] = [
   { src: bathroomImage, category: 'apartment' },
   { src: bathroomAltImage, category: 'apartment' },
   { src: diningImage, category: 'apartment' },
+  { src: nespressoCapsulesImage, category: 'apartment' },
   { src: poolImage, category: 'apartment' },
   { src: poolAltImage, category: 'apartment' },
   { src: poolsideImage, category: 'apartment' },

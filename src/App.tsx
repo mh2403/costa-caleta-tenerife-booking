@@ -8,6 +8,7 @@ import { LanguageProvider, useLanguage } from "@/i18n";
 
 const Index = lazy(() => import("./pages/Index"));
 const Booking = lazy(() => import("./pages/Booking"));
+const BookingDossier = lazy(() => import("./pages/BookingDossier"));
 const Contact = lazy(() => import("./pages/Contact"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Privacy = lazy(() => import("./pages/Privacy"));
@@ -37,6 +38,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/booking" element={<Booking />} />
+              <Route path="/booking/dossier/:token" element={<BookingDossier />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />

@@ -26,7 +26,16 @@ export function Header() {
   }, [location.pathname]);
 
   const normalizePath = (path: string) => (path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path);
-  const isActive = (path: string) => normalizePath(location.pathname) === normalizePath(path);
+  const isActive = (path: string) => {
+    const currentPath = normalizePath(location.pathname);
+    const targetPath = normalizePath(path);
+
+    if (targetPath === '/') {
+      return currentPath === '/';
+    }
+
+    return currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
+  };
   const isHomeHero = location.pathname === '/' && !isScrolled;
   const useHeroHeaderStyle = isHomeHero && !mobileMenuOpen;
 

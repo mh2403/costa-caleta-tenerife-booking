@@ -21,7 +21,7 @@ const testimonials = [
     },
   },
   {
-    name: 'B.d.S.',
+    name: 'B.S.',
     rating: 5,
     text: {
       en: 'Practical, well-located apartment close to restaurants and the promenade. Sea and mountain views are a nice bonus.',

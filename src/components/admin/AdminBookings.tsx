@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { translations } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,16 +20,18 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Check, X, Eye, Loader2, Mail, Phone, User, Trash2 } from 'lucide-react';
-import { useBookings, useUpdateBooking, useDeleteBooking, Booking, BookingStatus } from '@/hooks/useBookings';
+import { useBookings, useUpdateBooking, useDeleteBooking, Booking, BookingStatus, BookingUpdate } from '@/hooks/useBookings';
 import { addDays, differenceInDays, format, isWithinInterval, startOfDay } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { useBlockedDates } from '@/hooks/useBlockedDates';
 import { usePricingRules } from '@/hooks/usePricing';
 import { useSettings } from '@/hooks/useSettings';
+import { bookingFlowConfig } from '@/lib/bookingFlowConfig';
 
 export function AdminBookings() {
   const t = translations.nl;
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { data: bookings = [], isLoading } = useBookings();
   const { data: blockedDatesData = [], isLoading: loadingBlocked } = useBlockedDates();
   const { data: pricingRules = [], isLoading: loadingPricing } = usePricingRules();
@@ -42,9 +45,27 @@ export function AdminBookings() {
   const [editCheckOut, setEditCheckOut] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
   const [paymentNotesDraft, setPaymentNotesDraft] = useState('');
+  const [cancelArmed, setCancelArmed] = useState(false);
+  const [deleteArmed, setDeleteArmed] = useState(false);
 
   const basePrice = settings?.base_price?.amount ?? 85;
-  const cleaningFee = settings?.cleaning_fee?.amount ?? 50;
+  const cleaningFee = bookingFlowConfig.cleaningFee;
+  const minStayNights = bookingFlowConfig.minStayNights;
+  const selectedBookingFieldKeys = useMemo(
+    () => new Set(Object.keys(selectedBooking ?? {})),
+    [selectedBooking]
+  );
+
+  const sanitizeBookingUpdatePayload = (payload: Record<string, unknown>) => {
+    const sanitized: Record<string, unknown> = {};
+    for (const [key, value] of Object.entries(payload)) {
+      if (value === undefined) continue;
+      if (key === 'id' || selectedBookingFieldKeys.has(key)) {
+        sanitized[key] = value;
+      }
+    }
+    return sanitized;
+  };
 
   const years = useMemo(() => {
     const uniqueYears = Array.from(
@@ -71,11 +92,15 @@ export function AdminBookings() {
       setEditCheckOut(format(new Date(selectedBooking.check_out), 'yyyy-MM-dd'));
       setDeleteReason('');
       setPaymentNotesDraft(selectedBooking.payment_notes ?? '');
+      setCancelArmed(false);
+      setDeleteArmed(false);
     } else {
       setEditCheckIn('');
       setEditCheckOut('');
       setDeleteReason('');
       setPaymentNotesDraft('');
+      setCancelArmed(false);
+      setDeleteArmed(false);
     }
   }, [selectedBooking]);
 
@@ -94,6 +119,20 @@ export function AdminBookings() {
         variant: 'destructive',
       });
     }
+  };
+
+  const openBookingDossier = (booking: Booking) => {
+    if (booking.public_token) {
+      navigate(`/booking/dossier/${booking.public_token}`);
+      return;
+    }
+
+    toast({
+      title: t.common.error,
+      description: 'Geen dossierlink beschikbaar voor deze boeking. Open details via popup.',
+      variant: 'destructive',
+    });
+    setSelectedBooking(booking);
   };
 
   const rangeOverlaps = (startA: Date, endA: Date, startB: Date, endB: Date) => {
@@ -138,20 +177,12 @@ export function AdminBookings() {
     return rule ? Number(rule.price_per_night) : basePrice;
   };
 
-  const getMinStayForDate = (date: Date) => {
-    const rule = pricingRules.find((r) =>
-      isWithinInterval(date, {
-        start: new Date(r.start_date),
-        end: new Date(r.end_date),
-      })
-    );
-    return rule?.min_stay ? Number(rule.min_stay) : 1;
-  };
+  const getMinStayForDate = (_date: Date) => minStayNights;
 
   const getMinStayForRange = (start: Date, end: Date) => {
     const nightsCount = Math.max(differenceInDays(end, start), 0);
     const nightsToCheck = nightsCount > 0 ? nightsCount : 1;
-    let minStay = 1;
+    let minStay = minStayNights;
 
     for (let i = 0; i < nightsToCheck; i++) {
       const currentDate = addDays(start, i);
@@ -194,10 +225,10 @@ export function AdminBookings() {
     const start = new Date(editCheckIn);
     const end = new Date(editCheckOut);
     const nights = differenceInDays(end, start);
-    if (nights < 1) {
+    if (nights < minStayNights) {
       toast({
         title: t.common.error,
-        description: 'Minstens 1 nacht vereist.',
+        description: `Minstens ${minStayNights} nachten vereist.`,
         variant: 'destructive',
       });
       return;
@@ -235,11 +266,14 @@ export function AdminBookings() {
 
     try {
       await updateBooking.mutateAsync({
-        id: selectedBooking.id,
-        check_in: editCheckIn,
-        check_out: editCheckOut,
-        total_price: recalculated.total,
-        cleaning_fee: cleaningFee,
+        ...(sanitizeBookingUpdatePayload({
+          id: selectedBooking.id,
+          check_in: editCheckIn,
+          check_out: editCheckOut,
+          total_price: recalculated.total,
+          cleaning_fee: cleaningFee,
+          deposit_amount: Number((recalculated.total * bookingFlowConfig.depositRatio).toFixed(2)),
+        }) as BookingUpdate & { id: string }),
       });
       toast({
         title: t.common.success,
@@ -265,8 +299,16 @@ export function AdminBookings() {
       });
       return;
     }
-    const confirmed = window.confirm('Weet u zeker dat u deze boeking definitief wilt verwijderen?');
-    if (!confirmed) return;
+
+    if (!deleteArmed) {
+      setDeleteArmed(true);
+      toast({
+        title: t.common.error,
+        description: 'Klik nogmaals op verwijderen om definitief te bevestigen.',
+      });
+      return;
+    }
+
     try {
       await deleteBooking.mutateAsync(selectedBooking.id);
       toast({
@@ -281,6 +323,21 @@ export function AdminBookings() {
         variant: 'destructive',
       });
     }
+  };
+
+  const handleCancelBooking = async () => {
+    if (!selectedBooking || selectedBooking.status !== 'confirmed') return;
+
+    if (!cancelArmed) {
+      setCancelArmed(true);
+      toast({
+        title: t.common.error,
+        description: 'Klik nogmaals op annuleren om te bevestigen.',
+      });
+      return;
+    }
+
+    await handleStatusChange(selectedBooking.id, 'cancelled');
   };
 
   const getStatusColor = (status: string) => {
@@ -300,7 +357,8 @@ export function AdminBookings() {
 
   const formatCurrency = (amount: number) => `€${Number(amount).toLocaleString()}`;
 
-  const getDepositAmount = (booking: Booking) => Number(booking.deposit_amount ?? 100);
+  const getDepositAmount = (booking: Booking) =>
+    Number((Number(booking.total_price ?? 0) * bookingFlowConfig.depositRatio).toFixed(2));
 
   const getRemainingAmount = (booking: Booking) => {
     const total = Number(booking.total_price ?? 0);
@@ -309,28 +367,56 @@ export function AdminBookings() {
   };
 
   const getPaymentSummary = (booking: Booking) => {
+    if (booking.status === 'cancelled') {
+      return {
+        label: 'Geannuleerd',
+        className: 'bg-muted text-muted-foreground',
+      };
+    }
+    if (booking.status === 'declined') {
+      return {
+        label: 'Afgewezen',
+        className: 'bg-destructive/10 text-destructive',
+      };
+    }
     if (booking.remaining_paid) {
       return {
-        label: 'Volledig betaald',
+        label: 'Volledig afgerond',
         className: 'bg-primary/10 text-primary',
       };
     }
     if (booking.deposit_paid) {
       return {
-        label: 'Voorschot ontvangen',
+        label: '30% voorschot ontvangen',
         className: 'bg-secondary/15 text-secondary',
       };
     }
+    if (booking.contract_sent && !booking.guest_contract_signed) {
+      return {
+        label: 'Wacht op ondertekend contract',
+        className: 'bg-accent/20 text-accent-foreground',
+      };
+    }
+    if (booking.status === 'confirmed') {
+      return {
+        label: 'Bevestigd, wacht op contractfase',
+        className: 'bg-accent/20 text-accent-foreground',
+      };
+    }
     return {
-      label: 'Voorschot open',
+      label: 'Wacht op bevestiging',
       className: 'bg-accent/20 text-accent-foreground',
     };
   };
 
   const getContractSummary = (booking: Booking) => {
-    if (booking.contract_signed) return 'Contract getekend';
+    if (booking.contract_signed) return 'Dossier finaal bevestigd';
+    if (booking.remaining_paid) return '70% restbedrag ontvangen';
+    if (booking.deposit_paid) return '30% voorschot ontvangen';
+    if (booking.guest_contract_signed) return 'Ondertekend contract ontvangen';
     if (booking.contract_sent) return 'Contract verzonden';
-    if (booking.whatsapp_notified) return 'WhatsApp gemeld';
+    if (booking.status === 'confirmed') return 'Boeking bevestigd';
+    if (booking.whatsapp_notified) return 'WhatsApp melding ontvangen';
     return 'Nog niet opgestart';
   };
 
@@ -342,8 +428,10 @@ export function AdminBookings() {
 
     try {
       const updated = await updateBooking.mutateAsync({
-        id: selectedBooking.id,
-        ...updates,
+        ...(sanitizeBookingUpdatePayload({
+          id: selectedBooking.id,
+          ...updates,
+        }) as BookingUpdate & { id: string }),
       });
       setSelectedBooking(updated);
       toast({
@@ -464,11 +552,11 @@ export function AdminBookings() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => setSelectedBooking(booking)}
+                  onClick={() => openBookingDossier(booking)}
                   className="col-span-2"
                 >
                   <Eye className="h-4 w-4 mr-2" />
-                  Details
+                  Open dossier
                 </Button>
                 {isPending && (
                   <>
@@ -552,7 +640,7 @@ export function AdminBookings() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => setSelectedBooking(booking)}
+                        onClick={() => openBookingDossier(booking)}
                       >
                         <Eye className="h-4 w-4" />
                       </Button>
@@ -678,11 +766,11 @@ export function AdminBookings() {
                   <span className="text-xl font-bold text-primary">{formatCurrency(Number(selectedBooking.total_price))}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Voorschot</span>
+                  <span className="text-muted-foreground">30% voorschot</span>
                   <span className="font-medium">{formatCurrency(getDepositAmount(selectedBooking))}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm">
-                  <span className="text-muted-foreground">Resterend bedrag</span>
+                  <span className="text-muted-foreground">70% restbedrag</span>
                   <span className="font-medium">{formatCurrency(getRemainingAmount(selectedBooking))}</span>
                 </div>
               </div>
@@ -700,40 +788,10 @@ export function AdminBookings() {
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
                     <div>
-                      <p className="text-sm font-medium">1. Voorschot ontvangen</p>
-                      <p className="text-xs text-muted-foreground">
-                        {selectedBooking.deposit_paid
-                          ? `Ontvangen op ${formatDateTime(selectedBooking.deposit_paid_at)}`
-                          : 'Nog niet ontvangen'}
-                      </p>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant={selectedBooking.deposit_paid ? 'outline' : 'default'}
-                      disabled={updateBooking.isPending}
-                      onClick={() => {
-                        const nextValue = !selectedBooking.deposit_paid;
-                        handleProgressUpdate(
-                          {
-                            deposit_paid: nextValue,
-                            deposit_paid_at: nextValue ? new Date().toISOString() : null,
-                            remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
-                            remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
-                          },
-                          nextValue ? 'Voorschot gemarkeerd als ontvangen' : 'Voorschotstatus teruggezet'
-                        );
-                      }}
-                    >
-                      {selectedBooking.deposit_paid ? 'Terugzetten' : 'Markeer'}
-                    </Button>
-                  </div>
-
-                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
-                    <div>
-                      <p className="text-sm font-medium">2. WhatsApp melding ontvangen</p>
+                      <p className="text-sm font-medium">1. WhatsApp melding ontvangen</p>
                       <p className="text-xs text-muted-foreground">
                         {selectedBooking.whatsapp_notified
-                          ? `Gemeld op ${formatDateTime(selectedBooking.whatsapp_notified_at)}`
+                          ? `Afgerond op ${formatDateTime(selectedBooking.whatsapp_notified_at)}`
                           : 'Nog niet gemeld'}
                       </p>
                     </div>
@@ -747,18 +805,66 @@ export function AdminBookings() {
                           {
                             whatsapp_notified: nextValue,
                             whatsapp_notified_at: nextValue ? new Date().toISOString() : null,
+                            status: nextValue ? selectedBooking.status : 'pending',
                             contract_sent: nextValue ? selectedBooking.contract_sent : false,
                             contract_sent_at: nextValue ? selectedBooking.contract_sent_at : null,
-                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
-                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
+                            guest_contract_signed: nextValue ? selectedBooking.guest_contract_signed : false,
+                            guest_contract_signed_at: nextValue ? selectedBooking.guest_contract_signed_at : null,
+                            guest_contract_signed_name: nextValue ? selectedBooking.guest_contract_signed_name : null,
+                            guest_signed_contract_file_path: nextValue ? selectedBooking.guest_signed_contract_file_path : null,
+                            guest_signed_contract_uploaded_at: nextValue ? selectedBooking.guest_signed_contract_uploaded_at : null,
+                            deposit_paid: nextValue ? selectedBooking.deposit_paid : false,
+                            deposit_paid_at: nextValue ? selectedBooking.deposit_paid_at : null,
                             remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
                             remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
                           },
-                          nextValue ? 'WhatsApp melding gemarkeerd' : 'WhatsApp status teruggezet'
+                          nextValue ? 'WhatsApp melding gemarkeerd' : 'WhatsApp-status teruggezet'
                         );
                       }}
                     >
                       {selectedBooking.whatsapp_notified ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">2. Boeking bevestigd door eigenaar</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.status === 'confirmed'
+                          ? `Afgerond op ${formatDateTime(selectedBooking.updated_at)}`
+                          : 'Nog niet bevestigd'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.status === 'confirmed' ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending || !selectedBooking.whatsapp_notified}
+                      onClick={() => {
+                        const nextValue = selectedBooking.status !== 'confirmed';
+                        handleProgressUpdate(
+                          {
+                            status: nextValue ? 'confirmed' : 'pending',
+                            contract_sent: nextValue ? selectedBooking.contract_sent : false,
+                            contract_sent_at: nextValue ? selectedBooking.contract_sent_at : null,
+                            guest_contract_signed: nextValue ? selectedBooking.guest_contract_signed : false,
+                            guest_contract_signed_at: nextValue ? selectedBooking.guest_contract_signed_at : null,
+                            guest_contract_signed_name: nextValue ? selectedBooking.guest_contract_signed_name : null,
+                            guest_signed_contract_file_path: nextValue ? selectedBooking.guest_signed_contract_file_path : null,
+                            guest_signed_contract_uploaded_at: nextValue ? selectedBooking.guest_signed_contract_uploaded_at : null,
+                            deposit_paid: nextValue ? selectedBooking.deposit_paid : false,
+                            deposit_paid_at: nextValue ? selectedBooking.deposit_paid_at : null,
+                            remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
+                            remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
+                          },
+                          nextValue ? 'Boeking bevestigd' : 'Bevestiging teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.status === 'confirmed' ? 'Terugzetten' : 'Markeer'}
                     </Button>
                   </div>
 
@@ -774,17 +880,24 @@ export function AdminBookings() {
                     <Button
                       size="sm"
                       variant={selectedBooking.contract_sent ? 'outline' : 'default'}
-                      disabled={updateBooking.isPending || !selectedBooking.whatsapp_notified}
+                      disabled={updateBooking.isPending || selectedBooking.status !== 'confirmed'}
                       onClick={() => {
                         const nextValue = !selectedBooking.contract_sent;
                         handleProgressUpdate(
                           {
                             contract_sent: nextValue,
                             contract_sent_at: nextValue ? new Date().toISOString() : null,
-                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
-                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
+                            guest_contract_signed: nextValue ? selectedBooking.guest_contract_signed : false,
+                            guest_contract_signed_at: nextValue ? selectedBooking.guest_contract_signed_at : null,
+                            guest_contract_signed_name: nextValue ? selectedBooking.guest_contract_signed_name : null,
+                            guest_signed_contract_file_path: nextValue ? selectedBooking.guest_signed_contract_file_path : null,
+                            guest_signed_contract_uploaded_at: nextValue ? selectedBooking.guest_signed_contract_uploaded_at : null,
+                            deposit_paid: nextValue ? selectedBooking.deposit_paid : false,
+                            deposit_paid_at: nextValue ? selectedBooking.deposit_paid_at : null,
                             remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
                             remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
                           },
                           nextValue ? 'Contract gemarkeerd als verzonden' : 'Contract verzendstatus teruggezet'
                         );
@@ -796,37 +909,75 @@ export function AdminBookings() {
 
                   <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
                     <div>
-                      <p className="text-sm font-medium">4. Contract ondertekend</p>
+                      <p className="text-sm font-medium">4. Ondertekend contract ontvangen van gast</p>
                       <p className="text-xs text-muted-foreground">
-                        {selectedBooking.contract_signed
-                          ? `Ondertekend op ${formatDateTime(selectedBooking.contract_signed_at)}`
-                          : 'Nog niet ondertekend'}
+                        {selectedBooking.guest_contract_signed
+                          ? `Ontvangen op ${formatDateTime(selectedBooking.guest_signed_contract_uploaded_at ?? selectedBooking.guest_contract_signed_at)}`
+                          : 'Nog niet ontvangen'}
                       </p>
                     </div>
                     <Button
                       size="sm"
-                      variant={selectedBooking.contract_signed ? 'outline' : 'default'}
+                      variant={selectedBooking.guest_contract_signed ? 'outline' : 'default'}
                       disabled={updateBooking.isPending || !selectedBooking.contract_sent}
                       onClick={() => {
-                        const nextValue = !selectedBooking.contract_signed;
+                        const nextValue = !selectedBooking.guest_contract_signed;
                         handleProgressUpdate(
                           {
-                            contract_signed: nextValue,
-                            contract_signed_at: nextValue ? new Date().toISOString() : null,
+                            guest_contract_signed: nextValue,
+                            guest_contract_signed_at: nextValue ? new Date().toISOString() : null,
+                            guest_signed_contract_file_path: nextValue ? selectedBooking.guest_signed_contract_file_path : null,
+                            guest_signed_contract_uploaded_at: nextValue ? selectedBooking.guest_signed_contract_uploaded_at : null,
+                            deposit_paid: nextValue ? selectedBooking.deposit_paid : false,
+                            deposit_paid_at: nextValue ? selectedBooking.deposit_paid_at : null,
                             remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
                             remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
                           },
-                          nextValue ? 'Contract gemarkeerd als ondertekend' : 'Contract ondertekenstatus teruggezet'
+                          nextValue ? 'Ondertekend contract gemarkeerd als ontvangen' : 'Ondertekend contract-status teruggezet'
                         );
                       }}
                     >
-                      {selectedBooking.contract_signed ? 'Terugzetten' : 'Markeer'}
+                      {selectedBooking.guest_contract_signed ? 'Terugzetten' : 'Markeer'}
                     </Button>
                   </div>
 
                   <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
                     <div>
-                      <p className="text-sm font-medium">5. Resterend bedrag ontvangen</p>
+                      <p className="text-sm font-medium">5. 30% voorschot ontvangen</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.deposit_paid
+                          ? `Ontvangen op ${formatDateTime(selectedBooking.deposit_paid_at)}`
+                          : 'Nog niet ontvangen'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.deposit_paid ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending || !selectedBooking.guest_contract_signed}
+                      onClick={() => {
+                        const nextValue = !selectedBooking.deposit_paid;
+                        handleProgressUpdate(
+                          {
+                            deposit_paid: nextValue,
+                            deposit_paid_at: nextValue ? new Date().toISOString() : null,
+                            remaining_paid: nextValue ? selectedBooking.remaining_paid : false,
+                            remaining_paid_at: nextValue ? selectedBooking.remaining_paid_at : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
+                          },
+                          nextValue ? 'Voorschot gemarkeerd als ontvangen' : 'Voorschot-status teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.deposit_paid ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">6. 70% restbedrag ontvangen</p>
                       <p className="text-xs text-muted-foreground">
                         {selectedBooking.remaining_paid
                           ? `Ontvangen op ${formatDateTime(selectedBooking.remaining_paid_at)}`
@@ -836,19 +987,49 @@ export function AdminBookings() {
                     <Button
                       size="sm"
                       variant={selectedBooking.remaining_paid ? 'outline' : 'default'}
-                      disabled={updateBooking.isPending || !selectedBooking.deposit_paid || !selectedBooking.contract_signed}
+                      disabled={updateBooking.isPending || !selectedBooking.deposit_paid}
                       onClick={() => {
                         const nextValue = !selectedBooking.remaining_paid;
                         handleProgressUpdate(
                           {
                             remaining_paid: nextValue,
                             remaining_paid_at: nextValue ? new Date().toISOString() : null,
+                            contract_signed: nextValue ? selectedBooking.contract_signed : false,
+                            contract_signed_at: nextValue ? selectedBooking.contract_signed_at : null,
                           },
                           nextValue ? 'Resterend bedrag gemarkeerd als ontvangen' : 'Restsaldo-status teruggezet'
                         );
                       }}
                     >
                       {selectedBooking.remaining_paid ? 'Terugzetten' : 'Markeer'}
+                    </Button>
+                  </div>
+
+                  <div className="flex items-start justify-between gap-3 rounded-lg border border-border/70 bg-muted/30 p-3">
+                    <div>
+                      <p className="text-sm font-medium">7. Boeking volledig afgehandeld</p>
+                      <p className="text-xs text-muted-foreground">
+                        {selectedBooking.contract_signed
+                          ? `Afgerond op ${formatDateTime(selectedBooking.contract_signed_at)}`
+                          : 'Nog niet afgerond'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant={selectedBooking.contract_signed ? 'outline' : 'default'}
+                      disabled={updateBooking.isPending || !selectedBooking.deposit_paid || !selectedBooking.remaining_paid}
+                      onClick={() => {
+                        const nextValue = !selectedBooking.contract_signed;
+                        handleProgressUpdate(
+                          {
+                            contract_signed: nextValue,
+                            contract_signed_at: nextValue ? new Date().toISOString() : null,
+                          },
+                          nextValue ? 'Boeking gemarkeerd als volledig afgehandeld' : 'Finale status teruggezet'
+                        );
+                      }}
+                    >
+                      {selectedBooking.contract_signed ? 'Terugzetten' : 'Markeer'}
                     </Button>
                   </div>
                 </div>
@@ -897,24 +1078,27 @@ export function AdminBookings() {
                 )}
                 {selectedBooking.status === 'confirmed' && (
                   <Button
-                    variant="outline"
+                    variant={cancelArmed ? 'destructive' : 'outline'}
                     className="w-full sm:flex-1"
-                    onClick={() => handleStatusChange(selectedBooking.id, 'cancelled')}
+                    onClick={handleCancelBooking}
                     disabled={updateBooking.isPending}
                   >
-                    Annuleren
+                    {cancelArmed ? 'Bevestig annuleren' : 'Annuleren (2-staps)'}
                   </Button>
                 )}
               </div>
 
-              {['declined', 'confirmed', 'cancelled'].includes(selectedBooking.status) && (
+              {['pending', 'declined', 'confirmed', 'cancelled'].includes(selectedBooking.status) && (
                 <div className="space-y-2">
                   {selectedBooking.status === 'confirmed' && (
                     <div>
                       <label className="text-xs text-muted-foreground">Reden voor verwijderen (verplicht)</label>
                       <Input
                         value={deleteReason}
-                        onChange={(e) => setDeleteReason(e.target.value)}
+                        onChange={(e) => {
+                          setDeleteReason(e.target.value);
+                          setDeleteArmed(false);
+                        }}
                         className="mt-1"
                         placeholder="Bijv. annulering door gast"
                       />
@@ -927,7 +1111,7 @@ export function AdminBookings() {
                     disabled={deleteBooking.isPending}
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Definitief verwijderen
+                    {deleteArmed ? 'Bevestig definitief verwijderen' : 'Definitief verwijderen (2-staps)'}
                   </Button>
                 </div>
               )}
