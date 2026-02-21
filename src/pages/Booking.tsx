@@ -298,6 +298,9 @@ const Booking = () => {
   ]);
 
   const whatsappBookingUrl = `https://wa.me/${whatsappNumber}?text=${whatsappBookingMessage}`;
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleNext = () => {
     if (step === 1) {
@@ -330,11 +333,13 @@ const Booking = () => {
         return;
       }
     }
-    setStep(step + 1);
+    setStep((currentStep) => Math.min(currentStep + 1, 3));
+    requestAnimationFrame(scrollToTop);
   };
 
   const handleBack = () => {
-    setStep(step - 1);
+    setStep((currentStep) => Math.max(currentStep - 1, 1));
+    requestAnimationFrame(scrollToTop);
   };
 
   const handleSubmit = async () => {

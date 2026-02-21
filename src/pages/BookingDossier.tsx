@@ -760,11 +760,15 @@ const BookingDossier = () => {
       label: t.booking.dossierStepOwnerSigned,
       done: booking.status === 'confirmed',
       date: booking.updated_at,
-      disabled: !booking.whatsapp_notified,
+      disabled: false,
       onToggle: () => {
         const nextValue = booking.status !== 'confirmed';
         return updateBookingFields(
           {
+            whatsapp_notified: nextValue ? true : booking.whatsapp_notified,
+            whatsapp_notified_at: nextValue
+              ? booking.whatsapp_notified_at ?? new Date().toISOString()
+              : booking.whatsapp_notified_at,
             status: nextValue ? 'confirmed' : 'pending',
             contract_sent: nextValue ? booking.contract_sent : false,
             contract_sent_at: nextValue ? booking.contract_sent_at : null,
