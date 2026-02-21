@@ -76,6 +76,7 @@ const BookingDossier = () => {
   const [deleteArmed, setDeleteArmed] = useState(false);
   const [contractFile, setContractFile] = useState<File | null>(null);
   const [uploadingContract, setUploadingContract] = useState(false);
+  const [openingContract, setOpeningContract] = useState(false);
   const [signedContractFile, setSignedContractFile] = useState<File | null>(null);
   const [uploadingSignedContract, setUploadingSignedContract] = useState(false);
   const [openingSignedContract, setOpeningSignedContract] = useState(false);
@@ -154,6 +155,8 @@ const BookingDossier = () => {
     if (!booking) return 0;
     return Math.max(Number((Number(booking.total_price) - depositAmount).toFixed(2)), 0);
   }, [booking, depositAmount]);
+  const contractStepDone = Boolean(booking?.contract_sent || booking?.contract_file_path);
+  const contractStepDate = booking?.contract_sent_at ?? booking?.contract_uploaded_at ?? null;
 
   const basePrice = settings?.base_price?.amount ?? 85;
   const cleaningFee = bookingFlowConfig.cleaningFee;
@@ -223,12 +226,6 @@ const BookingDossier = () => {
       : `${import.meta.env.BASE_URL}/`;
     return new URL(`${base}booking/dossier/${token}`, window.location.origin).toString();
   }, [token]);
-
-  const contractUrl = useMemo(() => {
-    if (!booking?.contract_file_path) return '';
-    const { data } = supabase.storage.from('booking-contracts').getPublicUrl(booking.contract_file_path);
-    return data.publicUrl;
-  }, [booking?.contract_file_path]);
 
   const canSubmitReview = useMemo(() => {
     if (!booking) return false;
@@ -567,7 +564,7 @@ const BookingDossier = () => {
 
   const handleGuestSignedContractUpload = async () => {
     if (!booking || !token || !signedContractFile) return;
-    if (!booking.contract_sent) {
+    if (!contractStepDone) {
       toast({
         title: t.common.error,
         description: t.booking.dossierContractWaiting,
@@ -578,6 +575,16 @@ const BookingDossier = () => {
 
     setUploadingSignedContract(true);
     try {
+      if (isAdmin && !booking.contract_sent && booking.contract_file_path) {
+        await updateBooking.mutateAsync(
+          sanitizeBookingUpdatePayload({
+            id: booking.id,
+            contract_sent: true,
+            contract_sent_at: booking.contract_sent_at ?? booking.contract_uploaded_at ?? new Date().toISOString(),
+          }) as BookingUpdate & { id: string }
+        );
+      }
+
       const safeName = signedContractFile.name
         .toLowerCase()
         .replace(/[^a-z0-9.-]+/g, '-')
@@ -651,6 +658,30 @@ const BookingDossier = () => {
       });
     } finally {
       setOpeningSignedContract(false);
+    }
+  };
+
+  const openContract = async () => {
+    if (!booking?.contract_file_path) return;
+    setOpeningContract(true);
+    try {
+      const { data, error: signedUrlError } = await supabase.storage
+        .from('booking-contracts')
+        .createSignedUrl(booking.contract_file_path, 60 * 10);
+
+      if (signedUrlError || !data?.signedUrl) {
+        throw signedUrlError ?? new Error('signed url missing');
+      }
+
+      window.open(data.signedUrl, '_blank', 'noopener,noreferrer');
+    } catch (openError) {
+      toast({
+        title: t.common.error,
+        description: t.booking.dossierContractOpenError,
+        variant: 'destructive',
+      });
+    } finally {
+      setOpeningContract(false);
     }
   };
 
@@ -791,34 +822,39 @@ const BookingDossier = () => {
     {
       id: 'contract_sent',
       label: t.booking.dossierStepContractSent,
-      done: booking.contract_sent,
-      date: booking.contract_sent_at,
+      done: contractStepDone,
+      date: contractStepDate,
       disabled: booking.status !== 'confirmed' || !booking.whatsapp_notified,
-      onToggle: () => updateBookingFields(
-        {
-          contract_sent: !booking.contract_sent,
-          contract_sent_at: booking.contract_sent ? null : new Date().toISOString(),
-          guest_contract_signed: booking.contract_sent ? false : booking.guest_contract_signed,
-          guest_contract_signed_at: booking.contract_sent ? null : booking.guest_contract_signed_at,
-          guest_contract_signed_name: booking.contract_sent ? null : booking.guest_contract_signed_name,
-          guest_signed_contract_file_path: booking.contract_sent ? null : booking.guest_signed_contract_file_path,
-          guest_signed_contract_uploaded_at: booking.contract_sent ? null : booking.guest_signed_contract_uploaded_at,
-          deposit_paid: booking.contract_sent ? false : booking.deposit_paid,
-          deposit_paid_at: booking.contract_sent ? null : booking.deposit_paid_at,
-          remaining_paid: booking.contract_sent ? false : booking.remaining_paid,
-          remaining_paid_at: booking.contract_sent ? null : booking.remaining_paid_at,
-          contract_signed: booking.contract_sent ? false : booking.contract_signed,
-          contract_signed_at: booking.contract_sent ? null : booking.contract_signed_at,
-        },
-        booking.contract_sent ? t.booking.dossierStepReset : t.booking.dossierStepSaved
-      ),
+      onToggle: () => {
+        const nextValue = !contractStepDone;
+        return updateBookingFields(
+          {
+            contract_sent: nextValue,
+            contract_sent_at: nextValue
+              ? (booking.contract_sent_at ?? booking.contract_uploaded_at ?? new Date().toISOString())
+              : null,
+            guest_contract_signed: nextValue ? booking.guest_contract_signed : false,
+            guest_contract_signed_at: nextValue ? booking.guest_contract_signed_at : null,
+            guest_contract_signed_name: nextValue ? booking.guest_contract_signed_name : null,
+            guest_signed_contract_file_path: nextValue ? booking.guest_signed_contract_file_path : null,
+            guest_signed_contract_uploaded_at: nextValue ? booking.guest_signed_contract_uploaded_at : null,
+            deposit_paid: nextValue ? booking.deposit_paid : false,
+            deposit_paid_at: nextValue ? booking.deposit_paid_at : null,
+            remaining_paid: nextValue ? booking.remaining_paid : false,
+            remaining_paid_at: nextValue ? booking.remaining_paid_at : null,
+            contract_signed: nextValue ? booking.contract_signed : false,
+            contract_signed_at: nextValue ? booking.contract_signed_at : null,
+          },
+          nextValue ? t.booking.dossierStepSaved : t.booking.dossierStepReset
+        );
+      },
     },
     {
       id: 'guest_signed',
       label: t.booking.dossierStepGuestSigned,
       done: booking.guest_contract_signed,
       date: booking.guest_signed_contract_uploaded_at ?? booking.guest_contract_signed_at,
-      disabled: !booking.contract_sent,
+      disabled: !contractStepDone,
       onToggle: () => updateBookingFields(
         {
           guest_contract_signed: !booking.guest_contract_signed,
@@ -1103,11 +1139,24 @@ const BookingDossier = () => {
 
               {booking.contract_file_path ? (
                 <div className="space-y-3">
-                  <Button asChild variant="outline" className="w-full sm:w-auto">
-                    <a href={contractUrl} target="_blank" rel="noopener noreferrer">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full sm:w-auto"
+                    onClick={openContract}
+                    disabled={openingContract}
+                  >
+                    {openingContract ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        {t.common.loading}
+                      </>
+                    ) : (
+                      <>
                       <FileText className="h-4 w-4" />
                       {t.booking.dossierOpenContract}
-                    </a>
+                      </>
+                    )}
                   </Button>
                   {booking.contract_uploaded_at && (
                     <p className="text-xs text-muted-foreground">

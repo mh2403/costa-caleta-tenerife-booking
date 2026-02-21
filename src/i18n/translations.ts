@@ -162,6 +162,7 @@ export interface Translations {
     dossierContractMissing: string;
     dossierContractWaiting: string;
     dossierOpenContract: string;
+    dossierContractOpenError: string;
     dossierContractUploadedAt: string;
     dossierGuestSignTitle: string;
     dossierSignConsent: string;
@@ -518,6 +519,7 @@ Practical:
       dossierContractMissing: 'Not uploaded yet',
       dossierContractWaiting: 'The owner will upload the contract here once ready.',
       dossierOpenContract: 'Open contract',
+      dossierContractOpenError: 'Could not open contract. Please try again.',
       dossierContractUploadedAt: 'Uploaded on',
       dossierGuestSignTitle: 'Guest signed contract upload',
       dossierSignConsent: 'Download the contract, sign it manually, scan it and upload the signed file here.',
@@ -972,6 +974,7 @@ Praktisch:
       dossierContractMissing: 'Nog niet opgeladen',
       dossierContractWaiting: 'De eigenaar zal het contract hier uploaden zodra het klaar is.',
       dossierOpenContract: 'Contract openen',
+      dossierContractOpenError: 'Contract openen mislukt. Probeer opnieuw.',
       dossierContractUploadedAt: 'Geüpload op',
       dossierGuestSignTitle: 'Upload ondertekend contract door gast',
       dossierSignConsent: 'Download het contract, onderteken het manueel, scan het en upload het ondertekende bestand hier.',
@@ -1426,6 +1429,7 @@ Práctico:
       dossierContractMissing: 'Aún no subido',
       dossierContractWaiting: 'La propietaria subirá aquí el contrato cuando esté listo.',
       dossierOpenContract: 'Abrir contrato',
+      dossierContractOpenError: 'No se pudo abrir el contrato. Inténtalo de nuevo.',
       dossierContractUploadedAt: 'Subido el',
       dossierGuestSignTitle: 'Subida del contrato firmado por huésped',
       dossierSignConsent: 'Descarga el contrato, fírmalo manualmente, escanéalo y sube aquí el archivo firmado.',
