@@ -7,7 +7,7 @@ import heroImage from '@/assets/CostaCaleta/BreakfastView-Pic2-hero.jpeg';
 export function HeroSection() {
   const { t } = useLanguage();
   const { data: settings } = useSettings();
-  const fromPrice = settings?.base_price?.amount ?? 85;
+  const fromPrice = settings?.base_price?.amount ?? 100;
   const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   return (

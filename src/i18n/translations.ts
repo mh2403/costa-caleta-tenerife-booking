@@ -410,7 +410,7 @@ Practical:
       highlights: [
         { label: 'Nearby', desc: 'Supermarket & shops' },
         { label: 'Nearby', desc: 'Restaurants & bars' },
-        { label: 'Promenade', desc: 'Los Cristianos' },
+        { label: 'Nearby', desc: 'Walking path towards Adeje' },
         { label: 'Nature', desc: 'El Puertito / Playa Paraiso' },
       ],
     },
@@ -860,7 +860,7 @@ Praktisch:
       highlights: [
         { label: 'Dichtbij', desc: 'Supermarkt & winkels' },
         { label: 'Dichtbij', desc: 'Restaurants & bars' },
-        { label: 'Dichtbij', desc: 'Los Cristianos' },
+        { label: 'Dichtbij', desc: 'Wandelpad richting Adeje' },
         { label: 'Dichtbij', desc: 'El Puertito / Playa Paraiso' },
       ],
     },
@@ -1310,7 +1310,7 @@ Práctico:
       highlights: [
         { label: 'Cerca', desc: 'Supermercado y tiendas' },
         { label: 'Cerca', desc: 'Restaurantes y bares' },
-        { label: 'Paseo', desc: 'Los Cristianos' },
+        { label: 'Cerca', desc: 'Sendero peatonal hacia Adeje' },
         { label: 'Naturaleza', desc: 'El Puertito / Playa Paraiso' },
       ],
     },
