@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
-import { useLanguage, languageNames, languageFlags, Language } from '@/i18n';
+import { useLanguage, languageNames, Language } from '@/i18n';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,17 +19,22 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
   const [open, setOpen] = useState(false);
 
   const languages: Language[] = ['en', 'nl', 'es'];
+  const languageCodes: Record<Language, string> = {
+    en: 'EN',
+    nl: 'NL',
+    es: 'ES',
+  };
 
   if (variant === 'minimal') {
     return (
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className={className}>
-            <span className="text-lg">{languageFlags[language]}</span>
+            <span className="text-sm font-semibold tracking-wide">{languageCodes[language]}</span>
             <ChevronDown className="h-3 w-3 opacity-50" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-[120px] bg-popover z-50">
+        <DropdownMenuContent align="end" className="min-w-[96px] bg-popover z-50">
           {languages.map((lang) => (
             <DropdownMenuItem
               key={lang}
@@ -37,10 +42,9 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
                 setLanguage(lang);
                 setOpen(false);
               }}
-              className={lang === language ? 'bg-accent' : ''}
+              className={lang === language ? 'bg-accent justify-center font-semibold' : 'justify-center font-semibold'}
             >
-              <span className="text-lg mr-2">{languageFlags[lang]}</span>
-              <span>{languageNames[lang]}</span>
+              <span>{languageCodes[lang]}</span>
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
@@ -52,25 +56,23 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className={className}>
-          <span className="text-lg mr-1">{languageFlags[language]}</span>
-          <span className="hidden sm:inline">{languageNames[language]}</span>
+          <span>{languageNames[language]}</span>
           <ChevronDown className="h-3 w-3 opacity-50 ml-1" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[160px] bg-popover z-50">
         {languages.map((lang) => (
-          <DropdownMenuItem
-            key={lang}
-            onClick={() => {
-              setLanguage(lang);
-              setOpen(false);
-            }}
-            className={lang === language ? 'bg-accent' : ''}
-          >
-            <span className="text-lg mr-2">{languageFlags[lang]}</span>
-            <span>{languageNames[lang]}</span>
-          </DropdownMenuItem>
-        ))}
+            <DropdownMenuItem
+              key={lang}
+              onClick={() => {
+                setLanguage(lang);
+                setOpen(false);
+              }}
+              className={lang === language ? 'bg-accent' : ''}
+            >
+              <span>{languageNames[lang]}</span>
+            </DropdownMenuItem>
+          ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

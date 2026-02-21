@@ -32,7 +32,6 @@ import {
   CheckCircle2,
   Circle,
   Copy,
-  ExternalLink,
   FileText,
   Loader2,
   MessageCircle,
@@ -67,6 +66,9 @@ const BookingDossier = () => {
 
   const [statusDraft, setStatusDraft] = useState<BookingStatus>('pending');
   const [paymentNotesDraft, setPaymentNotesDraft] = useState('');
+  const [guestNameDraft, setGuestNameDraft] = useState('');
+  const [guestEmailDraft, setGuestEmailDraft] = useState('');
+  const [guestPhoneDraft, setGuestPhoneDraft] = useState('');
   const [editCheckIn, setEditCheckIn] = useState('');
   const [editCheckOut, setEditCheckOut] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
@@ -96,6 +98,9 @@ const BookingDossier = () => {
     if (!booking) return;
     setStatusDraft(booking.status as BookingStatus);
     setPaymentNotesDraft(booking.payment_notes ?? '');
+    setGuestNameDraft(booking.guest_name ?? '');
+    setGuestEmailDraft(booking.guest_email ?? '');
+    setGuestPhoneDraft(booking.guest_phone ?? '');
     setEditCheckIn(format(new Date(booking.check_in), 'yyyy-MM-dd'));
     setEditCheckOut(format(new Date(booking.check_out), 'yyyy-MM-dd'));
     setDeleteReason('');
@@ -300,6 +305,32 @@ const BookingDossier = () => {
         variant: 'destructive',
       });
     }
+  };
+
+  const handleGuestDetailsSave = async () => {
+    if (!booking || !isAdmin) return;
+
+    const nextName = guestNameDraft.trim();
+    const nextEmail = guestEmailDraft.trim();
+    const nextPhone = guestPhoneDraft.trim();
+
+    if (!nextName || !nextEmail || !nextPhone) {
+      toast({
+        title: t.common.error,
+        description: t.booking.requiredFields,
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    await updateBookingFields(
+      {
+        guest_name: nextName,
+        guest_email: nextEmail,
+        guest_phone: nextPhone,
+      },
+      t.booking.dossierGuestDetailsSaved
+    );
   };
 
   const handleAdminDateUpdate = async () => {
@@ -877,26 +908,93 @@ const BookingDossier = () => {
               </Badge>
             </div>
 
-            <div className="rounded-xl border border-border bg-muted/30 p-4 md:p-5 space-y-3">
-              <p className="text-sm text-muted-foreground">{t.booking.dossierLinkLabel}</p>
-              <div className="flex flex-col gap-3 md:flex-row md:items-center">
-                <a
-                  href={dossierUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 rounded-md bg-background px-3 py-2 text-xs md:text-sm break-all text-primary underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                >
-                  {dossierUrl}
-                </a>
-                <Button type="button" variant="outline" onClick={copyLink}>
-                  <Copy className="h-4 w-4" />
-                  {t.booking.dossierCopyLink}
-                </Button>
+            <div className="rounded-xl border border-border bg-muted/30 p-5 md:p-6 shadow-soft">
+              <div className="grid items-stretch gap-4 md:gap-5 md:grid-cols-[1.35fr_0.85fr]">
+                <div className="rounded-lg border border-border/70 bg-background p-4 md:p-5 space-y-4">
+                  <p className="text-sm text-muted-foreground">{t.booking.dossierLinkShortNote}</p>
+                  <a
+                    href={dossierUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-md border border-primary/20 bg-primary/5 px-3 py-2.5 text-xs md:text-sm break-all text-primary underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    {dossierUrl}
+                  </a>
+                  <div className="flex justify-start">
+                    <Button type="button" variant="outline" onClick={copyLink} className="w-full sm:w-auto">
+                      <Copy className="h-4 w-4" />
+                      {t.booking.dossierCopyLink}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="rounded-lg border border-border/80 bg-background p-4 md:p-5 space-y-3">
+                  <h3 className="font-heading text-lg font-semibold text-foreground">{t.booking.dossierGuestDetailsTitle}</h3>
+
+                  {isAdmin ? (
+                    <div className="space-y-3">
+                      <div>
+                        <Label htmlFor="guest-name-inline" className="text-xs text-muted-foreground">
+                          {t.booking.fullName}
+                        </Label>
+                        <Input
+                          id="guest-name-inline"
+                          value={guestNameDraft}
+                          onChange={(event) => setGuestNameDraft(event.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="guest-email-inline" className="text-xs text-muted-foreground">
+                          {t.booking.email}
+                        </Label>
+                        <Input
+                          id="guest-email-inline"
+                          type="email"
+                          value={guestEmailDraft}
+                          onChange={(event) => setGuestEmailDraft(event.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="guest-phone-inline" className="text-xs text-muted-foreground">
+                          {t.booking.phone}
+                        </Label>
+                        <Input
+                          id="guest-phone-inline"
+                          value={guestPhoneDraft}
+                          onChange={(event) => setGuestPhoneDraft(event.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={handleGuestDetailsSave}
+                        disabled={updateBooking.isPending}
+                        className="w-full"
+                      >
+                        {t.admin.save}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <p className="text-xs text-muted-foreground">{t.booking.fullName}</p>
+                        <p className="font-medium text-foreground">{booking.guest_name || '-'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">{t.booking.email}</p>
+                        <p className="text-muted-foreground break-all">{booking.guest_email || '-'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">{t.booking.phone}</p>
+                        <p className="text-muted-foreground">{booking.guest_phone || '-'}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
-              <p className="inline-flex items-center gap-1 text-xs font-medium text-primary/85">
-                <ExternalLink className="h-3.5 w-3.5" />
-                {t.booking.dossierOpenLinkHint}
-              </p>
             </div>
           </section>
 

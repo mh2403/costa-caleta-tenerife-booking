@@ -135,11 +135,15 @@ export interface Translations {
     dossierSubtitle: string;
     dossierNotFoundTitle: string;
     dossierNotFoundDescription: string;
+    dossierOwnerViewNote: string;
+    dossierLinkShortNote: string;
     dossierLinkLabel: string;
     dossierCopyLink: string;
     dossierLinkCopied: string;
     dossierCopyError: string;
     dossierOpenLinkHint: string;
+    dossierGuestDetailsTitle: string;
+    dossierGuestDetailsSaved: string;
     dossierDone: string;
     dossierPending: string;
     dossierMark: string;
@@ -468,7 +472,7 @@ Practical:
         'Submit your booking request through this form.',
         'Send a WhatsApp message right away with your name, email, phone number and booking link.',
         'The owner confirms availability, then uploads the official contract in your booking dossier.',
-        'Download the contract, sign it manually, scan it and upload the signed file in your booking dossier.',
+        'Download the contract, review it, sign it and upload it back to your booking dossier.',
         'After confirmation, pay the 30% deposit according to the contract.',
         'Pay the remaining 70% at least one month before check-in.',
         'The booking is final after signed contract validation and full payment.',
@@ -479,7 +483,7 @@ Practical:
       paymentDetailReference: 'Reference: Your name + dates',
       paymentNote: 'Bank details are not shown on this website and are shared via contract/WhatsApp when needed.',
       whatsappBookingCta: 'Send WhatsApp booking message now',
-      whatsappBookingHint: 'Important: send this message now so the owner can review and confirm your booking request quickly.',
+      whatsappBookingHint: 'Let the owner know that you have booked.',
       whatsappBookingMessage: 'Hi, I just placed a booking request for Costa Caleta.\nName: {name}\nEmail: {email}\nPhone: {phone}\nDates: {checkIn} - {checkOut}\nTotal booking amount: {total}\nBooking link: {link}\nCould you please review and confirm my booking request? Thank you!',
       checkInTime: 'Check-in time',
       checkOutTime: 'Check-out time',
@@ -487,11 +491,15 @@ Practical:
       dossierSubtitle: 'Follow each step of your booking, contract and payment in one secure page.',
       dossierNotFoundTitle: 'Booking dossier not found',
       dossierNotFoundDescription: 'This link is invalid or the booking no longer exists. Check the URL or contact us.',
+      dossierOwnerViewNote: 'This is your personal booking dossier. Keep this page safe.',
+      dossierLinkShortNote: 'This is your personal booking dossier. Save this private link so you can return at any time.',
       dossierLinkLabel: 'Save this private link to return to your booking dossier anytime:',
       dossierCopyLink: 'Copy link',
       dossierLinkCopied: 'Booking link copied.',
       dossierCopyError: 'Could not copy the link. Please copy it manually.',
       dossierOpenLinkHint: 'Tap the link to open your booking dossier in a new tab.',
+      dossierGuestDetailsTitle: 'Your details',
+      dossierGuestDetailsSaved: 'Guest details updated.',
       dossierDone: 'Completed',
       dossierPending: 'Pending',
       dossierMark: 'Mark',
@@ -918,7 +926,7 @@ Praktisch:
         'Plaats uw boekingsaanvraag via dit formulier.',
         'Stuur direct een WhatsApp-bericht met uw naam, e-mail, telefoonnummer en boekingslink.',
         'De eigenaar bevestigt de beschikbaarheid en uploadt het officiële contract in uw boekingsdossier.',
-        'Download het contract, onderteken het manueel, scan het en upload het ondertekende bestand in uw boekingsdossier.',
+        'Download het contract, lees het door, onderteken het en upload het opnieuw in uw boekingsdossier.',
         'Na bevestiging betaalt u het 30% voorschot volgens de contractvoorwaarden.',
         'Betaal het resterende 70% minstens één maand voor de aankomstdatum.',
         'De boeking is pas definitief na controle van het ondertekende contract en volledige betaling.',
@@ -929,7 +937,7 @@ Praktisch:
       paymentDetailReference: 'Referentie: uw naam + data',
       paymentNote: 'Bankgegevens worden niet op de website getoond en worden indien nodig via contract/WhatsApp gedeeld.',
       whatsappBookingCta: 'Stuur nu uw WhatsApp boekingsbericht',
-      whatsappBookingHint: 'Belangrijk: stuur dit bericht nu zodat de eigenaar uw boekingsaanvraag snel kan nakijken en bevestigen.',
+      whatsappBookingHint: 'Laat de eigenaar weten dat u geboekt heeft.',
       whatsappBookingMessage: 'Hallo, ik heb zonet een boekingsaanvraag geplaatst voor Costa Caleta.\nNaam: {name}\nE-mail: {email}\nTelefoon: {phone}\nData: {checkIn} - {checkOut}\nTotaal boekingsbedrag: {total}\nBoekingslink: {link}\nKan u mijn boekingsaanvraag nakijken en bevestigen? Bedankt!',
       checkInTime: 'Inchecktijd',
       checkOutTime: 'Uitchecktijd',
@@ -937,11 +945,15 @@ Praktisch:
       dossierSubtitle: 'Volg elke stap van uw boeking, contract en betaling op één beveiligde pagina.',
       dossierNotFoundTitle: 'Boekingsdossier niet gevonden',
       dossierNotFoundDescription: 'Deze link is ongeldig of het dossier bestaat niet meer. Controleer de URL of neem contact op.',
+      dossierOwnerViewNote: 'Dit is uw persoonlijke boekingsdossier. Bewaar deze pagina goed.',
+      dossierLinkShortNote: 'Dit is uw persoonlijke boekingsdossier. Bewaar deze privélink zodat u op elk moment kunt terugkeren.',
       dossierLinkLabel: 'Bewaar deze privélink om later terug te keren naar uw boekingsdossier:',
       dossierCopyLink: 'Link kopiëren',
       dossierLinkCopied: 'Boekingslink gekopieerd.',
       dossierCopyError: 'Link kopiëren mislukt. Kopieer de link handmatig.',
       dossierOpenLinkHint: 'Tik op de link om uw boekingsdossier in een nieuw tabblad te openen.',
+      dossierGuestDetailsTitle: 'Uw gegevens',
+      dossierGuestDetailsSaved: 'Gegevens van gast bijgewerkt.',
       dossierDone: 'Afgerond',
       dossierPending: 'In afwachting',
       dossierMark: 'Markeer',
@@ -1368,7 +1380,7 @@ Práctico:
         'Envía tu solicitud de reserva mediante este formulario.',
         'Envía de inmediato un mensaje por WhatsApp con tu nombre, email, teléfono y enlace de reserva.',
         'La propietaria confirma disponibilidad y sube el contrato oficial en tu expediente.',
-        'Descarga el contrato, fírmalo manualmente, escanéalo y sube el archivo firmado en tu expediente.',
+        'Descarga el contrato, léelo, fírmalo y súbelo de nuevo a tu expediente.',
         'Tras la confirmación, paga el anticipo del 30% según las condiciones del contrato.',
         'Paga el 70% restante al menos un mes antes de la llegada.',
         'La reserva queda cerrada tras validar contrato firmado y pago completo.',
@@ -1379,7 +1391,7 @@ Práctico:
       paymentDetailReference: 'Referencia: tu nombre + fechas',
       paymentNote: 'Los datos bancarios no se muestran en esta web y se comparten cuando sea necesario por contrato/WhatsApp.',
       whatsappBookingCta: 'Enviar ahora mensaje de WhatsApp',
-      whatsappBookingHint: 'Importante: envía este mensaje ahora para que la propietaria pueda revisar y confirmar tu solicitud rápidamente.',
+      whatsappBookingHint: 'Avisa a la propietaria de que ya has reservado.',
       whatsappBookingMessage: 'Hola, acabo de enviar una solicitud de reserva para Costa Caleta.\nNombre: {name}\nEmail: {email}\nTeléfono: {phone}\nFechas: {checkIn} - {checkOut}\nImporte total de la reserva: {total}\nEnlace de reserva: {link}\n¿Podéis revisar y confirmar mi solicitud de reserva? ¡Gracias!',
       checkInTime: 'Hora de entrada',
       checkOutTime: 'Hora de salida',
@@ -1387,11 +1399,15 @@ Práctico:
       dossierSubtitle: 'Sigue cada paso de tu reserva, contrato y pago en una sola página segura.',
       dossierNotFoundTitle: 'No se encontró el expediente',
       dossierNotFoundDescription: 'Este enlace no es válido o la reserva ya no existe. Revisa la URL o contáctanos.',
+      dossierOwnerViewNote: 'Este es tu expediente personal de reserva. Guarda bien esta página.',
+      dossierLinkShortNote: 'Este es tu expediente personal de reserva. Guarda este enlace privado para volver cuando quieras.',
       dossierLinkLabel: 'Guarda este enlace privado para volver a tu expediente cuando quieras:',
       dossierCopyLink: 'Copiar enlace',
       dossierLinkCopied: 'Enlace de reserva copiado.',
       dossierCopyError: 'No se pudo copiar el enlace. Cópialo manualmente.',
       dossierOpenLinkHint: 'Toca el enlace para abrir tu expediente de reserva en una nueva pestaña.',
+      dossierGuestDetailsTitle: 'Tus datos',
+      dossierGuestDetailsSaved: 'Datos del huésped actualizados.',
       dossierDone: 'Completado',
       dossierPending: 'Pendiente',
       dossierMark: 'Marcar',

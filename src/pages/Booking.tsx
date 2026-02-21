@@ -398,9 +398,6 @@ const Booking = () => {
       <h3 className="font-heading text-base md:text-lg font-semibold mb-1">
         {t.booking.paymentTitle}
       </h3>
-      <p className="text-xs md:text-sm text-muted-foreground">
-        {t.booking.paymentIntro}
-      </p>
 
       <div className="grid md:grid-cols-2 gap-3">
         <div className="rounded-lg border border-primary/25 bg-primary/5 p-3 md:p-4">
@@ -454,6 +451,55 @@ const Booking = () => {
               <p className="text-muted-foreground mb-6">
                 {t.booking.confirmationMessage}
               </p>
+              <Button
+                variant="whatsapp"
+                size="lg"
+                asChild
+                className="w-full h-auto min-h-12 whitespace-normal px-4 py-3"
+              >
+                <a
+                  href={whatsappBookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 text-center text-sm leading-snug"
+                >
+                  <MessageCircle className="h-5 w-5 shrink-0" />
+                    {t.booking.whatsappBookingCta}
+                </a>
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2 mb-6 text-center">
+                {t.booking.whatsappBookingHint}
+              </p>
+
+              {bookingDossierUrl && (
+                <div className="bg-card rounded-xl p-4 shadow-soft mb-6 text-left border border-border/80">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    {t.booking.dossierLinkLabel}
+                  </p>
+                  <a
+                    href={bookingDossierUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block rounded-md bg-muted px-3 py-2 text-xs break-all text-primary underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  >
+                    {bookingDossierUrl}
+                  </a>
+                  <p className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary/85">
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    {t.booking.dossierOpenLinkHint}
+                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="mt-3 w-full sm:w-auto"
+                    onClick={handleCopyDossierLink}
+                  >
+                    <Copy className="h-4 w-4" />
+                    {t.booking.dossierCopyLink}
+                  </Button>
+                </div>
+              )}
+
               <div className="bg-card rounded-xl p-6 shadow-soft mb-6 text-left">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
@@ -485,53 +531,6 @@ const Booking = () => {
               <div className="mb-6">
                 {renderPaymentDetails(false)}
               </div>
-              {bookingDossierUrl && (
-                <div className="bg-card rounded-xl p-4 shadow-soft mb-6 text-left border border-border/80">
-                  <p className="text-sm text-muted-foreground mb-2">
-                    {t.booking.dossierLinkLabel}
-                  </p>
-                  <a
-                    href={bookingDossierUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block rounded-md bg-muted px-3 py-2 text-xs break-all text-primary underline decoration-primary/60 underline-offset-2 transition-colors hover:text-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                  >
-                    {bookingDossierUrl}
-                  </a>
-                  <p className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary/85">
-                    <ExternalLink className="h-3.5 w-3.5" />
-                    {t.booking.dossierOpenLinkHint}
-                  </p>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    className="mt-3 w-full sm:w-auto"
-                    onClick={handleCopyDossierLink}
-                  >
-                    <Copy className="h-4 w-4" />
-                    {t.booking.dossierCopyLink}
-                  </Button>
-                </div>
-              )}
-              <Button
-                variant="whatsapp"
-                size="lg"
-                asChild
-                className="w-full h-auto min-h-12 whitespace-normal px-4 py-3"
-              >
-                <a
-                  href={whatsappBookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 text-center text-sm leading-snug"
-                >
-                  <MessageCircle className="h-5 w-5 shrink-0" />
-                    {t.booking.whatsappBookingCta}
-                </a>
-              </Button>
-              <p className="text-sm text-muted-foreground mt-2 text-center">
-                {t.booking.whatsappBookingHint}
-              </p>
             </div>
           </div>
         </main>
