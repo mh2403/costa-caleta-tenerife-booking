@@ -56,3 +56,9 @@ Set these GitHub Actions secrets for production SEO/SEA:
 - `VITE_SUPABASE_PROJECT_ID`
 - `VITE_SUPABASE_URL`
 - `VITE_SUPABASE_PUBLISHABLE_KEY`
+
+## Google Ads (SEA) Assets
+- `marketing/seo-keyword-map.md`: SEO keyword map per page and per language.
+- `marketing/google-ads-keywords.csv`: EN/NL/ES keyword import pack (exact + phrase, grouped per campaign/ad group).
+- `marketing/google-ads-negative-keywords.txt`: shared negative keywords starter list.
+- `marketing/google-ads-setup-checklist.md`: click-by-click setup and QA checklist.

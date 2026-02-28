@@ -309,7 +309,7 @@ export const translations: Record<Language, Translations> = {
     },
     hero: {
       title: 'Escape to the sun of Tenerife',
-      subtitle: 'Experience the warmth of the Canary Islands.',
+      subtitle: 'Business-friendly apartment rental in La Caleta, Adeje, Tenerife.',
       checkAvailability: 'View Gallery',
       bookNow: 'Book Now',
       fromPrice: 'From',
@@ -323,7 +323,7 @@ export const translations: Record<Language, Translations> = {
     },
     cta: {
       title: 'Ready for Your Tenerife Escape?',
-      subtitle: 'Book directly with us for the best rates. No hidden fees, no middlemen — just your perfect vacation home.',
+      subtitle: 'Book your Tenerife apartment rental directly with us in La Caleta, Adeje. No hidden fees, no middlemen.',
       eyebrow: 'Costa Caleta Tenerife',
       trustItems: [
         'Prime La Caleta location',
@@ -424,8 +424,8 @@ Practical:
       subtitle: 'What our guests say about their stay',
     },
     booking: {
-      title: 'Book Your Stay',
-      subtitle: 'Simple booking, no account required',
+      title: 'Book Your Tenerife Apartment',
+      subtitle: 'Direct apartment rental in La Caleta, Adeje. No account required.',
       step1: 'Select Dates',
       step2: 'Your Details',
       step3: 'Confirm',
@@ -552,8 +552,8 @@ Practical:
       dossierWhatsappHint: 'After submitting your booking request, send your WhatsApp booking message immediately.',
     },
     contact: {
-      title: 'Get in Touch',
-      subtitle: 'We\'re here to help with any questions',
+      title: 'Contact for Tenerife Apartment Booking',
+      subtitle: 'Ask about availability, business stays, and direct rental support.',
       phone: 'Phone',
       email: 'Email',
       responseTime: 'We respond within 24 hours',
@@ -764,7 +764,7 @@ Practical:
     },
     hero: {
       title: 'Ontsnap naar de zon van Tenerife',
-      subtitle: 'Ervaar de warmte van de Canarische Eilanden.',
+      subtitle: 'Zakelijk en comfortabel appartement in La Caleta, Adeje, Tenerife.',
       checkAvailability: "Bekijk foto's",
       bookNow: 'Nu Boeken',
       fromPrice: 'Vanaf',
@@ -778,7 +778,7 @@ Practical:
     },
     cta: {
       title: 'Klaar voor uw Tenerife-escape?',
-      subtitle: 'Boek direct bij ons voor de beste tarieven. Geen verborgen kosten, geen tussenpersonen — gewoon uw perfecte vakantieverblijf.',
+      subtitle: 'Boek uw appartement op Tenerife rechtstreeks bij ons in La Caleta, Adeje. Geen verborgen kosten of tussenpersonen.',
       eyebrow: 'Costa Caleta Tenerife',
       trustItems: [
         'Toplocatie in La Caleta',
@@ -879,8 +879,8 @@ Praktisch:
       subtitle: 'Wat onze gasten zeggen over hun verblijf',
     },
     booking: {
-      title: 'Boek Uw Verblijf',
-      subtitle: 'Eenvoudig boeken, geen account nodig',
+      title: 'Boek uw appartement op Tenerife',
+      subtitle: 'Rechtstreeks appartement huren in La Caleta, Adeje. Geen account nodig.',
       step1: 'Selecteer Data',
       step2: 'Uw Gegevens',
       step3: 'Bevestigen',
@@ -1007,8 +1007,8 @@ Praktisch:
       dossierWhatsappHint: 'Na het verzenden van uw boekingsaanvraag stuurt u best direct het WhatsApp-boekingsbericht.',
     },
     contact: {
-      title: 'Neem Contact Op',
-      subtitle: 'Wij helpen u graag met al uw vragen',
+      title: 'Contact voor boeking appartement Tenerife',
+      subtitle: 'Vraag naar beschikbaarheid, werkverblijven en directe verhuur.',
       phone: 'Telefoon',
       email: 'E-mail',
       responseTime: 'Wij reageren binnen 24 uur',
@@ -1219,7 +1219,7 @@ Praktisch:
     },
     hero: {
       title: 'Escápate al sol de Tenerife',
-      subtitle: 'Experimenta el calor de las Islas Canarias.',
+      subtitle: 'Alquiler de apartamento en La Caleta, Adeje, Tenerife.',
       checkAvailability: 'Ver Fotos',
       bookNow: 'Reservar Ahora',
       fromPrice: 'Desde',
@@ -1233,7 +1233,7 @@ Praktisch:
     },
     cta: {
       title: '¿Listo para tu escapada en Tenerife?',
-      subtitle: 'Reserva directamente con nosotros para las mejores tarifas. Sin cargos ocultos, sin intermediarios — solo tu hogar vacacional perfecto.',
+      subtitle: 'Reserva tu apartamento en Tenerife directamente con nosotros en La Caleta, Adeje. Sin cargos ocultos ni intermediarios.',
       eyebrow: 'Costa Caleta Tenerife',
       trustItems: [
         'Ubicación ideal en La Caleta',
@@ -1334,8 +1334,8 @@ Práctico:
       subtitle: 'Lo que dicen nuestros huéspedes sobre su estancia',
     },
     booking: {
-      title: 'Reserva Tu Estancia',
-      subtitle: 'Reserva sencilla, sin necesidad de cuenta',
+      title: 'Reserva tu apartamento en Tenerife',
+      subtitle: 'Alquiler directo en La Caleta, Adeje, sin necesidad de cuenta.',
       step1: 'Seleccionar Fechas',
       step2: 'Tus Datos',
       step3: 'Confirmar',
@@ -1462,8 +1462,8 @@ Práctico:
       dossierWhatsappHint: 'Después de enviar tu solicitud de reserva, envía enseguida el mensaje de WhatsApp de reserva.',
     },
     contact: {
-      title: 'Ponte en Contacto',
-      subtitle: 'Estamos aquí para ayudarte con cualquier pregunta',
+      title: 'Contacto para reservar apartamento en Tenerife',
+      subtitle: 'Consulta disponibilidad, estancias de trabajo y alquiler directo.',
       phone: 'Teléfono',
       email: 'Correo',
       responseTime: 'Respondemos en 24 horas',
