@@ -56,6 +56,8 @@ const getTrackingConfig = () => {
 
 export const isTrackingConfigured = () => getTrackingConfig().enabled;
 
+const isUsingGtm = () => Boolean(getTrackingConfig().gtmId);
+
 const ensureDataLayerAndGtag = () => {
   if (typeof window === 'undefined') return;
 
@@ -187,7 +189,13 @@ export const trackEvent = (name: string, payload?: Record<string, unknown>) => {
   if (typeof window === 'undefined' || !isTrackingConfigured()) return;
 
   const params = buildEventPayload(payload);
-  window.dataLayer?.push({ event: name, ...params });
+  if (isUsingGtm()) {
+    // GTM path: custom event object in dataLayer.
+    window.dataLayer?.push({ event: name, ...params });
+    return;
+  }
+
+  // GA direct path (without GTM).
   window.gtag?.('event', name, params);
 };
 
@@ -209,7 +217,11 @@ export const trackPageView = ({
     language,
   });
 
-  window.dataLayer?.push({ event: 'page_view', ...payload });
+  if (isUsingGtm()) {
+    window.dataLayer?.push({ event: 'page_view', ...payload });
+    return;
+  }
+
   window.gtag?.('event', 'page_view', payload);
 };
 
