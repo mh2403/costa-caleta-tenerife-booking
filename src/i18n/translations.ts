@@ -309,7 +309,7 @@ export const translations: Record<Language, Translations> = {
     },
     hero: {
       title: 'Escape to the sun of Tenerife',
-      subtitle: 'Business-friendly apartment rental in La Caleta, Adeje, Tenerife.',
+      subtitle: 'Comfortable apartment in La Caleta, Adeje, Tenerife.',
       checkAvailability: 'View Gallery',
       bookNow: 'Book Now',
       fromPrice: 'From',
@@ -553,7 +553,7 @@ Practical:
     },
     contact: {
       title: 'Contact for Tenerife Apartment Booking',
-      subtitle: 'Ask about availability, business stays, and direct rental support.',
+      subtitle: 'Ask about availability, long stays, and direct rental support.',
       phone: 'Phone',
       email: 'Email',
       responseTime: 'We respond within 24 hours',
@@ -764,7 +764,7 @@ Practical:
     },
     hero: {
       title: 'Ontsnap naar de zon van Tenerife',
-      subtitle: 'Zakelijk en comfortabel appartement in La Caleta, Adeje, Tenerife.',
+      subtitle: 'Comfortabel appartement in La Caleta, Adeje, Tenerife.',
       checkAvailability: "Bekijk foto's",
       bookNow: 'Nu Boeken',
       fromPrice: 'Vanaf',
@@ -1008,7 +1008,7 @@ Praktisch:
     },
     contact: {
       title: 'Contact voor boeking appartement Tenerife',
-      subtitle: 'Vraag naar beschikbaarheid, werkverblijven en directe verhuur.',
+      subtitle: 'Vraag naar beschikbaarheid, langere verblijven en directe verhuur.',
       phone: 'Telefoon',
       email: 'E-mail',
       responseTime: 'Wij reageren binnen 24 uur',
@@ -1463,7 +1463,7 @@ Práctico:
     },
     contact: {
       title: 'Contacto para reservar apartamento en Tenerife',
-      subtitle: 'Consulta disponibilidad, estancias de trabajo y alquiler directo.',
+      subtitle: 'Consulta disponibilidad, estancias largas y alquiler directo.',
       phone: 'Teléfono',
       email: 'Correo',
       responseTime: 'Respondemos en 24 horas',

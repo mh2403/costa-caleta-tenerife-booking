@@ -119,15 +119,15 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
 
   const localized = {
     en: {
-      homeTitle: 'Business Apartment Rental Tenerife | Costa Caleta La Caleta',
+      homeTitle: 'Costa Caleta Tenerife | Apartment in La Caleta',
       homeDescription:
-        'Business-friendly apartment rental in La Caleta, Adeje, Tenerife. Book direct with the owner at Costa Caleta and avoid platform fees.',
-      bookingTitle: 'Book Apartment Rental Tenerife | Costa Caleta',
+        'Stay at Costa Caleta Tenerife in a comfortable apartment in La Caleta, Adeje. Book directly with the owner.',
+      bookingTitle: 'Book your stay | Costa Caleta Tenerife',
       bookingDescription:
-        'Check live availability and book your Tenerife apartment rental directly in La Caleta, Adeje. Fast WhatsApp confirmation from the owner.',
-      contactTitle: 'Contact for Tenerife Apartment Rental | Costa Caleta',
+        'Check availability and send your booking request directly to the owner in La Caleta, Adeje.',
+      contactTitle: 'Contact | Costa Caleta Tenerife',
       contactDescription:
-        'Contact Costa Caleta Tenerife for apartment availability, monthly stay questions and direct booking support in La Caleta, Adeje.',
+        'Contact us via WhatsApp, phone or email for availability and practical questions.',
       privacyTitle: 'Privacy policy | Costa Caleta Tenerife',
       privacyDescription:
         'Read how Costa Caleta Tenerife handles personal data, legal bases, retention periods, and your GDPR rights.',
@@ -140,15 +140,15 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
       fallbackTitle: 'Page not found | Costa Caleta Tenerife',
     },
     nl: {
-      homeTitle: 'Zakelijk appartement huren Tenerife | Costa Caleta La Caleta',
+      homeTitle: 'Costa Caleta Tenerife | Appartement in La Caleta',
       homeDescription:
-        'Zakelijk en comfortabel appartement huren in La Caleta, Adeje, Tenerife. Boek rechtstreeks bij de eigenaar en vermijd platformkosten.',
-      bookingTitle: 'Appartement boeken Tenerife | Costa Caleta',
+        'Verblijf in een comfortabel appartement in La Caleta, Adeje. Boek rechtstreeks bij de eigenaar van Costa Caleta Tenerife.',
+      bookingTitle: 'Boek uw verblijf | Costa Caleta Tenerife',
       bookingDescription:
-        'Controleer beschikbaarheid en boek uw appartement in Tenerife rechtstreeks in La Caleta, Adeje, met snelle WhatsApp-bevestiging.',
-      contactTitle: 'Contact voor appartement Tenerife | Costa Caleta',
+        'Controleer beschikbaarheid en verstuur uw boekingsaanvraag rechtstreeks naar de eigenaar in La Caleta, Adeje.',
+      contactTitle: 'Contact | Costa Caleta Tenerife',
       contactDescription:
-        'Neem direct contact op over beschikbaarheid, langere verblijven en rechtstreekse boeking van ons appartement in La Caleta, Adeje.',
+        'Neem contact op via WhatsApp, telefoon of e-mail voor beschikbaarheid en praktische vragen.',
       privacyTitle: 'Privacybeleid | Costa Caleta Tenerife',
       privacyDescription:
         'Lees hoe Costa Caleta Tenerife persoonsgegevens verwerkt, bewaartermijnen hanteert en uw GDPR-rechten respecteert.',
@@ -161,15 +161,15 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
       fallbackTitle: 'Pagina niet gevonden | Costa Caleta Tenerife',
     },
     es: {
-      homeTitle: 'Alquiler apartamento Tenerife La Caleta | Costa Caleta',
+      homeTitle: 'Costa Caleta Tenerife | Apartamento en La Caleta',
       homeDescription:
-        'Alquiler de apartamento en La Caleta, Adeje, Tenerife, ideal para vacaciones y estancias de trabajo. Reserva directa con la propietaria.',
-      bookingTitle: 'Reservar apartamento Tenerife | Costa Caleta',
+        'Alojate en un apartamento comodo en La Caleta, Adeje. Reserva directamente con la propietaria de Costa Caleta Tenerife.',
+      bookingTitle: 'Reserva tu estancia | Costa Caleta Tenerife',
       bookingDescription:
-        'Consulta disponibilidad en tiempo real y reserva tu apartamento en Tenerife en La Caleta, Adeje, con confirmacion rapida por WhatsApp.',
-      contactTitle: 'Contacto alquiler apartamento Tenerife | Costa Caleta',
+        'Consulta disponibilidad y envia tu solicitud de reserva directamente a la propietaria en La Caleta, Adeje.',
+      contactTitle: 'Contacto | Costa Caleta Tenerife',
       contactDescription:
-        'Contacta para disponibilidad, estancias largas y reserva directa de nuestro apartamento en La Caleta, Adeje, Tenerife.',
+        'Contacta por WhatsApp, telefono o correo para disponibilidad y dudas practicas.',
       privacyTitle: 'Politica de privacidad | Costa Caleta Tenerife',
       privacyDescription:
         'Consulta como Costa Caleta Tenerife gestiona datos personales, plazos de conservacion y tus derechos de privacidad.',
@@ -358,7 +358,7 @@ const RouteSeo = () => {
         '@context': 'https://schema.org',
         '@graph': [
           {
-            '@type': 'LodgingBusiness',
+            '@type': 'VacationRental',
             name: 'Costa Caleta Tenerife',
             url: canonicalUrl,
             image: ogImageUrl,
