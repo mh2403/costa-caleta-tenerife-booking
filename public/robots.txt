@@ -8,3 +8,4 @@ Disallow: /nl/booking/dossier/
 Disallow: /es/booking/dossier/
 
 Sitemap: https://www.costacaleta.eu/sitemap.xml
+Sitemap: https://www.costacaleta.eu/sitemap.txt

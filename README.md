@@ -31,6 +31,7 @@ npm run preview
 `npm run build` includes a postbuild step that:
 - creates static route HTML copies for GitHub Pages deep-link support
 - generates `dist/sitemap.xml` with locale alternates
+- generates `dist/sitemap.txt` fallback for Search Console compatibility
 - generates `dist/robots.txt` with private route exclusions
 
 ## Environment Variables

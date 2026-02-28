@@ -106,6 +106,16 @@ const buildSitemap = async () => {
   await writeFile(path.join(DIST_DIR, 'sitemap.xml'), sitemapXml, 'utf8');
 };
 
+const buildTextSitemap = async () => {
+  const urls = BASE_ROUTES.flatMap((route) =>
+    LOCALES.map((locale) => `${siteUrl}${buildLocalizedPath(route, locale)}`)
+  );
+
+  const uniqueUrls = Array.from(new Set(urls));
+  const textSitemap = `${uniqueUrls.join('\n')}\n`;
+  await writeFile(path.join(DIST_DIR, 'sitemap.txt'), textSitemap, 'utf8');
+};
+
 const buildRobots = async () => {
   const robotsTxt = [
     'User-agent: *',
@@ -118,6 +128,7 @@ const buildRobots = async () => {
     'Disallow: /es/booking/dossier/',
     '',
     `Sitemap: ${siteUrl}/sitemap.xml`,
+    `Sitemap: ${siteUrl}/sitemap.txt`,
     '',
   ].join('\n');
 
@@ -127,6 +138,7 @@ const buildRobots = async () => {
 const run = async () => {
   await ensureRouteHtmlCopies();
   await buildSitemap();
+  await buildTextSitemap();
   await buildRobots();
 };
 
