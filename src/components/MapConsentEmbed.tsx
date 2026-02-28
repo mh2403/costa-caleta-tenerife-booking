@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { trackContactClick } from '@/lib/analytics';
+import { useLanguage } from '@/i18n';
 
 type MapConsentEmbedProps = {
   title: string;
@@ -24,6 +26,7 @@ export function MapConsentEmbed({
   externalButtonLabel,
   className,
 }: MapConsentEmbedProps) {
+  const { language } = useLanguage();
   const [isLoaded, setIsLoaded] = useState(false);
 
   return (
@@ -44,9 +47,21 @@ export function MapConsentEmbed({
           <p className="text-lg font-semibold text-foreground">{consentTitle}</p>
           <p className="mt-2 max-w-md text-sm text-muted-foreground">{consentDescription}</p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-            <Button onClick={() => setIsLoaded(true)}>{loadButtonLabel}</Button>
+            <Button
+              onClick={() => {
+                trackContactClick('map', 'map_embed_load', language);
+                setIsLoaded(true);
+              }}
+            >
+              {loadButtonLabel}
+            </Button>
             <Button asChild variant="outline">
-              <a href={externalUrl} target="_blank" rel="noopener noreferrer">
+              <a
+                href={externalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackContactClick('map', 'map_external_open', language)}
+              >
                 {externalButtonLabel}
               </a>
             </Button>

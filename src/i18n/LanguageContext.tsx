@@ -14,14 +14,9 @@ const LANGUAGE_KEY = 'tenerife-rental-language';
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem(LANGUAGE_KEY) as Language;
-      if (saved && translations[saved]) {
-        return saved;
-      }
-      // Try to detect browser language
-      const browserLang = navigator.language.split('-')[0] as Language;
-      if (translations[browserLang]) {
-        return browserLang;
+      const firstSegment = window.location.pathname.split('/').filter(Boolean)[0] as Language | undefined;
+      if (firstSegment && translations[firstSegment]) {
+        return firstSegment;
       }
     }
     return 'en';

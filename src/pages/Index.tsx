@@ -48,11 +48,11 @@ const Index = () => {
         aria-label={backToHeroLabel[language]}
         onClick={scrollToHero}
         className={[
-          'group fixed left-4 top-24 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/30 bg-primary text-primary-foreground shadow-[0_22px_42px_-20px_hsl(var(--primary)/0.95)] transition-all duration-300 md:left-6 md:top-28',
-          showBackToHero ? 'translate-y-0 opacity-100' : 'pointer-events-none -translate-y-3 opacity-0',
+          'group fixed bottom-5 right-4 z-50 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary-foreground/30 bg-primary text-primary-foreground shadow-[0_22px_42px_-20px_hsl(var(--primary)/0.95)] transition-all duration-300 md:bottom-6 md:right-6',
+          showBackToHero ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0',
         ].join(' ')}
       >
-        <ArrowUp className="h-5 w-5 motion-safe:animate-[bounce_2.1s_ease-in-out_infinite] transition-transform duration-200 group-hover:-translate-y-0.5" />
+        <ArrowUp className="h-5 w-5" />
       </button>
       <main>
         <HeroSection />

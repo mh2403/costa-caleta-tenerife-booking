@@ -2,9 +2,12 @@ import { Link } from 'react-router-dom';
 import { Phone, Mail, MessageCircle } from 'lucide-react';
 import { useLanguage } from '@/i18n';
 import { contactInfo } from '@/lib/contactInfo';
+import { useLocalizedPath } from '@/hooks/useLocalizedPath';
+import { trackContactClick } from '@/lib/analytics';
 
 export function Footer() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const localizedPath = useLocalizedPath();
   const currentYear = new Date().getFullYear();
   const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
@@ -18,7 +21,7 @@ export function Footer() {
       <div className="relative container mx-auto px-4 py-14 md:py-16">
         <div className="grid gap-10 lg:grid-cols-[1.25fr_0.9fr_1fr]">
           <div>
-            <Link to="/" className="mb-4 inline-flex items-center gap-3">
+            <Link to={localizedPath('/')} className="mb-4 inline-flex items-center gap-3">
               <img src={logoUrl} alt="Costa Caleta" className="h-8 w-8 rounded-full border border-background/20" />
               <span className="font-heading text-2xl font-semibold">Costa Caleta</span>
             </Link>
@@ -30,10 +33,10 @@ export function Footer() {
           <div>
             <h4 className="font-heading text-lg font-semibold mb-4">{t.footer.quickLinks}</h4>
             <div className="flex flex-col gap-2 text-sm">
-              <Link to="/" className="text-background/75 transition-colors hover:text-background">{t.nav.home}</Link>
-              <Link to="/booking" className="text-background/75 transition-colors hover:text-background">{t.nav.booking}</Link>
-              <Link to="/contact" className="text-background/75 transition-colors hover:text-background">{t.nav.contact}</Link>
-              <Link to="/instructions" className="text-background/75 transition-colors hover:text-background">{t.footer.instructions}</Link>
+              <Link to={localizedPath('/')} className="text-background/75 transition-colors hover:text-background">{t.nav.home}</Link>
+              <Link to={localizedPath('/booking')} className="text-background/75 transition-colors hover:text-background">{t.nav.booking}</Link>
+              <Link to={localizedPath('/contact')} className="text-background/75 transition-colors hover:text-background">{t.nav.contact}</Link>
+              <Link to={localizedPath('/instructions')} className="text-background/75 transition-colors hover:text-background">{t.footer.instructions}</Link>
             </div>
           </div>
 
@@ -42,6 +45,7 @@ export function Footer() {
             <div className="flex flex-col gap-3 text-sm">
               <a
                 href={`tel:${contactInfo.phone}`}
+                onClick={() => trackContactClick('phone', 'footer', language)}
                 className="inline-flex items-center gap-2 rounded-xl border border-background/20 bg-background/5 px-3 py-2 text-background/80 transition-colors hover:border-background/35 hover:text-background"
               >
                 <Phone className="h-4 w-4" />
@@ -49,6 +53,7 @@ export function Footer() {
               </a>
               <a
                 href={`mailto:${contactInfo.email}`}
+                onClick={() => trackContactClick('email', 'footer', language)}
                 className="inline-flex items-center gap-2 rounded-xl border border-background/20 bg-background/5 px-3 py-2 text-background/80 transition-colors hover:border-background/35 hover:text-background"
               >
                 <Mail className="h-4 w-4" />
@@ -58,6 +63,7 @@ export function Footer() {
                 href={`https://wa.me/${contactInfo.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackContactClick('whatsapp', 'footer', language)}
                 className="inline-flex items-center gap-2 rounded-xl border border-background/20 bg-background/5 px-3 py-2 text-background/80 transition-colors hover:border-background/35 hover:text-background"
               >
                 <MessageCircle className="h-4 w-4" />
@@ -70,8 +76,8 @@ export function Footer() {
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-background/20 pt-7 md:flex-row">
           <p className="text-background/60 text-sm">© {currentYear} Costa Caleta. {t.footer.rights}.</p>
           <div className="flex gap-4 text-sm">
-            <Link to="/privacy" className="text-background/60 transition-colors hover:text-background">{t.footer.privacy}</Link>
-            <Link to="/terms" className="text-background/60 transition-colors hover:text-background">{t.footer.terms}</Link>
+            <Link to={localizedPath('/privacy')} className="text-background/60 transition-colors hover:text-background">{t.footer.privacy}</Link>
+            <Link to={localizedPath('/terms')} className="text-background/60 transition-colors hover:text-background">{t.footer.terms}</Link>
             <Link to="/admin" className="text-background/45 transition-colors hover:text-background/70">Admin</Link>
           </div>
         </div>

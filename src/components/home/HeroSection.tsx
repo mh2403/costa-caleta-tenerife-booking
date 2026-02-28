@@ -3,9 +3,11 @@ import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { useSettings } from '@/hooks/useSettings';
 import heroImage from '@/assets/CostaCaleta/BreakfastView-Pic2-hero.jpeg';
+import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 
 export function HeroSection() {
   const { t } = useLanguage();
+  const localizedPath = useLocalizedPath();
   const { data: settings } = useSettings();
   const fromPrice = settings?.base_price?.amount ?? 100;
   const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
@@ -47,7 +49,7 @@ export function HeroSection() {
 
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button asChild variant="hero" size="xl" className="rounded-full">
-                <Link to="/booking">{t.hero.bookNow}</Link>
+                <Link to={localizedPath('/booking')}>{t.hero.bookNow}</Link>
               </Button>
               <Button asChild variant="heroOutline" size="xl" className="rounded-full">
                 <a href="#gallery">{t.hero.checkAvailability}</a>

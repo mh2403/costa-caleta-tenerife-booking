@@ -27,6 +27,7 @@ import { usePricingRules } from '@/hooks/usePricing';
 import { useSettings } from '@/hooks/useSettings';
 import { supabase } from '@/integrations/supabase/client';
 import { bookingFlowConfig } from '@/lib/bookingFlowConfig';
+import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 import {
   Calendar,
   CheckCircle2,
@@ -42,6 +43,7 @@ import {
 const BookingDossier = () => {
   const { token } = useParams();
   const { t, language } = useLanguage();
+  const localizedPath = useLocalizedPath();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { isAdmin, loading: authLoading } = useAuth();
@@ -744,7 +746,7 @@ const BookingDossier = () => {
                 {t.booking.dossierNotFoundDescription}
               </p>
               <Button asChild variant="hero">
-                <Link to="/">{t.notFound.backHome}</Link>
+                <Link to={localizedPath('/')}>{t.notFound.backHome}</Link>
               </Button>
             </div>
           </div>

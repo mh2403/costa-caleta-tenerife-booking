@@ -21,6 +21,7 @@ import { useBlockedDates } from '@/hooks/useBlockedDates';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { contactInfo } from '@/lib/contactInfo';
 import { bookingFlowConfig } from '@/lib/bookingFlowConfig';
+import { trackBookingRequestSubmitted, trackBookingStepViewed, trackContactClick } from '@/lib/analytics';
 
 const Booking = () => {
   const { t, language } = useLanguage();
@@ -48,6 +49,10 @@ const Booking = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [submitted]);
+
+  useEffect(() => {
+    trackBookingStepViewed(step, language as 'en' | 'nl' | 'es');
+  }, [step, language]);
 
   const dateLocale = useMemo(() => {
     if (language === 'nl') return nl;
@@ -371,6 +376,13 @@ const Booking = () => {
 
       setSubmittedBooking(createdBooking);
       setSubmitted(true);
+      trackBookingRequestSubmitted({
+        value: totalPrice,
+        currency: 'EUR',
+        nights,
+        guests: Number(guests),
+        language: language as 'en' | 'nl' | 'es',
+      });
     } catch (error) {
       console.error('Booking error:', error);
       toast({
@@ -466,6 +478,7 @@ const Booking = () => {
                   href={whatsappBookingUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackContactClick('whatsapp', 'booking_confirmation', language as 'en' | 'nl' | 'es')}
                   className="flex w-full items-center justify-center gap-2 text-center text-sm leading-snug"
                 >
                   <MessageCircle className="h-5 w-5 shrink-0" />

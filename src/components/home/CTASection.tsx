@@ -2,9 +2,11 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 
 export function CTASection() {
   const { t } = useLanguage();
+  const localizedPath = useLocalizedPath();
   const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   return (
@@ -37,7 +39,7 @@ export function CTASection() {
               size="lg"
               className="min-w-[190px] rounded-full bg-primary-foreground text-foreground shadow-large hover:bg-primary-foreground/90"
             >
-              <Link to="/booking" className="flex items-center justify-center gap-2">
+              <Link to={localizedPath('/booking')} className="flex items-center justify-center gap-2">
                 {t.hero.bookNow}
                 <ArrowRight className="h-5 w-5" />
               </Link>
@@ -48,7 +50,7 @@ export function CTASection() {
               size="lg"
               className="min-w-[190px] rounded-full border-primary-foreground/70 bg-primary-foreground/6 hover:bg-primary-foreground/16"
             >
-              <Link to="/contact">{t.nav.contact}</Link>
+              <Link to={localizedPath('/contact')}>{t.nav.contact}</Link>
             </Button>
           </div>
         </div>

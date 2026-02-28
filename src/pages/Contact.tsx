@@ -4,9 +4,10 @@ import { useLanguage } from '@/i18n';
 import { Phone, Mail, MessageCircle, Clock, MapPin } from 'lucide-react';
 import { contactInfo } from '@/lib/contactInfo';
 import { MapConsentEmbed } from '@/components/MapConsentEmbed';
+import { trackContactClick } from '@/lib/analytics';
 
 const Contact = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   const contactDetails = {
     ...contactInfo,
@@ -43,6 +44,7 @@ const Contact = () => {
                       href={`https://wa.me/${contactDetails.whatsapp}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackContactClick('whatsapp', 'contact_page', language)}
                       className="group flex items-start gap-4 rounded-2xl border border-border/70 bg-card p-4 transition-all hover:border-[#25D366]/40 hover:bg-[#25D366]/5"
                     >
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#25D366]/10 transition-colors group-hover:bg-[#25D366]/20">
@@ -60,6 +62,7 @@ const Contact = () => {
 
                     <a
                       href={`tel:${contactDetails.phone}`}
+                      onClick={() => trackContactClick('phone', 'contact_page', language)}
                       className="group flex items-start gap-4 rounded-2xl border border-border/70 bg-card p-4 transition-all hover:border-primary/40 hover:bg-primary/5"
                     >
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
@@ -77,6 +80,7 @@ const Contact = () => {
 
                     <a
                       href={`mailto:${contactDetails.email}`}
+                      onClick={() => trackContactClick('email', 'contact_page', language)}
                       className="group flex items-start gap-4 rounded-2xl border border-border/70 bg-card p-4 transition-all hover:border-secondary/40 hover:bg-secondary/5"
                     >
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-secondary/10 transition-colors group-hover:bg-secondary/20">

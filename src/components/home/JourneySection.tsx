@@ -2,11 +2,13 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, CalendarCheck2, KeyRound, MessageSquareMore } from 'lucide-react';
 import { useLanguage } from '@/i18n';
 import { Button } from '@/components/ui/button';
+import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 
 const stepIcons = [CalendarCheck2, MessageSquareMore, KeyRound];
 
 export function JourneySection() {
   const { t } = useLanguage();
+  const localizedPath = useLocalizedPath();
 
   return (
     <section className="relative overflow-hidden bg-background py-16 md:py-24">
@@ -28,13 +30,13 @@ export function JourneySection() {
 
             <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button asChild size="lg" className="rounded-full">
-                <Link to="/booking" className="inline-flex items-center gap-2">
+                <Link to={localizedPath('/booking')} className="inline-flex items-center gap-2">
                   {t.journey.primaryCta}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="rounded-full">
-                <Link to="/contact">{t.journey.secondaryCta}</Link>
+                <Link to={localizedPath('/contact')}>{t.journey.secondaryCta}</Link>
               </Button>
             </div>
           </div>

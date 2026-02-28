@@ -5,10 +5,13 @@ import { useLanguage } from '@/i18n';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { extractLocaleFromPath, normalizePath } from '@/lib/localeRouting';
+import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 
 export function Header() {
   const { t } = useLanguage();
   const location = useLocation();
+  const localizedPath = useLocalizedPath();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
@@ -25,9 +28,8 @@ export function Header() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  const normalizePath = (path: string) => (path.length > 1 && path.endsWith('/') ? path.slice(0, -1) : path);
+  const currentPath = normalizePath(extractLocaleFromPath(location.pathname).path);
   const isActive = (path: string) => {
-    const currentPath = normalizePath(location.pathname);
     const targetPath = normalizePath(path);
 
     if (targetPath === '/') {
@@ -36,7 +38,7 @@ export function Header() {
 
     return currentPath === targetPath || currentPath.startsWith(`${targetPath}/`);
   };
-  const isHomeHero = location.pathname === '/' && !isScrolled;
+  const isHomeHero = currentPath === '/' && !isScrolled;
   const useHeroHeaderStyle = isHomeHero && !mobileMenuOpen;
 
   const navLinks = [
@@ -57,7 +59,7 @@ export function Header() {
           )}
         >
           <nav className="flex h-14 items-center justify-between md:h-16">
-            <Link to="/" className="flex items-center gap-2.5">
+            <Link to={localizedPath('/')} className="flex items-center gap-2.5">
               <img
                 src={logoUrl}
                 alt="Costa Caleta"
@@ -77,7 +79,7 @@ export function Header() {
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
-                  to={link.path}
+                  to={localizedPath(link.path)}
                   className={cn(
                     'rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200',
                     isActive(link.path)
@@ -103,7 +105,7 @@ export function Header() {
               />
 
               <Button asChild variant={useHeroHeaderStyle ? 'heroOutline' : 'hero'} size="sm" className="ml-2 rounded-full px-5">
-                <Link to="/booking">{t.hero.bookNow}</Link>
+                <Link to={localizedPath('/booking')}>{t.hero.bookNow}</Link>
               </Button>
             </div>
 
@@ -139,7 +141,7 @@ export function Header() {
                 {navLinks.map((link) => (
                   <Link
                     key={link.path}
-                    to={link.path}
+                    to={localizedPath(link.path)}
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
                       'block rounded-lg px-4 py-3 text-sm font-medium transition-colors',
@@ -152,7 +154,7 @@ export function Header() {
                   </Link>
                 ))}
                 <Button asChild variant="hero" className="mt-2 w-full">
-                  <Link to="/booking" onClick={() => setMobileMenuOpen(false)}>
+                  <Link to={localizedPath('/booking')} onClick={() => setMobileMenuOpen(false)}>
                     {t.hero.bookNow}
                   </Link>
                 </Button>

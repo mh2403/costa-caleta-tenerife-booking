@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useLanguage, languageNames, Language } from '@/i18n';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { switchPathLocale } from '@/lib/localeRouting';
 
 interface LanguageSwitcherProps {
   variant?: 'default' | 'minimal';
@@ -17,12 +19,20 @@ interface LanguageSwitcherProps {
 export function LanguageSwitcher({ variant = 'default', className }: LanguageSwitcherProps) {
   const { language, setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const languages: Language[] = ['en', 'nl', 'es'];
   const languageCodes: Record<Language, string> = {
     en: 'EN',
     nl: 'NL',
     es: 'ES',
+  };
+  const changeLanguage = (lang: Language) => {
+    const localizedPath = switchPathLocale(location.pathname, lang);
+    setLanguage(lang);
+    navigate(`${localizedPath}${location.search}${location.hash}`);
+    setOpen(false);
   };
 
   if (variant === 'minimal') {
@@ -38,10 +48,7 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
           {languages.map((lang) => (
             <DropdownMenuItem
               key={lang}
-              onClick={() => {
-                setLanguage(lang);
-                setOpen(false);
-              }}
+              onClick={() => changeLanguage(lang)}
               className={lang === language ? 'bg-accent justify-center font-semibold' : 'justify-center font-semibold'}
             >
               <span>{languageCodes[lang]}</span>
@@ -64,10 +71,7 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
         {languages.map((lang) => (
             <DropdownMenuItem
               key={lang}
-              onClick={() => {
-                setLanguage(lang);
-                setOpen(false);
-              }}
+              onClick={() => changeLanguage(lang)}
               className={lang === language ? 'bg-accent' : ''}
             >
               <span>{languageNames[lang]}</span>
