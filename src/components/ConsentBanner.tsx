@@ -17,19 +17,19 @@ export function ConsentBanner() {
       ({
         en: {
           title: 'Cookies',
-          description: 'Allow anonymous analytics and ad measurement?',
+          description: 'We use cookies to give you a better user experience on this website.',
           accept: 'Allow',
           reject: 'Only essential',
         },
         nl: {
           title: 'Cookies',
-          description: 'Anonieme analytics en advertentiemeting toestaan?',
+          description: 'We gebruiken cookies om je een betere gebruikerservaring op deze website te bieden.',
           accept: 'Toestaan',
           reject: 'Alleen essentieel',
         },
         es: {
           title: 'Cookies',
-          description: 'Permitir analitica anonima y medicion de anuncios?',
+          description: 'Usamos cookies para ofrecerte una mejor experiencia de usuario en este sitio web.',
           accept: 'Permitir',
           reject: 'Solo esenciales',
         },
