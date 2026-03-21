@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>404 | Costa Caleta Tenerife</title>
     <meta name="robots" content="noindex, nofollow" />
+    <script>
+      (function () {
+        var pathname = window.location.pathname || '/';
+        var assetPattern = /\.(?:css|js|mjs|map|json|txt|xml|ico|png|jpe?g|gif|webp|avif|svg|mp4|webm|mov|pdf|woff2?|ttf|eot)$/i;
+        var isAssetRequest = pathname.indexOf('/assets/') === 0 || pathname.indexOf('/.well-known/') === 0 || assetPattern.test(pathname);
+
+        if (isAssetRequest) return;
+
+        var redirectPath = pathname + window.location.search + window.location.hash;
+
+        try {
+          window.sessionStorage.setItem('spa-redirect-path', redirectPath);
+        } catch (error) {
+          console.warn('Could not preserve SPA redirect path.', error);
+        }
+
+        window.location.replace('/?spa-redirect=' + encodeURIComponent(redirectPath));
+      })();
+    </script>
     <style>
       body {
         margin: 0;
@@ -27,7 +46,10 @@
   <body>
     <main>
       <h1>404</h1>
-      <p>Page not found.</p>
+      <p>Redirecting back into the website...</p>
+      <noscript>
+        <p>Page not found.</p>
+      </noscript>
       <p><a href="/">Go back to the homepage</a></p>
     </main>
   </body>
