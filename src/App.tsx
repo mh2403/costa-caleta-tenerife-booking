@@ -440,6 +440,12 @@ const App = () => (
                   element={<Instructions />}
                 />
               ))}
+              {LOCALIZED_PUBLIC_PREFIXES.map((prefix) => (
+                <Route key={`${prefix}-booking-dossier`} path={`/${prefix}/booking/dossier/:token`} element={<BookingDossier />} />
+              ))}
+              {LOCALIZED_PUBLIC_PREFIXES.map((prefix) => (
+                <Route key={`${prefix}-admin`} path={`/${prefix}/admin/*`} element={<Admin />} />
+              ))}
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

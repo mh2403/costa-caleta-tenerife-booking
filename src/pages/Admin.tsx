@@ -20,6 +20,7 @@ import { AdminPricing } from '@/components/admin/AdminPricing';
 import { AdminAvailability } from '@/components/admin/AdminAvailability';
 import { AdminDashboard } from '@/components/admin/AdminDashboard';
 import { useAuth } from '@/hooks/useAuth';
+import { buildLocalizedPath, extractLocaleFromPath } from '@/lib/localeRouting';
 
 const Admin = () => {
   const t = translations.nl;
@@ -32,6 +33,9 @@ const Admin = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
+  const { locale } = extractLocaleFromPath(location.pathname);
+  const adminBasePath = buildLocalizedPath('/admin', locale);
+  const websiteHomePath = buildLocalizedPath('/', locale);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +56,7 @@ const Admin = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigate('/admin');
+    navigate(adminBasePath);
   };
 
   const navItems = [
@@ -63,8 +67,9 @@ const Admin = () => {
   ];
 
   const isActive = (path: string, exact?: boolean) => {
-    if (exact) return location.pathname === path;
-    return location.pathname.startsWith(path);
+    const { path: currentPath } = extractLocaleFromPath(location.pathname);
+    if (exact) return currentPath === path;
+    return currentPath.startsWith(path);
   };
 
   // Show loading state
@@ -141,7 +146,7 @@ const Admin = () => {
             )}
 
             <div className="mt-6 text-center">
-              <Link to="/" className="text-sm text-muted-foreground hover:text-primary">
+              <Link to={websiteHomePath} className="text-sm text-muted-foreground hover:text-primary">
                 ← Terug naar website
               </Link>
             </div>
@@ -171,7 +176,7 @@ const Admin = () => {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="p-6 border-b border-border">
-            <Link to="/" className="flex items-center gap-2">
+            <Link to={websiteHomePath} className="flex items-center gap-2">
               <img src={logoUrl} alt="Costa Caleta" className="h-7 w-7 rounded-full border border-primary/20" />
               <span className="font-heading text-xl font-semibold">Costa Caleta</span>
             </Link>
@@ -182,7 +187,7 @@ const Admin = () => {
             {navItems.map((item) => (
               <Link
                 key={item.path}
-                to={item.path}
+                to={buildLocalizedPath(item.path, locale)}
                 onClick={() => setSidebarOpen(false)}
                 className={cn(
                   'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
