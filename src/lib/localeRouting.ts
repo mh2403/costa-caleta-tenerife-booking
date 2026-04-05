@@ -1,6 +1,6 @@
 import type { Language } from '@/i18n';
 
-export const DEFAULT_LANGUAGE: Language = 'en';
+export const DEFAULT_LANGUAGE: Language = 'nl';
 export const SUPPORTED_LANGUAGES: readonly Language[] = ['en', 'nl', 'es'] as const;
 
 const SUPPORTED_LANGUAGE_SET = new Set<Language>(SUPPORTED_LANGUAGES);

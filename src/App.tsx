@@ -25,7 +25,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 
 const queryClient = new QueryClient();
 
-const LOCALIZED_PUBLIC_PREFIXES = ['nl', 'es'] as const;
+const LOCALIZED_PUBLIC_PREFIXES = ['en', 'nl', 'es'] as const;
 
 type RouteSeoConfig = {
   title: string;
@@ -183,18 +183,6 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
     },
   }[locale];
 
-  if (hasLocalePrefix && locale === 'en') {
-    return {
-      title: localized.fallbackTitle,
-      description: localized.homeDescription,
-      robots: 'noindex, nofollow',
-      canonicalPath: buildLocalizedPath(normalizedRoutePath, 'en'),
-      locale,
-      indexable: false,
-      alternatePaths: null,
-    };
-  }
-
   if (isAdmin) {
     return {
       title: 'Admin | Costa Caleta Tenerife',
@@ -219,11 +207,23 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
     };
   }
 
+  if (hasLocalePrefix && locale === 'nl') {
+    return {
+      title: localized.fallbackTitle,
+      description: localized.homeDescription,
+      robots: 'noindex, nofollow',
+      canonicalPath: buildLocalizedPath(normalizedRoutePath, 'nl'),
+      locale,
+      indexable: false,
+      alternatePaths: null,
+    };
+  }
+
   const alternatePaths: RouteSeoConfig['alternatePaths'] = {
     en: buildLocalizedPath(normalizedRoutePath, 'en'),
     nl: buildLocalizedPath(normalizedRoutePath, 'nl'),
     es: buildLocalizedPath(normalizedRoutePath, 'es'),
-    'x-default': buildLocalizedPath(normalizedRoutePath, 'en'),
+    'x-default': buildLocalizedPath(normalizedRoutePath, 'nl'),
   };
 
   switch (normalizedRoutePath) {
@@ -301,15 +301,15 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
 };
 
 const RouteLanguageSync = () => {
-  const { pathname } = useLocation();
+  const location = useLocation();
   const { language, setLanguage } = useLanguage();
 
   useEffect(() => {
-    const { locale } = extractLocaleFromPath(pathname);
+    const { locale } = extractLocaleFromPath(location.pathname);
     if (locale !== language) {
       setLanguage(locale);
     }
-  }, [language, pathname, setLanguage]);
+  }, [language, location.pathname, setLanguage]);
 
   return null;
 };

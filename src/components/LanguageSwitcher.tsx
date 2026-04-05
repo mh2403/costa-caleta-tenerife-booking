@@ -22,7 +22,7 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
   const location = useLocation();
   const navigate = useNavigate();
 
-  const languages: Language[] = ['en', 'nl', 'es'];
+  const languages: Language[] = ['nl', 'en', 'es'];
   const languageCodes: Record<Language, string> = {
     en: 'EN',
     nl: 'NL',

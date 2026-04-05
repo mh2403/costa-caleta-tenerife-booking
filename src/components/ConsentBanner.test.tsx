@@ -33,10 +33,11 @@ describe('ConsentBanner', () => {
   });
 
   it.each([
-    ['/', 'We use cookies to give you a better user experience on this website.'],
+    ['/', 'We gebruiken cookies om je een betere gebruikerservaring op deze website te bieden.'],
+    ['/en', 'We use cookies to give you a better user experience on this website.'],
     ['/nl', 'We gebruiken cookies om je een betere gebruikerservaring op deze website te bieden.'],
     ['/es', 'Usamos cookies para ofrecerte una mejor experiencia de usuario en este sitio web.'],
-  ])('shows the updated copy for %s', (pathname, description) => {
+  ])('shows the localized copy for %s', (pathname, description) => {
     renderBanner(pathname);
 
     expect(screen.getByText(description)).toBeInTheDocument();

@@ -10,6 +10,7 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 const LANGUAGE_KEY = 'tenerife-rental-language';
+const DEFAULT_LANGUAGE: Language = 'nl';
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
@@ -19,12 +20,17 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         return firstSegment;
       }
     }
-    return 'en';
+
+    return DEFAULT_LANGUAGE;
   });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem(LANGUAGE_KEY, lang);
+
+    if (typeof window !== 'undefined' && typeof window.localStorage?.setItem === 'function') {
+      window.localStorage.setItem(LANGUAGE_KEY, lang);
+    }
+
     document.documentElement.lang = lang;
   };
 
