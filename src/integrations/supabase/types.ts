@@ -418,6 +418,16 @@ export type Database = {
           success: boolean
         }[]
       }
+      update_booking_message_by_token: {
+        Args: {
+          _message: string | null
+          _token: string
+        }
+        Returns: {
+          success: boolean
+          updated_at: string | null
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "user"

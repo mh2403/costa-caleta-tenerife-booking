@@ -17,6 +17,7 @@ import { contactInfo } from '@/lib/contactInfo';
 import {
   useDeleteBooking,
   usePublicBookingDossier,
+  useUpdateBookingMessageByToken,
   useSubmitSignedBookingContractByToken,
   useSubmitBookingReviewByToken,
   useUpdateBooking,
@@ -59,6 +60,7 @@ const BookingDossier = () => {
   } = usePublicBookingDossier(token ?? null);
 
   const updateBooking = useUpdateBooking();
+  const updateBookingMessage = useUpdateBookingMessageByToken();
   const deleteBooking = useDeleteBooking();
   const submitSignedContract = useSubmitSignedBookingContractByToken();
   const submitReview = useSubmitBookingReviewByToken();
@@ -72,6 +74,7 @@ const BookingDossier = () => {
   const [guestEmailDraft, setGuestEmailDraft] = useState('');
   const [guestPhoneDraft, setGuestPhoneDraft] = useState('');
   const [guestAddressDraft, setGuestAddressDraft] = useState('');
+  const [guestMessageDraft, setGuestMessageDraft] = useState('');
   const [editCheckIn, setEditCheckIn] = useState('');
   const [editCheckOut, setEditCheckOut] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
@@ -106,6 +109,7 @@ const BookingDossier = () => {
     setGuestEmailDraft(booking.guest_email ?? '');
     setGuestPhoneDraft(booking.guest_phone ?? '');
     setGuestAddressDraft(booking.guest_address ?? '');
+    setGuestMessageDraft(booking.message ?? '');
     setEditCheckIn(format(new Date(booking.check_in), 'yyyy-MM-dd'));
     setEditCheckOut(format(new Date(booking.check_out), 'yyyy-MM-dd'));
     setDeleteReason('');
@@ -335,6 +339,27 @@ const BookingDossier = () => {
       },
       t.booking.dossierGuestDetailsSaved
     );
+  };
+
+  const handleGuestMessageSave = async () => {
+    if (!token) return;
+
+    try {
+      await updateBookingMessage.mutateAsync({
+        token,
+        message: guestMessageDraft,
+      });
+      toast({
+        title: t.common.success,
+        description: t.booking.dossierMessageSaved,
+      });
+    } catch (updateError) {
+      toast({
+        title: t.common.error,
+        description: t.booking.dossierUpdateError,
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleAdminDateUpdate = async () => {
@@ -975,7 +1000,7 @@ const BookingDossier = () => {
                   </div>
                 </div>
 
-                <div className="rounded-lg border border-border/80 bg-background p-4 md:p-5 space-y-3">
+                <div className="rounded-lg border border-border/80 bg-background p-4 md:p-5 space-y-4">
                   <h3 className="font-heading text-lg font-semibold text-foreground">{t.booking.dossierGuestDetailsTitle}</h3>
 
                   {isAdmin ? (
@@ -1055,6 +1080,29 @@ const BookingDossier = () => {
                       </div>
                     </div>
                   )}
+
+                  <div className="space-y-2 pt-1">
+                    <Label htmlFor="guest-message-inline" className="text-xs text-muted-foreground">
+                      {t.booking.message}
+                    </Label>
+                    <Textarea
+                      id="guest-message-inline"
+                      value={guestMessageDraft}
+                      onChange={(event) => setGuestMessageDraft(event.target.value)}
+                      rows={4}
+                      placeholder={t.booking.messagePlaceholder}
+                      className="min-h-[110px]"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleGuestMessageSave}
+                      disabled={updateBookingMessage.isPending}
+                      className="w-full"
+                    >
+                      {updateBookingMessage.isPending ? t.common.loading : t.booking.dossierSaveMessage}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

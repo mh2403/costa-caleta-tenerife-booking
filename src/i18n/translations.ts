@@ -145,6 +145,8 @@ export interface Translations {
     dossierOpenLinkHint: string;
     dossierGuestDetailsTitle: string;
     dossierGuestDetailsSaved: string;
+    dossierSaveMessage: string;
+    dossierMessageSaved: string;
     dossierDone: string;
     dossierPending: string;
     dossierMark: string;
@@ -503,6 +505,8 @@ Practical:
       dossierOpenLinkHint: 'Tap the link to open your booking dossier in a new tab.',
       dossierGuestDetailsTitle: 'Your details',
       dossierGuestDetailsSaved: 'Guest details updated.',
+      dossierSaveMessage: 'Save message',
+      dossierMessageSaved: 'Message saved.',
       dossierDone: 'Completed',
       dossierPending: 'Pending',
       dossierMark: 'Mark',
@@ -959,6 +963,8 @@ Praktisch:
       dossierOpenLinkHint: 'Tik op de link om uw boekingsdossier in een nieuw tabblad te openen.',
       dossierGuestDetailsTitle: 'Uw gegevens',
       dossierGuestDetailsSaved: 'Gegevens van gast bijgewerkt.',
+      dossierSaveMessage: 'Bericht opslaan',
+      dossierMessageSaved: 'Bericht opgeslagen.',
       dossierDone: 'Afgerond',
       dossierPending: 'In afwachting',
       dossierMark: 'Markeer',
@@ -1415,6 +1421,8 @@ Práctico:
       dossierOpenLinkHint: 'Toca el enlace para abrir tu expediente de reserva en una nueva pestaña.',
       dossierGuestDetailsTitle: 'Tus datos',
       dossierGuestDetailsSaved: 'Datos del huésped actualizados.',
+      dossierSaveMessage: 'Guardar mensaje',
+      dossierMessageSaved: 'Mensaje guardado.',
       dossierDone: 'Completado',
       dossierPending: 'Pendiente',
       dossierMark: 'Marcar',

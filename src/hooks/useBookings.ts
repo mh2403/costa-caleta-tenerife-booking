@@ -15,6 +15,7 @@ export type PublicBookingCreateResult = {
 export type PublicSignedContractUploadResult = Database['public']['Functions']['submit_signed_contract']['Returns'][number];
 type LegacySignedContractResult = Database['public']['Functions']['sign_booking_contract']['Returns'][number];
 export type PublicReviewResult = Database['public']['Functions']['submit_booking_review']['Returns'][number];
+export type PublicBookingMessageUpdateResult = Database['public']['Functions']['update_booking_message_by_token']['Returns'][number];
 type PublicBookedDateRange = Database['public']['Functions']['get_public_booked_dates']['Returns'][number];
 
 const getBookingDossierQueryKey = (token: string) => ['booking-dossier', token] as const;
@@ -313,6 +314,32 @@ export function useSubmitBookingReviewByToken() {
       }
 
       return result as PublicReviewResult;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: getBookingDossierQueryKey(variables.token) });
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+    },
+  });
+}
+
+export function useUpdateBookingMessageByToken() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ token, message }: { token: string; message: string }) => {
+      const { data, error } = await supabase.rpc('update_booking_message_by_token', {
+        _token: token,
+        _message: message.trim() || null,
+      });
+
+      if (error) throw error;
+
+      const result = data?.[0];
+      if (!result?.success) {
+        throw new Error('Booking message could not be updated');
+      }
+
+      return result as PublicBookingMessageUpdateResult;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: getBookingDossierQueryKey(variables.token) });
