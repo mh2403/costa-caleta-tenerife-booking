@@ -45,6 +45,7 @@ export function useCreateBooking() {
         guest_name: booking.guest_name?.trim() ?? '',
         guest_email: booking.guest_email?.trim() ?? '',
         guest_phone: booking.guest_phone?.trim() ?? '',
+        guest_address: booking.guest_address?.trim() ?? '',
         check_in: booking.check_in,
         check_out: booking.check_out,
         num_guests: Math.max(1, booking.num_guests ?? 1),
@@ -64,11 +65,16 @@ export function useCreateBooking() {
         throw new Error(`Minimum stay is ${bookingFlowConfig.minStayNights} nights`);
       }
 
+      if (!normalizedBooking.guest_address) {
+        throw new Error('Guest address is required');
+      }
+
       // Primary path: RPC keeps server-side validation centralized.
       const { data, error: rpcError } = await supabase.rpc('create_public_booking', {
         _guest_name: normalizedBooking.guest_name,
         _guest_email: normalizedBooking.guest_email,
         _guest_phone: normalizedBooking.guest_phone,
+        _guest_address: normalizedBooking.guest_address,
         _check_in: normalizedBooking.check_in,
         _check_out: normalizedBooking.check_out,
         _num_guests: normalizedBooking.num_guests ?? 1,
@@ -124,9 +130,13 @@ export function useCreateBooking() {
       }
 
       // Backward compatibility: legacy schema without public_token column.
+      const legacyNormalizedBooking: BookingInsert = { ...normalizedBooking };
+      delete legacyNormalizedBooking.public_token;
+      delete legacyNormalizedBooking.guest_address;
+
       const { error: directLegacyError } = await supabase
         .from('bookings')
-        .insert(normalizedBooking);
+        .insert(legacyNormalizedBooking);
 
       if (!directLegacyError) {
         return {

@@ -87,6 +87,7 @@ export interface Translations {
     fullName: string;
     email: string;
     phone: string;
+    address: string;
     message: string;
     messagePlaceholder: string;
     next: string;
@@ -436,6 +437,7 @@ Practical:
       fullName: 'Full Name',
       email: 'Email Address',
       phone: 'Phone Number',
+      address: 'Address',
       message: 'Message (optional)',
       messagePlaceholder: 'Any special requests or questions?',
       next: 'Next',
@@ -485,7 +487,7 @@ Practical:
       paymentNote: 'Bank details are not shown on this website and are shared via contract/WhatsApp when needed.',
       whatsappBookingCta: 'Send WhatsApp booking message now',
       whatsappBookingHint: 'Let the owner know that you have booked.',
-      whatsappBookingMessage: 'Hi, I just placed a booking request for Costa Caleta.\nName: {name}\nEmail: {email}\nPhone: {phone}\nDates: {checkIn} - {checkOut}\nTotal booking amount: {total}\nBooking link: {link}\nCould you please review and confirm my booking request? Thank you!',
+      whatsappBookingMessage: 'Hi, I just placed a booking request for Costa Caleta.\nName: {name}\nEmail: {email}\nPhone: {phone}\nAddress: {address}\nDates: {checkIn} - {checkOut}\nTotal booking amount: {total}\nBooking link: {link}\nCould you please review and confirm my booking request? Thank you!',
       checkInTime: 'Check-in time',
       checkOutTime: 'Check-out time',
       dossierTitle: 'Your booking dossier',
@@ -891,6 +893,7 @@ Praktisch:
       fullName: 'Volledige Naam',
       email: 'E-mailadres',
       phone: 'Telefoonnummer',
+      address: 'Adres',
       message: 'Bericht (optioneel)',
       messagePlaceholder: 'Speciale verzoeken of vragen?',
       next: 'Volgende',
@@ -940,7 +943,7 @@ Praktisch:
       paymentNote: 'Bankgegevens worden niet op de website getoond en worden indien nodig via contract/WhatsApp gedeeld.',
       whatsappBookingCta: 'Stuur nu uw WhatsApp boekingsbericht',
       whatsappBookingHint: 'Laat de eigenaar weten dat u geboekt heeft.',
-      whatsappBookingMessage: 'Hallo, ik heb zonet een boekingsaanvraag geplaatst voor Costa Caleta.\nNaam: {name}\nE-mail: {email}\nTelefoon: {phone}\nData: {checkIn} - {checkOut}\nTotaal boekingsbedrag: {total}\nBoekingslink: {link}\nKan u mijn boekingsaanvraag nakijken en bevestigen? Bedankt!',
+      whatsappBookingMessage: 'Hallo, ik heb zonet een boekingsaanvraag geplaatst voor Costa Caleta.\nNaam: {name}\nE-mail: {email}\nTelefoon: {phone}\nAdres: {address}\nData: {checkIn} - {checkOut}\nTotaal boekingsbedrag: {total}\nBoekingslink: {link}\nKan u mijn boekingsaanvraag nakijken en bevestigen? Bedankt!',
       checkInTime: 'Inchecktijd',
       checkOutTime: 'Uitchecktijd',
       dossierTitle: 'Uw boekingsdossier',
@@ -1346,6 +1349,7 @@ Práctico:
       fullName: 'Nombre Completo',
       email: 'Correo Electrónico',
       phone: 'Número de Teléfono',
+      address: 'Dirección',
       message: 'Mensaje (opcional)',
       messagePlaceholder: '¿Alguna solicitud especial o pregunta?',
       next: 'Siguiente',
@@ -1395,7 +1399,7 @@ Práctico:
       paymentNote: 'Los datos bancarios no se muestran en esta web y se comparten cuando sea necesario por contrato/WhatsApp.',
       whatsappBookingCta: 'Enviar ahora mensaje de WhatsApp',
       whatsappBookingHint: 'Avisa a la propietaria de que ya has reservado.',
-      whatsappBookingMessage: 'Hola, acabo de enviar una solicitud de reserva para Costa Caleta.\nNombre: {name}\nEmail: {email}\nTeléfono: {phone}\nFechas: {checkIn} - {checkOut}\nImporte total de la reserva: {total}\nEnlace de reserva: {link}\n¿Podéis revisar y confirmar mi solicitud de reserva? ¡Gracias!',
+      whatsappBookingMessage: 'Hola, acabo de enviar una solicitud de reserva para Costa Caleta.\nNombre: {name}\nEmail: {email}\nTeléfono: {phone}\nDirección: {address}\nFechas: {checkIn} - {checkOut}\nImporte total de la reserva: {total}\nEnlace de reserva: {link}\n¿Podéis revisar y confirmar mi solicitud de reserva? ¡Gracias!',
       checkInTime: 'Hora de entrada',
       checkOutTime: 'Hora de salida',
       dossierTitle: 'Tu expediente de reserva',

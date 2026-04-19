@@ -71,6 +71,7 @@ const BookingDossier = () => {
   const [guestNameDraft, setGuestNameDraft] = useState('');
   const [guestEmailDraft, setGuestEmailDraft] = useState('');
   const [guestPhoneDraft, setGuestPhoneDraft] = useState('');
+  const [guestAddressDraft, setGuestAddressDraft] = useState('');
   const [editCheckIn, setEditCheckIn] = useState('');
   const [editCheckOut, setEditCheckOut] = useState('');
   const [deleteReason, setDeleteReason] = useState('');
@@ -104,6 +105,7 @@ const BookingDossier = () => {
     setGuestNameDraft(booking.guest_name ?? '');
     setGuestEmailDraft(booking.guest_email ?? '');
     setGuestPhoneDraft(booking.guest_phone ?? '');
+    setGuestAddressDraft(booking.guest_address ?? '');
     setEditCheckIn(format(new Date(booking.check_in), 'yyyy-MM-dd'));
     setEditCheckOut(format(new Date(booking.check_out), 'yyyy-MM-dd'));
     setDeleteReason('');
@@ -249,6 +251,7 @@ const BookingDossier = () => {
         .replace('{name}', booking.guest_name || '-')
         .replace('{email}', booking.guest_email || '-')
         .replace('{phone}', booking.guest_phone || '-')
+        .replace('{address}', booking.guest_address || '-')
         .replace('{checkIn}', formatLocalizedDate(booking.check_in))
         .replace('{checkOut}', formatLocalizedDate(booking.check_out))
         .replace('{total}', `€${Number(booking.total_price ?? 0).toLocaleString()}`)
@@ -312,8 +315,9 @@ const BookingDossier = () => {
     const nextName = guestNameDraft.trim();
     const nextEmail = guestEmailDraft.trim();
     const nextPhone = guestPhoneDraft.trim();
+    const nextAddress = guestAddressDraft.trim();
 
-    if (!nextName || !nextEmail || !nextPhone) {
+    if (!nextName || !nextEmail || !nextPhone || !nextAddress) {
       toast({
         title: t.common.error,
         description: t.booking.requiredFields,
@@ -327,6 +331,7 @@ const BookingDossier = () => {
         guest_name: nextName,
         guest_email: nextEmail,
         guest_phone: nextPhone,
+        guest_address: nextAddress,
       },
       t.booking.dossierGuestDetailsSaved
     );
@@ -1009,6 +1014,17 @@ const BookingDossier = () => {
                           className="mt-1"
                         />
                       </div>
+                      <div>
+                        <Label htmlFor="guest-address-inline" className="text-xs text-muted-foreground">
+                          {t.booking.address}
+                        </Label>
+                        <Input
+                          id="guest-address-inline"
+                          value={guestAddressDraft}
+                          onChange={(event) => setGuestAddressDraft(event.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
                       <Button
                         type="button"
                         variant="outline"
@@ -1032,6 +1048,10 @@ const BookingDossier = () => {
                       <div>
                         <p className="text-xs text-muted-foreground">{t.booking.phone}</p>
                         <p className="text-muted-foreground">{booking.guest_phone || '-'}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground">{t.booking.address}</p>
+                        <p className="text-muted-foreground whitespace-pre-wrap">{booking.guest_address || '-'}</p>
                       </div>
                     </div>
                   )}

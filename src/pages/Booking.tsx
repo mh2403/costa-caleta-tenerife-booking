@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { useLanguage } from '@/i18n';
-import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, Loader2, Copy, ExternalLink } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, MessageCircle, CalendarIcon, User, Mail, Phone, MapPin, Loader2, Copy, ExternalLink } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useCreateBooking, useBookedDates } from '@/hooks/useBookings';
 import type { PublicBookingCreateResult } from '@/hooks/useBookings';
@@ -35,6 +35,7 @@ const Booking = () => {
     fullName: '',
     email: '',
     phone: '',
+    address: '',
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
@@ -284,6 +285,7 @@ const Booking = () => {
         .replace('{name}', formData.fullName?.trim() || '-')
         .replace('{email}', formData.email?.trim() || '-')
         .replace('{phone}', formData.phone?.trim() || '-')
+        .replace('{address}', formData.address?.trim() || '-')
         .replace('{checkIn}', formatLocalizedDate(checkIn))
         .replace('{checkOut}', formatLocalizedDate(checkOut))
         .replace('{total}', `${currencySymbol}${totalPrice}`)
@@ -294,6 +296,7 @@ const Booking = () => {
     formData.fullName,
     formData.email,
     formData.phone,
+    formData.address,
     checkIn,
     checkOut,
     currencySymbol,
@@ -349,7 +352,7 @@ const Booking = () => {
 
   const handleSubmit = async () => {
     // Validate form
-    if (!formData.fullName || !formData.email || !formData.phone) {
+    if (!formData.fullName || !formData.email || !formData.phone || !formData.address) {
       toast({
         title: t.booking.requiredFields,
         variant: 'destructive',
@@ -364,6 +367,7 @@ const Booking = () => {
         guest_name: formData.fullName,
         guest_email: formData.email,
         guest_phone: formData.phone,
+        guest_address: formData.address,
         check_in: format(checkIn, 'yyyy-MM-dd'),
         check_out: format(checkOut, 'yyyy-MM-dd'),
         num_guests: parseInt(guests),
@@ -732,6 +736,15 @@ const Booking = () => {
                       />
                     </div>
                     <div>
+                      <Label htmlFor="address">{t.booking.address} *</Label>
+                      <Input
+                        id="address"
+                        value={formData.address}
+                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
                       <Label htmlFor="message">{t.booking.message}</Label>
                       <Textarea
                         id="message"
@@ -790,6 +803,10 @@ const Booking = () => {
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4 text-muted-foreground" />
                         <span>{formData.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <span>{formData.address}</span>
                       </div>
                     </div>
 

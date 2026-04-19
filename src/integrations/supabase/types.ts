@@ -54,6 +54,7 @@ export type Database = {
           deposit_paid: boolean
           deposit_paid_at: string | null
           guest_email: string
+          guest_address: string | null
           guest_contract_signed: boolean
           guest_contract_signed_at: string | null
           guest_contract_signed_name: string | null
@@ -94,6 +95,7 @@ export type Database = {
           deposit_paid?: boolean
           deposit_paid_at?: string | null
           guest_email: string
+          guest_address?: string | null
           guest_contract_signed?: boolean
           guest_contract_signed_at?: string | null
           guest_contract_signed_name?: string | null
@@ -134,6 +136,7 @@ export type Database = {
           deposit_paid?: boolean
           deposit_paid_at?: string | null
           guest_email?: string
+          guest_address?: string | null
           guest_contract_signed?: boolean
           guest_contract_signed_at?: string | null
           guest_contract_signed_name?: string | null
@@ -309,6 +312,7 @@ export type Database = {
           _check_in: string
           _check_out: string
           _cleaning_fee: number
+          _guest_address: string
           _guest_email: string
           _guest_name: string
           _guest_phone: string
@@ -340,6 +344,7 @@ export type Database = {
           deposit_amount: number
           deposit_paid: boolean
           deposit_paid_at: string | null
+          guest_address: string | null
           guest_contract_signed: boolean
           guest_contract_signed_at: string | null
           guest_contract_signed_name: string | null
