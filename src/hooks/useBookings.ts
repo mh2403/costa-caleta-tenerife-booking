@@ -15,6 +15,7 @@ export type PublicBookingCreateResult = {
 export type PublicSignedContractUploadResult = Database['public']['Functions']['submit_signed_contract']['Returns'][number];
 type LegacySignedContractResult = Database['public']['Functions']['sign_booking_contract']['Returns'][number];
 export type PublicReviewResult = Database['public']['Functions']['submit_booking_review']['Returns'][number];
+type PublicBookedDateRange = Database['public']['Functions']['get_public_booked_dates']['Returns'][number];
 
 const getBookingDossierQueryKey = (token: string) => ['booking-dossier', token] as const;
 
@@ -193,12 +194,10 @@ export function useBookedDates() {
     queryKey: ['booked-dates'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('bookings')
-        .select('check_in, check_out')
-        .in('status', ['pending', 'confirmed']);
+        .rpc('get_public_booked_dates');
 
       if (error) throw error;
-      return data.map(b => ({
+      return (data as PublicBookedDateRange[]).map((b) => ({
         start: new Date(b.check_in),
         end: new Date(b.check_out),
       }));

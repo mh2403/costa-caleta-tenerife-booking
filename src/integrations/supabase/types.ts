@@ -367,6 +367,13 @@ export type Database = {
           whatsapp_notified_at: string | null
         }[]
       }
+      get_public_booked_dates: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          check_in: string
+          check_out: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
