@@ -12,11 +12,14 @@ import {
   normalizePath,
 } from '@/lib/localeRouting';
 import { captureMarketingParams, initializeAnalytics, trackPageView } from '@/lib/analytics';
+import seoCopy from '@/content/seo-copy.json';
 
 const Index = lazy(() => import('./pages/Index'));
 const Booking = lazy(() => import('./pages/Booking'));
 const BookingDossier = lazy(() => import('./pages/BookingDossier'));
 const Contact = lazy(() => import('./pages/Contact'));
+const Accommodation = lazy(() => import('./pages/Accommodation'));
+const LaCaletaGuide = lazy(() => import('./pages/LaCaletaGuide'));
 const Admin = lazy(() => import('./pages/Admin'));
 const Privacy = lazy(() => import('./pages/Privacy'));
 const Terms = lazy(() => import('./pages/Terms'));
@@ -36,6 +39,14 @@ type RouteSeoConfig = {
   indexable: boolean;
   alternatePaths: Record<'en' | 'nl' | 'es' | 'x-default', string> | null;
 };
+
+type SeoMetadata = {
+  title: string;
+  description: string;
+  indexable: boolean;
+};
+
+const localizedSeoCopy = seoCopy as Record<Language, Record<string, SeoMetadata>>;
 
 const RouteFallback = () => {
   const { t } = useLanguage();
@@ -117,71 +128,13 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
   const isAdmin = normalizedRoutePath.startsWith('/admin');
   const isDossier = normalizedRoutePath.startsWith('/booking/dossier/');
 
-  const localized = {
-    en: {
-      homeTitle: 'Costa Caleta Tenerife | Apartment in La Caleta',
-      homeDescription:
-        'Stay at Costa Caleta Tenerife in a comfortable apartment in La Caleta, Adeje. Book directly with the owner.',
-      bookingTitle: 'Book your stay | Costa Caleta Tenerife',
-      bookingDescription:
-        'Check availability and send your booking request directly to the owner in La Caleta, Adeje.',
-      contactTitle: 'Contact | Costa Caleta Tenerife',
-      contactDescription:
-        'Contact us via WhatsApp, phone or email for availability and practical questions.',
-      privacyTitle: 'Privacy policy | Costa Caleta Tenerife',
-      privacyDescription:
-        'Read how Costa Caleta Tenerife handles personal data, legal bases, retention periods, and your GDPR rights.',
-      termsTitle: 'Terms & conditions | Costa Caleta Tenerife',
-      termsDescription:
-        'Review booking, payment, check-in/check-out, cancellation and liability terms for Costa Caleta Tenerife.',
-      instructionsTitle: 'Guest instructions | Costa Caleta Tenerife',
-      instructionsDescription:
-        'Guest instructions for your Costa Caleta Tenerife stay, including the apartment TV video guide.',
-      fallbackTitle: 'Page not found | Costa Caleta Tenerife',
-    },
-    nl: {
-      homeTitle: 'Costa Caleta Tenerife | Appartement in La Caleta',
-      homeDescription:
-        'Verblijf in een comfortabel appartement in La Caleta, Adeje. Boek rechtstreeks bij de eigenaar van Costa Caleta Tenerife.',
-      bookingTitle: 'Boek uw verblijf | Costa Caleta Tenerife',
-      bookingDescription:
-        'Controleer beschikbaarheid en verstuur uw boekingsaanvraag rechtstreeks naar de eigenaar in La Caleta, Adeje.',
-      contactTitle: 'Contact | Costa Caleta Tenerife',
-      contactDescription:
-        'Neem contact op via WhatsApp, telefoon of e-mail voor beschikbaarheid en praktische vragen.',
-      privacyTitle: 'Privacybeleid | Costa Caleta Tenerife',
-      privacyDescription:
-        'Lees hoe Costa Caleta Tenerife persoonsgegevens verwerkt, bewaartermijnen hanteert en uw GDPR-rechten respecteert.',
-      termsTitle: 'Voorwaarden | Costa Caleta Tenerife',
-      termsDescription:
-        'Bekijk de voorwaarden rond boeking, betaling, check-in/check-out, annulering en aansprakelijkheid.',
-      instructionsTitle: 'Instructies | Costa Caleta Tenerife',
-      instructionsDescription:
-        'Gasteninstructies voor uw verblijf bij Costa Caleta Tenerife, inclusief videohandleiding voor de tv.',
-      fallbackTitle: 'Pagina niet gevonden | Costa Caleta Tenerife',
-    },
-    es: {
-      homeTitle: 'Costa Caleta Tenerife | Apartamento en La Caleta',
-      homeDescription:
-        'Alojate en un apartamento comodo en La Caleta, Adeje. Reserva directamente con la propietaria de Costa Caleta Tenerife.',
-      bookingTitle: 'Reserva tu estancia | Costa Caleta Tenerife',
-      bookingDescription:
-        'Consulta disponibilidad y envia tu solicitud de reserva directamente a la propietaria en La Caleta, Adeje.',
-      contactTitle: 'Contacto | Costa Caleta Tenerife',
-      contactDescription:
-        'Contacta por WhatsApp, telefono o correo para disponibilidad y dudas practicas.',
-      privacyTitle: 'Politica de privacidad | Costa Caleta Tenerife',
-      privacyDescription:
-        'Consulta como Costa Caleta Tenerife gestiona datos personales, plazos de conservacion y tus derechos de privacidad.',
-      termsTitle: 'Terminos y condiciones | Costa Caleta Tenerife',
-      termsDescription:
-        'Revisa condiciones de reserva, pago, check-in/check-out, cancelacion y responsabilidad para tu estancia.',
-      instructionsTitle: 'Instrucciones | Costa Caleta Tenerife',
-      instructionsDescription:
-        'Instrucciones para huespedes de Costa Caleta Tenerife, incluida la guia en video para el televisor del apartamento.',
-      fallbackTitle: 'Pagina no encontrada | Costa Caleta Tenerife',
-    },
-  }[locale];
+  const localized = localizedSeoCopy[locale];
+  const routeMeta = localized[normalizedRoutePath];
+  const fallbackMeta: SeoMetadata = {
+    title: locale === 'nl' ? 'Pagina niet gevonden | Costa Caleta Tenerife' : locale === 'es' ? 'Página no encontrada | Costa Caleta Tenerife' : 'Page not found | Costa Caleta Tenerife',
+    description: localized['/'].description,
+    indexable: false,
+  };
 
   if (isAdmin) {
     return {
@@ -209,8 +162,8 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
 
   if (hasLocalePrefix && locale === 'nl') {
     return {
-      title: localized.fallbackTitle,
-      description: localized.homeDescription,
+      title: fallbackMeta.title,
+      description: fallbackMeta.description,
       robots: 'noindex, nofollow',
       canonicalPath: buildLocalizedPath(normalizedRoutePath, 'nl'),
       locale,
@@ -226,78 +179,18 @@ const getSeoConfig = (pathname: string): RouteSeoConfig => {
     'x-default': buildLocalizedPath(normalizedRoutePath, 'nl'),
   };
 
-  switch (normalizedRoutePath) {
-    case '/':
-      return {
-        title: localized.homeTitle,
-        description: localized.homeDescription,
-        robots: 'index, follow',
-        canonicalPath: buildLocalizedPath('/', locale),
-        locale,
-        indexable: true,
-        alternatePaths,
-      };
-    case '/booking':
-      return {
-        title: localized.bookingTitle,
-        description: localized.bookingDescription,
-        robots: 'index, follow',
-        canonicalPath: buildLocalizedPath('/booking', locale),
-        locale,
-        indexable: true,
-        alternatePaths,
-      };
-    case '/contact':
-      return {
-        title: localized.contactTitle,
-        description: localized.contactDescription,
-        robots: 'index, follow',
-        canonicalPath: buildLocalizedPath('/contact', locale),
-        locale,
-        indexable: true,
-        alternatePaths,
-      };
-    case '/privacy':
-      return {
-        title: localized.privacyTitle,
-        description: localized.privacyDescription,
-        robots: 'index, follow',
-        canonicalPath: buildLocalizedPath('/privacy', locale),
-        locale,
-        indexable: true,
-        alternatePaths,
-      };
-    case '/terms':
-      return {
-        title: localized.termsTitle,
-        description: localized.termsDescription,
-        robots: 'index, follow',
-        canonicalPath: buildLocalizedPath('/terms', locale),
-        locale,
-        indexable: true,
-        alternatePaths,
-      };
-    case '/instructions':
-      return {
-        title: localized.instructionsTitle,
-        description: localized.instructionsDescription,
-        robots: 'index, follow',
-        canonicalPath: buildLocalizedPath('/instructions', locale),
-        locale,
-        indexable: true,
-        alternatePaths,
-      };
-    default:
-      return {
-        title: localized.fallbackTitle,
-        description: localized.homeDescription,
-        robots: 'noindex, nofollow',
-        canonicalPath: normalizedOriginalPath,
-        locale,
-        indexable: false,
-        alternatePaths: null,
-      };
-  }
+  const metadata = routeMeta ?? fallbackMeta;
+  const indexable = Boolean(routeMeta?.indexable);
+
+  return {
+    title: metadata.title,
+    description: metadata.description,
+    robots: indexable ? 'index, follow' : 'noindex, nofollow',
+    canonicalPath: routeMeta ? buildLocalizedPath(normalizedRoutePath, locale) : normalizedOriginalPath,
+    locale,
+    indexable,
+    alternatePaths: indexable ? alternatePaths : null,
+  };
 };
 
 const RouteLanguageSync = () => {
@@ -358,13 +251,26 @@ const RouteSeo = () => {
         '@context': 'https://schema.org',
         '@graph': [
           {
-            '@type': 'VacationRental',
+            '@type': 'LodgingBusiness',
             name: 'Costa Caleta Tenerife',
             url: canonicalUrl,
             image: ogImageUrl,
             inLanguage: seoConfig.locale,
             telephone: '+32475965141',
-            priceRange: 'EUR',
+            priceRange: '€€',
+            numberOfRooms: 1,
+            checkinTime: '15:00',
+            checkoutTime: '12:00',
+            amenityFeature: [
+              { '@type': 'LocationFeatureSpecification', name: 'Sunny terrace', value: true },
+              { '@type': 'LocationFeatureSpecification', name: 'Shared swimming pool', value: true },
+              { '@type': 'LocationFeatureSpecification', name: 'Sea view', value: true },
+              { '@type': 'LocationFeatureSpecification', name: 'Wi-Fi', value: true },
+            ],
+            additionalProperty: [
+              { '@type': 'PropertyValue', name: 'Guest capacity', value: 2 },
+              { '@type': 'PropertyValue', name: 'Bedrooms', value: 1 },
+            ],
             address: {
               '@type': 'PostalAddress',
               streetAddress: 'Calle Las Artes 24, Appartement 404',
@@ -380,6 +286,27 @@ const RouteSeo = () => {
             description: seoConfig.description,
             inLanguage: seoConfig.locale,
             url: canonicalUrl,
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: seoConfig.locale === 'nl' ? 'Home' : seoConfig.locale === 'es' ? 'Inicio' : 'Home',
+                item: `${siteUrl}${buildLocalizedPath('/', seoConfig.locale)}`,
+              },
+              ...(seoConfig.canonicalPath === buildLocalizedPath('/', seoConfig.locale)
+                ? []
+                : [
+                    {
+                      '@type': 'ListItem',
+                      position: 2,
+                      name: seoConfig.title,
+                      item: canonicalUrl,
+                    },
+                  ]),
+            ],
           },
         ],
       });
@@ -413,6 +340,8 @@ const App = () => (
               <Route path="/booking" element={<Booking />} />
               <Route path="/booking/dossier/:token" element={<BookingDossier />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/appartement-la-caleta" element={<Accommodation />} />
+              <Route path="/la-caleta-tenerife" element={<LaCaletaGuide />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/instructions" element={<Instructions />} />
@@ -426,6 +355,20 @@ const App = () => (
               ))}
               {LOCALIZED_PUBLIC_PREFIXES.map((prefix) => (
                 <Route key={`${prefix}-contact`} path={`/${prefix}/contact`} element={<Contact />} />
+              ))}
+              {LOCALIZED_PUBLIC_PREFIXES.map((prefix) => (
+                <Route
+                  key={`${prefix}-accommodation`}
+                  path={`/${prefix}/appartement-la-caleta`}
+                  element={<Accommodation />}
+                />
+              ))}
+              {LOCALIZED_PUBLIC_PREFIXES.map((prefix) => (
+                <Route
+                  key={`${prefix}-la-caleta-guide`}
+                  path={`/${prefix}/la-caleta-tenerife`}
+                  element={<LaCaletaGuide />}
+                />
               ))}
               {LOCALIZED_PUBLIC_PREFIXES.map((prefix) => (
                 <Route key={`${prefix}-privacy`} path={`/${prefix}/privacy`} element={<Privacy />} />

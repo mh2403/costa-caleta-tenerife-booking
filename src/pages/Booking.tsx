@@ -38,6 +38,7 @@ const Booking = () => {
     address: '',
     message: '',
   });
+  const [showContactErrors, setShowContactErrors] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submittedBooking, setSubmittedBooking] = useState<PublicBookingCreateResult | null>(null);
 
@@ -76,7 +77,7 @@ const Booking = () => {
   const basePrice = settings?.base_price?.amount ?? 85;
   const cleaningFee = bookingFlowConfig.cleaningFee;
   const minStayNights = bookingFlowConfig.minStayNights;
-  const maxGuests = settings?.max_guests?.count ?? 6;
+  const maxGuests = Math.min(2, settings?.max_guests?.count ?? 2);
   const whatsappNumber = contactInfo.whatsapp.replace(/[^0-9]/g, '');
   const whatsappDisplayNumber = contactInfo.phone;
   const checkInTime = settings?.check_in_time?.time ?? '15:00';
@@ -310,6 +311,24 @@ const Booking = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const updateFormField = (field: keyof typeof formData, value: string) => {
+    setFormData((current) => ({ ...current, [field]: value }));
+    if (showContactErrors) setShowContactErrors(false);
+  };
+
+  const focusFirstMissingContactField = () => {
+    const firstMissingField = [
+      ['fullName', formData.fullName],
+      ['email', formData.email],
+      ['phone', formData.phone],
+      ['address', formData.address],
+    ].find(([, value]) => !value.trim())?.[0];
+
+    if (firstMissingField) {
+      requestAnimationFrame(() => document.getElementById(firstMissingField)?.focus());
+    }
+  };
+
   const handleNext = () => {
     if (step === 1) {
       if (!checkIn || !checkOut) {
@@ -341,6 +360,23 @@ const Booking = () => {
         return;
       }
     }
+
+    if (step === 2) {
+      const hasMissingContactField = [formData.fullName, formData.email, formData.phone, formData.address].some(
+        (value) => !value.trim(),
+      );
+
+      if (hasMissingContactField) {
+        setShowContactErrors(true);
+        toast({
+          title: t.booking.requiredFields,
+          variant: 'destructive',
+        });
+        focusFirstMissingContactField();
+        return;
+      }
+    }
+
     setStep((currentStep) => Math.min(currentStep + 1, 3));
     requestAnimationFrame(scrollToTop);
   };
@@ -351,12 +387,23 @@ const Booking = () => {
   };
 
   const handleSubmit = async () => {
+    setShowContactErrors(true);
+
+    const trimmedFormData = {
+      fullName: formData.fullName.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      address: formData.address.trim(),
+      message: formData.message.trim(),
+    };
+
     // Validate form
-    if (!formData.fullName || !formData.email || !formData.phone || !formData.address) {
+    if (!trimmedFormData.fullName || !trimmedFormData.email || !trimmedFormData.phone || !trimmedFormData.address) {
       toast({
         title: t.booking.requiredFields,
         variant: 'destructive',
       });
+      focusFirstMissingContactField();
       return;
     }
 
@@ -364,14 +411,14 @@ const Booking = () => {
 
     try {
       const createdBooking = await createBooking.mutateAsync({
-        guest_name: formData.fullName,
-        guest_email: formData.email,
-        guest_phone: formData.phone,
-        guest_address: formData.address,
+        guest_name: trimmedFormData.fullName,
+        guest_email: trimmedFormData.email,
+        guest_phone: trimmedFormData.phone,
+        guest_address: trimmedFormData.address,
         check_in: format(checkIn, 'yyyy-MM-dd'),
         check_out: format(checkOut, 'yyyy-MM-dd'),
         num_guests: parseInt(guests),
-        message: formData.message || null,
+        message: trimmedFormData.message || null,
         language: language as 'en' | 'nl' | 'es',
         total_price: totalPrice,
         cleaning_fee: cleaningFee,
@@ -705,13 +752,22 @@ const Booking = () => {
                     <User className="h-5 w-5 text-primary" />
                     {t.booking.step2}
                   </h3>
+                  {showContactErrors && (
+                    <p className="mb-4 rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive" role="alert">
+                      {t.booking.requiredFields}
+                    </p>
+                  )}
                   <div className="space-y-4">
                     <div>
                       <Label htmlFor="fullName">{t.booking.fullName} *</Label>
                       <Input
                         id="fullName"
+                        name="name"
+                        autoComplete="name"
+                        aria-required="true"
+                        aria-invalid={showContactErrors && !formData.fullName.trim()}
                         value={formData.fullName}
-                        onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                        onChange={(e) => updateFormField('fullName', e.target.value)}
                         className="mt-1"
                       />
                     </div>
@@ -719,9 +775,13 @@ const Booking = () => {
                       <Label htmlFor="email">{t.booking.email} *</Label>
                       <Input
                         id="email"
+                        name="email"
                         type="email"
+                        autoComplete="email"
+                        aria-required="true"
+                        aria-invalid={showContactErrors && !formData.email.trim()}
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={(e) => updateFormField('email', e.target.value)}
                         className="mt-1"
                       />
                     </div>
@@ -729,9 +789,13 @@ const Booking = () => {
                       <Label htmlFor="phone">{t.booking.phone} *</Label>
                       <Input
                         id="phone"
+                        name="tel"
                         type="tel"
+                        autoComplete="tel"
+                        aria-required="true"
+                        aria-invalid={showContactErrors && !formData.phone.trim()}
                         value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        onChange={(e) => updateFormField('phone', e.target.value)}
                         className="mt-1"
                       />
                     </div>
@@ -739,8 +803,12 @@ const Booking = () => {
                       <Label htmlFor="address">{t.booking.address} *</Label>
                       <Input
                         id="address"
+                        name="address"
+                        autoComplete="street-address"
+                        aria-required="true"
+                        aria-invalid={showContactErrors && !formData.address.trim()}
                         value={formData.address}
-                        onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                        onChange={(e) => updateFormField('address', e.target.value)}
                         className="mt-1"
                       />
                     </div>
@@ -749,7 +817,7 @@ const Booking = () => {
                       <Textarea
                         id="message"
                         value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        onChange={(e) => updateFormField('message', e.target.value)}
                         placeholder={t.booking.messagePlaceholder}
                         className="mt-1"
                         rows={4}

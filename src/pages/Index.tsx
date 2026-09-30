@@ -3,6 +3,8 @@ import { ArrowUp } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { HeroSection } from '@/components/home/HeroSection';
+import { TrustStrip } from '@/components/home/TrustStrip';
+import { Reveal } from '@/components/home/Reveal';
 import { JourneySection } from '@/components/home/JourneySection';
 import { GallerySection } from '@/components/home/GallerySection';
 import { FacilitiesSection } from '@/components/home/FacilitiesSection';
@@ -56,22 +58,25 @@ const Index = () => {
       </button>
       <main>
         <HeroSection />
-        <div className="content-auto">
+        <TrustStrip />
+        <Reveal className="content-auto">
           <JourneySection />
-        </div>
-        <GallerySection />
-        <div className="content-auto">
+        </Reveal>
+        <Reveal>
+          <GallerySection />
+        </Reveal>
+        <Reveal className="content-auto">
           <FacilitiesSection />
-        </div>
-        <div className="content-auto">
+        </Reveal>
+        <Reveal className="content-auto">
           <LocationSection />
-        </div>
-        <div className="content-auto">
+        </Reveal>
+        <Reveal className="content-auto">
           <TestimonialsSection />
-        </div>
-        <div className="content-auto">
+        </Reveal>
+        <Reveal className="content-auto">
           <CTASection />
-        </div>
+        </Reveal>
       </main>
       <Footer />
     </div>

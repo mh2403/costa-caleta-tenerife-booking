@@ -8,12 +8,12 @@ import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 export function HeroSection() {
   const { t } = useLanguage();
   const localizedPath = useLocalizedPath();
-  const { data: settings } = useSettings();
-  const fromPrice = settings?.base_price?.amount ?? 100;
+  const { data: settings, isLoading: isLoadingSettings } = useSettings();
+  const fromPrice = settings?.base_price?.amount ?? 90;
   const logoUrl = `${import.meta.env.BASE_URL}favicon.svg?v=20260214b`;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0">
         <img
           src={heroImage}
@@ -21,7 +21,6 @@ export function HeroSection() {
           className="w-full h-full object-cover object-[center_60%]"
           loading="eager"
           decoding="async"
-          fetchPriority="high"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-foreground/55 via-foreground/30 to-foreground/75" />
       </div>
@@ -34,7 +33,7 @@ export function HeroSection() {
               <span>{t.cta.eyebrow}</span>
             </div>
 
-            <h1 className="mb-6 font-heading text-4xl font-bold leading-tight text-primary-foreground text-shadow-hero md:text-5xl lg:text-6xl">
+            <h1 className="mb-6 font-heading text-2xl font-bold leading-[1.12] text-primary-foreground text-shadow-hero sm:text-4xl md:text-5xl lg:text-6xl">
               {t.hero.title}
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-lg text-primary-foreground/90 text-shadow-hero md:text-xl">
@@ -43,7 +42,14 @@ export function HeroSection() {
 
             <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary-foreground/30 bg-primary-foreground/12 px-6 py-3">
               <span className="text-primary-foreground/80">{t.hero.fromPrice}</span>
-              <span className="text-2xl font-bold text-primary-foreground">€{fromPrice}</span>
+              {isLoadingSettings ? (
+                <span
+                  aria-label="Prijs laden"
+                  className="inline-block h-8 w-14 animate-pulse rounded-md bg-primary-foreground/25"
+                />
+              ) : (
+                <span className="text-2xl font-bold text-primary-foreground">€{fromPrice}</span>
+              )}
               <span className="text-primary-foreground/80">{t.hero.perNight}</span>
             </div>
 

@@ -220,9 +220,34 @@
     contain-intrinsic-size: 1px 820px;
   }
 
+  .reveal-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 420ms ease-out, transform 420ms ease-out;
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .reveal-on-scroll-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   @media (max-width: 768px) {
     .content-auto {
       contain-intrinsic-size: 1px 700px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .reveal-on-scroll,
+    .reveal-on-scroll-visible {
+      opacity: 1;
+      transform: none;
+      transition: none;
     }
   }
 

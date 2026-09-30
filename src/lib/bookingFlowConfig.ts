@@ -4,4 +4,4 @@ export const bookingFlowConfig = {
   depositRatio: 0.3,
   remainingRatio: 0.7,
   remainingDueMonthsBeforeCheckIn: 1,
-} as const;
+};

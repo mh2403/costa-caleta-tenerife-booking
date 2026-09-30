@@ -3,21 +3,21 @@ import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useLanguage } from '@/i18n';
-import balconyMorningImage from '@/assets/CostaCaleta/BalconyView-Pic1.JPG';
+import balconyMorningImage from '@/assets/CostaCaleta/BalconyView-Pic1.jpg';
 import balconyMountainBreakfastImage from '@/assets/CostaCaleta/BalconyView-pic5.jpg';
-import bedroomImage from '@/assets/CostaCaleta/Bedroom-pic1.JPG';
-import livingroomImage from '@/assets/CostaCaleta/Livingroom-pic1.JPG';
+import bedroomImage from '@/assets/CostaCaleta/Bedroom-pic1.jpg';
+import livingroomImage from '@/assets/CostaCaleta/Livingroom-pic1.jpg';
 import livingroomAltImage from '@/assets/CostaCaleta/Livingroom-pic2.jpg';
-import bathroomImage from '@/assets/CostaCaleta/Bathroom-pic1.JPG';
-import bathroomAltImage from '@/assets/CostaCaleta/Bathroom-pic2.JPG';
-import diningImage from '@/assets/CostaCaleta/DinnerTable-pic1.JPG';
+import bathroomImage from '@/assets/CostaCaleta/Bathroom-pic1.jpg';
+import bathroomAltImage from '@/assets/CostaCaleta/Bathroom-pic2.jpg';
+import diningImage from '@/assets/CostaCaleta/DinnerTable-pic1.jpg';
 import nespressoCapsulesImage from '@/assets/CostaCaleta/capsulesNespresso.jpeg';
 import poolImage from '@/assets/CostaCaleta/Pool-pic3.jpg';
-import poolAltImage from '@/assets/CostaCaleta/Pool-pic1.JPG';
+import poolAltImage from '@/assets/CostaCaleta/Pool-pic1.jpg';
 import poolsideImage from '@/assets/CostaCaleta/Poolside-pic2-crop.jpg';
 import poolsideSunsetImage from '@/assets/CostaCaleta/Poolside-pic3.jpg';
 import sunsetBeachImage from '@/assets/CostaCaleta/Nature-pic13.jpg';
-import coastalViewImage from '@/assets/CostaCaleta/Nature-pic3.JPG';
+import coastalViewImage from '@/assets/CostaCaleta/Nature-pic3.jpg';
 import roadImage from '@/assets/CostaCaleta/TenerifeRoad-pic1.jpg';
 
 type GalleryCategory = 'all' | 'apartment' | 'tenerife';
@@ -148,13 +148,13 @@ export function GallerySection() {
     <section id="gallery" className="py-16 md:py-24 bg-card">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center mb-8">
-          <div className="inline-flex rounded-full border border-border bg-background p-1 shadow-soft">
+          <div className="inline-flex max-w-full flex-wrap justify-center rounded-full border border-border bg-background p-1 shadow-soft">
             {(Object.keys(categoryLabels) as GalleryCategory[]).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
                 className={cn(
-                  'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                  'min-h-11 rounded-full px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   category === cat
                     ? 'bg-primary text-primary-foreground'
                     : 'text-muted-foreground hover:text-foreground'

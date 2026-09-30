@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { switchPathLocale } from '@/lib/localeRouting';
+import { cn } from '@/lib/utils';
 
 interface LanguageSwitcherProps {
   variant?: 'default' | 'minimal';
@@ -39,7 +40,7 @@ export function LanguageSwitcher({ variant = 'default', className }: LanguageSwi
     return (
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className={className}>
+          <Button variant="ghost" size="sm" className={cn('min-h-11 min-w-[44px]', className)}>
             <span className="text-sm font-semibold tracking-wide">{languageCodes[language]}</span>
             <ChevronDown className="h-3 w-3 opacity-50" />
           </Button>

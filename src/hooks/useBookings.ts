@@ -49,7 +49,7 @@ export function useCreateBooking() {
         guest_address: booking.guest_address?.trim() ?? '',
         check_in: booking.check_in,
         check_out: booking.check_out,
-        num_guests: Math.max(1, booking.num_guests ?? 1),
+        num_guests: Math.min(2, Math.max(1, booking.num_guests ?? 1)),
         message: booking.message ?? null,
         language: booking.language ?? 'en',
         total_price: booking.total_price,

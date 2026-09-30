@@ -9,7 +9,7 @@ import { extractLocaleFromPath, normalizePath } from '@/lib/localeRouting';
 import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 
 export function Header() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const location = useLocation();
   const localizedPath = useLocalizedPath();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -123,8 +123,14 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-label={
+                  mobileMenuOpen
+                    ? { en: 'Close menu', nl: 'Menu sluiten', es: 'Cerrar menú' }[language]
+                    : { en: 'Open menu', nl: 'Menu openen', es: 'Abrir menú' }[language]
+                }
+                aria-expanded={mobileMenuOpen}
                 className={cn(
-                  'rounded-full',
+                  'min-h-11 min-w-11 rounded-full',
                   useHeroHeaderStyle
                     ? 'text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground'
                     : 'text-foreground'

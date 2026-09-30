@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://www.costacaleta.eu/</loc></url>
-  <url><loc>https://www.costacaleta.eu/booking</loc></url>
-  <url><loc>https://www.costacaleta.eu/contact</loc></url>
-  <url><loc>https://www.costacaleta.eu/privacy</loc></url>
-  <url><loc>https://www.costacaleta.eu/terms</loc></url>
-  <url><loc>https://www.costacaleta.eu/instructions</loc></url>
-  <url><loc>https://www.costacaleta.eu/nl</loc></url>
-  <url><loc>https://www.costacaleta.eu/nl/booking</loc></url>
-  <url><loc>https://www.costacaleta.eu/nl/contact</loc></url>
-  <url><loc>https://www.costacaleta.eu/nl/privacy</loc></url>
-  <url><loc>https://www.costacaleta.eu/nl/terms</loc></url>
-  <url><loc>https://www.costacaleta.eu/nl/instructions</loc></url>
-  <url><loc>https://www.costacaleta.eu/es</loc></url>
-  <url><loc>https://www.costacaleta.eu/es/booking</loc></url>
-  <url><loc>https://www.costacaleta.eu/es/contact</loc></url>
-  <url><loc>https://www.costacaleta.eu/es/privacy</loc></url>
-  <url><loc>https://www.costacaleta.eu/es/terms</loc></url>
-  <url><loc>https://www.costacaleta.eu/es/instructions</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://www.costacaleta.eu/</loc>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.costacaleta.eu/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.costacaleta.eu/en" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.costacaleta.eu/es" />
+  </url>
+  <url>
+    <loc>https://www.costacaleta.eu/booking</loc>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.costacaleta.eu/booking" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.costacaleta.eu/en/booking" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.costacaleta.eu/es/booking" />
+  </url>
+  <url>
+    <loc>https://www.costacaleta.eu/contact</loc>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.costacaleta.eu/contact" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.costacaleta.eu/en/contact" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.costacaleta.eu/es/contact" />
+  </url>
+  <url>
+    <loc>https://www.costacaleta.eu/appartement-la-caleta</loc>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.costacaleta.eu/appartement-la-caleta" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.costacaleta.eu/en/appartement-la-caleta" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.costacaleta.eu/es/appartement-la-caleta" />
+  </url>
+  <url>
+    <loc>https://www.costacaleta.eu/la-caleta-tenerife</loc>
+    <xhtml:link rel="alternate" hreflang="nl" href="https://www.costacaleta.eu/la-caleta-tenerife" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.costacaleta.eu/en/la-caleta-tenerife" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://www.costacaleta.eu/es/la-caleta-tenerife" />
+  </url>
 </urlset>

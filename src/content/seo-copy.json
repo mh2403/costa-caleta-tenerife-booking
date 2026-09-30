@@ -1,0 +1,128 @@
+{
+  "en": {
+    "/": {
+      "title": "Sea-view apartment in La Caleta, Tenerife | Costa Caleta",
+      "description": "Renovated one-bedroom holiday apartment with sunny terrace and shared pool in La Caleta, Adeje. Book direct for up to 2 people.",
+      "indexable": true
+    },
+    "/booking": {
+      "title": "Book your stay in La Caleta | Costa Caleta",
+      "description": "Check availability and request a stay in a sea-view apartment in La Caleta, Adeje. Enjoy direct booking for up to 2 people.",
+      "indexable": true
+    },
+    "/contact": {
+      "title": "Contact Costa Caleta Tenerife | Adeje",
+      "description": "Contact Costa Caleta Tenerife by WhatsApp, phone or email about availability and your stay in La Caleta, Adeje, Tenerife.",
+      "indexable": true
+    },
+    "/appartement-la-caleta": {
+      "title": "Sea-view apartment in La Caleta | Costa Caleta",
+      "description": "Discover the renovated holiday apartment in La Caleta, Adeje: 1 bedroom, sunny terrace, shared pool and space for up to 2 people.",
+      "indexable": true
+    },
+    "/la-caleta-tenerife": {
+      "title": "La Caleta Tenerife guide | Beaches and restaurants",
+      "description": "Plan your stay in La Caleta, Tenerife with local tips on the coast, restaurants, walks, beaches, golf and practical travel information.",
+      "indexable": true
+    },
+    "/privacy": {
+      "title": "Privacy policy | Costa Caleta Tenerife",
+      "description": "Read how Costa Caleta Tenerife handles personal data and respects your privacy rights.",
+      "indexable": false
+    },
+    "/terms": {
+      "title": "Booking terms | Costa Caleta Tenerife",
+      "description": "Review booking, payment, check-in, check-out, cancellation and liability terms.",
+      "indexable": false
+    },
+    "/instructions": {
+      "title": "Guest instructions | Costa Caleta Tenerife",
+      "description": "Practical instructions for guests staying at Costa Caleta Tenerife in La Caleta.",
+      "indexable": false
+    }
+  },
+  "nl": {
+    "/": {
+      "title": "Appartement met zeezicht in La Caleta, Tenerife",
+      "description": "Een gerenoveerd vakantieappartement met één slaapkamer, zonnig terras en gemeenschappelijk zwembad in La Caleta, Adeje. Boek direct voor een verblijf met tot 2 personen.",
+      "indexable": true
+    },
+    "/booking": {
+      "title": "Boek uw verblijf in La Caleta | Costa Caleta",
+      "description": "Controleer beschikbaarheid van het appartement met zeezicht in La Caleta, Adeje. Rechtstreeks boeken voor een verblijf met tot 2 personen.",
+      "indexable": true
+    },
+    "/contact": {
+      "title": "Contact | Costa Caleta Tenerife",
+      "description": "Neem via WhatsApp, telefoon of e-mail contact op over beschikbaarheid, uw verblijf en praktische vragen in La Caleta, Adeje, Tenerife.",
+      "indexable": true
+    },
+    "/appartement-la-caleta": {
+      "title": "Appartement met zeezicht in La Caleta | Costa Caleta",
+      "description": "Bekijk het gerenoveerde vakantieappartement in La Caleta, Adeje: 1 slaapkamer, zonnig terras, gedeeld zwembad en ruimte voor tot 2 personen.",
+      "indexable": true
+    },
+    "/la-caleta-tenerife": {
+      "title": "La Caleta Tenerife gids | Stranden en restaurants",
+      "description": "Plan uw verblijf in La Caleta, Tenerife met lokale tips over de kust, restaurants, wandelingen, stranden, golf en praktische reisinformatie.",
+      "indexable": true
+    },
+    "/privacy": {
+      "title": "Privacybeleid | Costa Caleta Tenerife",
+      "description": "Lees hoe Costa Caleta Tenerife persoonsgegevens verwerkt en uw privacyrechten respecteert.",
+      "indexable": false
+    },
+    "/terms": {
+      "title": "Boekingsvoorwaarden | Costa Caleta Tenerife",
+      "description": "Bekijk de voorwaarden rond boeking, betaling, check-in, check-out, annulering en aansprakelijkheid.",
+      "indexable": false
+    },
+    "/instructions": {
+      "title": "Gasteninstructies | Costa Caleta Tenerife",
+      "description": "Praktische instructies voor gasten van Costa Caleta Tenerife in La Caleta.",
+      "indexable": false
+    }
+  },
+  "es": {
+    "/": {
+      "title": "Apartamento con vistas al mar en La Caleta | Costa Caleta",
+      "description": "Apartamento vacacional renovado de un dormitorio, terraza soleada y piscina comunitaria en La Caleta, Adeje. Reserva directa para hasta 2 personas.",
+      "indexable": true
+    },
+    "/booking": {
+      "title": "Reserva tu estancia en La Caleta | Costa Caleta",
+      "description": "Consulta la disponibilidad de un apartamento con vistas al mar en La Caleta, Adeje. Reserva directa para hasta 2 personas.",
+      "indexable": true
+    },
+    "/contact": {
+      "title": "Contacto | Costa Caleta Tenerife",
+      "description": "Contacta con Costa Caleta Tenerife por WhatsApp, teléfono o correo sobre disponibilidad y tu estancia en La Caleta, Adeje.",
+      "indexable": true
+    },
+    "/appartement-la-caleta": {
+      "title": "Apartamento con vistas al mar en La Caleta | Costa Caleta",
+      "description": "Descubre el apartamento vacacional renovado en La Caleta, Adeje: 1 dormitorio, terraza soleada, piscina comunitaria y espacio para hasta 2 personas.",
+      "indexable": true
+    },
+    "/la-caleta-tenerife": {
+      "title": "Guía de La Caleta Tenerife | Playas y restaurantes",
+      "description": "Planifica tu estancia en La Caleta, Tenerife con consejos locales sobre la costa, restaurantes, paseos, playas, golf y viajes.",
+      "indexable": true
+    },
+    "/privacy": {
+      "title": "Política de privacidad | Costa Caleta Tenerife",
+      "description": "Consulta cómo Costa Caleta Tenerife gestiona tus datos personales y respeta tu privacidad.",
+      "indexable": false
+    },
+    "/terms": {
+      "title": "Condiciones de reserva | Costa Caleta Tenerife",
+      "description": "Revisa las condiciones de reserva, pago, check-in, check-out, cancelación y responsabilidad.",
+      "indexable": false
+    },
+    "/instructions": {
+      "title": "Instrucciones para huéspedes | Costa Caleta Tenerife",
+      "description": "Instrucciones prácticas para huéspedes de Costa Caleta Tenerife en La Caleta.",
+      "indexable": false
+    }
+  }
+}

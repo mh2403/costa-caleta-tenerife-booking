@@ -17,6 +17,7 @@ export interface Translations {
     fromPrice: string;
     perNight: string;
     trustItems: string[];
+    highlights: string[];
     imageAlt: string;
   };
   // CTA section
@@ -311,7 +312,7 @@ export const translations: Record<Language, Translations> = {
       admin: 'Admin',
     },
     hero: {
-      title: 'Escape to the sun of Tenerife',
+      title: 'Escape to the sunshine of Tenerife',
       subtitle: 'Comfortable apartment in La Caleta, Adeje, Tenerife.',
       checkAvailability: 'View Gallery',
       bookNow: 'Book Now',
@@ -322,6 +323,7 @@ export const translations: Record<Language, Translations> = {
         'Prime La Caleta location',
         'Fast host response',
       ],
+      highlights: ['1 bedroom', 'Up to 2 people', 'Sea & mountain views', 'Pool'],
       imageAlt: 'Breakfast table with ocean view in La Caleta',
     },
     cta: {
@@ -780,6 +782,7 @@ Practical:
         'Toplocatie in La Caleta',
         'Snelle reactie van host',
       ],
+      highlights: ['1 slaapkamer', 'Tot 2 personen', 'Zee- en bergzicht', 'Zwembad'],
       imageAlt: 'Ontbijttafel met oceaanzicht in La Caleta',
     },
     cta: {
@@ -1228,7 +1231,7 @@ Praktisch:
     },
     hero: {
       title: 'Escápate al sol de Tenerife',
-      subtitle: 'Alquiler de apartamento en La Caleta, Adeje, Tenerife.',
+      subtitle: 'Apartamento confortable en La Caleta, Adeje, Tenerife.',
       checkAvailability: 'Ver Fotos',
       bookNow: 'Reservar Ahora',
       fromPrice: 'Desde',
@@ -1238,6 +1241,7 @@ Praktisch:
         'Ubicación ideal en La Caleta',
         'Respuesta rápida del anfitrión',
       ],
+      highlights: ['1 dormitorio', 'Hasta 2 personas', 'Vistas al mar y la montaña', 'Piscina'],
       imageAlt: 'Mesa de desayuno con vista al océano en La Caleta',
     },
     cta: {

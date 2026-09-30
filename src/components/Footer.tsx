@@ -78,7 +78,7 @@ export function Footer() {
           <div className="flex gap-4 text-sm">
             <Link to={localizedPath('/privacy')} className="text-background/60 transition-colors hover:text-background">{t.footer.privacy}</Link>
             <Link to={localizedPath('/terms')} className="text-background/60 transition-colors hover:text-background">{t.footer.terms}</Link>
-            <Link to="/admin" className="text-background/45 transition-colors hover:text-background/70">Admin</Link>
+            <Link to={localizedPath('/admin')} className="text-background/45 transition-colors hover:text-background/70">Admin</Link>
           </div>
         </div>
       </div>
