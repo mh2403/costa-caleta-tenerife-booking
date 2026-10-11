@@ -27,6 +27,7 @@ import { useBlockedDates } from '@/hooks/useBlockedDates';
 import { usePricingRules } from '@/hooks/usePricing';
 import { useSettings } from '@/hooks/useSettings';
 import { bookingFlowConfig } from '@/lib/bookingFlowConfig';
+import { getBookingDeposit } from '@/lib/bookingPrice';
 
 export function AdminBookings() {
   const t = translations.nl;
@@ -75,9 +76,11 @@ export function AdminBookings() {
   }, [bookings]);
 
   const bookingsByYear = useMemo(() => {
-    if (yearFilter === 'all') return bookings;
-    const targetYear = Number(yearFilter);
-    return bookings.filter((b) => new Date(b.check_in).getFullYear() === targetYear);
+    const matchingBookings = yearFilter === 'all'
+      ? [...bookings]
+      : bookings.filter((b) => new Date(b.check_in).getFullYear() === Number(yearFilter));
+
+    return matchingBookings.sort((a, b) => b.check_in.localeCompare(a.check_in));
   }, [bookings, yearFilter]);
 
   const filteredBookings = filter === 'all'
@@ -358,7 +361,7 @@ export function AdminBookings() {
   const formatCurrency = (amount: number) => `€${Number(amount).toLocaleString()}`;
 
   const getDepositAmount = (booking: Booking) =>
-    Number((Number(booking.total_price ?? 0) * bookingFlowConfig.depositRatio).toFixed(2));
+    getBookingDeposit(booking);
 
   const getRemainingAmount = (booking: Booking) => {
     const total = Number(booking.total_price ?? 0);

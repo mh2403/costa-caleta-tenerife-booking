@@ -115,6 +115,8 @@ export interface Translations {
     paymentTitle: string;
     paymentIntro: string;
     paymentDepositLabel: string;
+    receivedDepositLabel: string;
+    adjustedRemainingBalanceLabel: string;
     paymentDepositHelp: string;
     remainingBalanceLabel: string;
     paymentLabelAccount: string;
@@ -468,6 +470,8 @@ Practical:
       paymentTitle: 'Booking follow-up and payment flow',
       paymentIntro: 'No advance transfer is required on the website. After owner confirmation, contract and payment details are shared through your booking dossier and WhatsApp.',
       paymentDepositLabel: '30% deposit (after owner confirmation)',
+      receivedDepositLabel: 'Deposit received',
+      adjustedRemainingBalanceLabel: 'Remaining balance (at least 1 month before check-in)',
       paymentDepositHelp: 'Pay this amount only after your booking is confirmed and the contract is shared.',
       remainingBalanceLabel: '70% remaining balance (at least 1 month before check-in)',
       paymentLabelAccount: 'Account holder',
@@ -927,6 +931,8 @@ Praktisch:
       paymentTitle: 'Boekingsopvolging en betalingsflow',
       paymentIntro: 'Er is geen onmiddellijke overschrijving nodig op de website. Na bevestiging door de eigenaar worden contract en betaalinstructies gedeeld via uw boekingsdossier en WhatsApp.',
       paymentDepositLabel: '30% voorschot (na bevestiging door eigenaar)',
+      receivedDepositLabel: 'Ontvangen voorschot',
+      adjustedRemainingBalanceLabel: 'Restbedrag (minstens 1 maand voor aankomst)',
       paymentDepositHelp: 'Betaal dit bedrag pas nadat uw boeking bevestigd is en het contract gedeeld is.',
       remainingBalanceLabel: '70% restbedrag (minstens 1 maand voor aankomst)',
       paymentLabelAccount: 'Rekeninghouder',
@@ -1386,6 +1392,8 @@ Práctico:
       paymentTitle: 'Seguimiento de reserva y flujo de pago',
       paymentIntro: 'No se requiere transferencia inmediata en la web. Tras la confirmación de la propietaria, el contrato y los datos de pago se comparten por expediente y WhatsApp.',
       paymentDepositLabel: 'Anticipo del 30% (tras confirmación de la propietaria)',
+      receivedDepositLabel: 'Anticipo recibido',
+      adjustedRemainingBalanceLabel: 'Saldo restante (mínimo 1 mes antes del check-in)',
       paymentDepositHelp: 'Paga este importe solo después de la confirmación y de recibir el contrato.',
       remainingBalanceLabel: 'Saldo restante del 70% (mínimo 1 mes antes del check-in)',
       paymentLabelAccount: 'Titular de la cuenta',

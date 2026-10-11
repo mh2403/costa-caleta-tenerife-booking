@@ -28,6 +28,8 @@ import { usePricingRules } from '@/hooks/usePricing';
 import { useSettings } from '@/hooks/useSettings';
 import { supabase } from '@/integrations/supabase/client';
 import { bookingFlowConfig } from '@/lib/bookingFlowConfig';
+import { getBookingDeposit } from '@/lib/bookingPrice';
+import { BookingPriceEditor } from '@/components/admin/BookingPriceEditor';
 import { useLocalizedPath } from '@/hooks/useLocalizedPath';
 import {
   Calendar,
@@ -156,7 +158,7 @@ const BookingDossier = () => {
 
   const depositAmount = useMemo(() => {
     if (!booking) return 0;
-    return Number((Number(booking.total_price) * bookingFlowConfig.depositRatio).toFixed(2));
+    return getBookingDeposit(booking);
   }, [booking]);
 
   const remainingAmount = useMemo(() => {
@@ -1131,21 +1133,24 @@ const BookingDossier = () => {
               </div>
 
               <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <span>{t.booking.total}</span>
-                  <span className="text-xl font-bold text-primary">{formatCurrency(Number(booking.total_price))}</span>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="text-xl font-bold text-primary">{formatCurrency(Number(booking.total_price))}</span>
+                    {isAdmin && <BookingPriceEditor booking={booking} isAdmin={isAdmin} />}
+                  </div>
                 </div>
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <span>{t.booking.paymentDepositLabel}</span>
+                  <span>{booking.deposit_paid ? t.booking.receivedDepositLabel : t.booking.paymentDepositLabel}</span>
                   <span className="font-medium text-foreground">{formatCurrency(depositAmount)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <span>{t.booking.remainingBalanceLabel}</span>
+                  <span>{booking.deposit_paid ? t.booking.adjustedRemainingBalanceLabel : t.booking.remainingBalanceLabel}</span>
                   <span className="font-medium text-foreground">{formatCurrency(remainingAmount)}</span>
                 </div>
                 {remainingDueDate && (
                   <p className="text-xs text-muted-foreground pt-1">
-                    {t.booking.remainingBalanceLabel}: {formatLocalizedDate(remainingDueDate)}
+                    {booking.deposit_paid ? t.booking.adjustedRemainingBalanceLabel : t.booking.remainingBalanceLabel}: {formatLocalizedDate(remainingDueDate)}
                   </p>
                 )}
               </div>

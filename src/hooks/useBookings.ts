@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import type { Database, Tables, TablesInsert, TablesUpdate } from '@/integrations/supabase/types';
 import { bookingFlowConfig } from '@/lib/bookingFlowConfig';
+import { getBookingDeposit, roundPrice } from '@/lib/bookingPrice';
 
 export type Booking = Tables<'bookings'>;
 export type BookingInsert = TablesInsert<'bookings'>;
@@ -171,6 +172,46 @@ export function useUpdateBooking() {
 
       if (error) throw error;
       return data as Booking;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['booking-dossier'] });
+    },
+  });
+}
+
+// Compare the displayed price/payment state before saving to avoid overwriting another edit.
+// Database RLS restricts booking updates to admins.
+export function useUpdateBookingPrice() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ booking, total, reason }: { booking: BookingDossier; total: number; reason: string }) => {
+      if (!Number.isFinite(total) || total <= 0 || total > 99999999.99 || roundPrice(total) !== total) {
+        throw new Error('Vul een geldig bedrag in met maximaal twee decimalen.');
+      }
+      if (booking.remaining_paid) throw new Error('Deze boeking is al volledig betaald.');
+      const deposit = getBookingDeposit({ ...booking, total_price: total });
+      if (total < deposit) throw new Error('De totaalprijs mag niet lager zijn dan het ontvangen voorschot.');
+
+      const entry = `Prijsafspraak (${new Date().toISOString()}): €${Number(booking.total_price).toFixed(2)} → €${total.toFixed(2)}${reason.trim() ? ` — ${reason.trim()}` : ''}`;
+      let query = supabase.from('bookings').update({
+        total_price: total,
+        deposit_amount: deposit,
+        payment_notes: [booking.payment_notes, entry].filter(Boolean).join('\n'),
+      }).eq('id', booking.id)
+        .eq('total_price', booking.total_price)
+        .eq('deposit_amount', booking.deposit_amount)
+        .eq('deposit_paid', booking.deposit_paid)
+        .eq('remaining_paid', booking.remaining_paid)
+        .eq('check_in', booking.check_in)
+        .eq('check_out', booking.check_out);
+      query = booking.payment_notes == null
+        ? query.is('payment_notes', null)
+        : query.eq('payment_notes', booking.payment_notes);
+      const { data, error } = await query.select('id').maybeSingle();
+      if (error) throw new Error('Opslaan mislukt. Probeer het opnieuw.');
+      if (!data) throw new Error('Dit dossier is intussen gewijzigd. Herlaad de pagina en probeer opnieuw.');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
